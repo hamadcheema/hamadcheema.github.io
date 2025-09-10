@@ -142,6 +142,23 @@
       border-top: 1px solid rgba(255,214,102,0.04);
     }
 
+    button {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 4px 10px;
+      margin-left: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    button:hover {
+      background: var(--accent);
+      color: #1e1e1e;
+    }
+
     @media (max-width: 768px) {
       .panel { margin: 30px 16px; padding: 28px; }
       header h1 { font-size: 38px; }
@@ -181,35 +198,52 @@
     <a href="https://www.fiverr.com/hamad_cheema" class="cta-button" target="_blank">🎮 Visit My Fiverr Profile</a>
 
     <h2>Contact Me</h2>
-    <p>📧 <strong>thatsmehammad@gmail.com</strong><br>📞 <strong>+92 341 4292789</strong></p>
+    <p>
+      📧 <strong id="email">thatsmehammad@gmail.com</strong>
+      <button onclick="copyToClipboard('email', this)">📋 Copy</button><br>
+      📞 <strong id="phone">+92 341 4292789</strong>
+      <button onclick="copyToClipboard('phone', this)">📋 Copy</button>
+    </p>
   </div>
 
   <footer>&copy; 2025 Hammad. All Rights Reserved.</footer>
 </section>
 
 <script>
-(function createSparkles(){
-  const container = document.querySelector('.sparkles');
-  const colors = ['#ffd966','#ff9f9f','#b5e7ff','#c7f3a6'];
-  const count = 30;
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  for(let i=0;i<count;i++){
-    const el = document.createElement('i');
-    const size = (Math.random()*6)+3;
-    el.style.width = el.style.height = size + 'px';
-    el.style.left = Math.random()*vw + 'px';
-    el.style.top = Math.random()*vh + 'px';
-    el.style.background = colors[Math.floor(Math.random()*colors.length)];
-    el.style.opacity = 0.85 * Math.random();
-    el.style.setProperty('--dur', (6 + Math.random()*8) + 's');
-    el.style.transform = `scale(${0.6 + Math.random()*0.9})`;
-    el.style.filter = 'blur(0.3px)';
-    container.appendChild(el);
+  // Sparkles animation
+  (function createSparkles(){
+    const container = document.querySelector('.sparkles');
+    const colors = ['#ffd966','#ff9f9f','#b5e7ff','#c7f3a6'];
+    const count = 30;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    for(let i=0;i<count;i++){
+      const el = document.createElement('i');
+      const size = (Math.random()*6)+3;
+      el.style.width = el.style.height = size + 'px';
+      el.style.left = Math.random()*vw + 'px';
+      el.style.top = Math.random()*vh + 'px';
+      el.style.background = colors[Math.floor(Math.random()*colors.length)];
+      el.style.opacity = 0.85 * Math.random();
+      el.style.setProperty('--dur', (6 + Math.random()*8) + 's');
+      el.style.transform = `scale(${0.6 + Math.random()*0.9})`;
+      el.style.filter = 'blur(0.3px)';
+      container.appendChild(el);
+    }
+  })();
+
+  // Copy to clipboard
+  function copyToClipboard(id, btn) {
+    const text = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = "✅ Copied!";
+      setTimeout(() => {
+        btn.innerHTML = original;
+      }, 1500);
+    });
   }
-})();
 </script>
 
 </body>
 </html>
-
