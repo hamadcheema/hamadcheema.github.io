@@ -1,257 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Privacy Policy</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hammad | Creative Graphic Designer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Great+Vibes&family=EB+Garamond:400,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --panel-width: 900px;
+      --accent: #ffd966;
+      --text: #f4eede;
+      --muted: rgba(244,238,222,0.85);
+    }
 
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Great+Vibes&family=EB+Garamond:400,600&display=swap" rel="stylesheet">
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: 'EB Garamond', serif;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=90') center/cover no-repeat fixed;
+      color: var(--text);
+      overflow-x: hidden;
+    }
 
-<style>
-  :root{
-    --panel-width: 900px;
-    --accent: #ffd966;
-    --text: #f4eede;
-    --muted: rgba(244,238,222,0.85);
-  }
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(2,6,23,0.35), rgba(3,10,40,0.45));
+      backdrop-filter: blur(1px);
+      z-index: 0;
+    }
 
-  /* page bg: sharp fantasy image */
-  html,body{height:100%; margin:0;}
-  body{
-    font-family: "EB Garamond", "Marcellus", serif;
-    color: var(--text);
-    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=90') center/cover fixed no-repeat;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    overflow-x:hidden;
-  }
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
 
-  /* dreamy overlay */
-  .bg-overlay{
-    position:fixed;
-    inset:0;
-    background: linear-gradient(180deg, rgba(2,6,23,0.35), rgba(3,10,40,0.45));
-    backdrop-filter: blur(1px);
-    z-index:0;
-  }
+    .sparkles i {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      animation: rise var(--dur, 8s) linear infinite;
+    }
 
-  /* floating sparkles */
-  .sparkles{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:1;
-    overflow:hidden;
-  }
-  .sparkles i{
-    position:absolute;
-    border-radius:50%;
-    opacity:0;
-    animation:rise var(--dur,8s) linear infinite;
-  }
-  @keyframes rise{
-    0%{ transform: translateY(100vh) scale(0.4); opacity:0;}
-    10%{ opacity:1;}
-    80%{ opacity:1;}
-    100%{ transform: translateY(-120vh) scale(1.1); opacity:0;}
-  }
+    @keyframes rise {
+      0% { transform: translateY(100vh) scale(0.4); opacity: 0; }
+      10% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateY(-120vh) scale(1.1); opacity: 0; }
+    }
 
-  /* floating glowing waves in background */
-  .waves {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
-  }
-  .wave {
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,214,102,0.05), transparent 60%);
-    animation: waveMove 18s ease-in-out infinite;
-  }
-  .wave:nth-child(2) {
-    animation-delay: -6s;
-    background: radial-gradient(circle, rgba(255,153,204,0.05), transparent 60%);
-  }
-  @keyframes waveMove {
-    0%, 100% { transform: translate(-25%, -25%) rotate(0deg); }
-    50% { transform: translate(-35%, -35%) rotate(180deg); }
-  }
+    .panel {
+      position: relative;
+      max-width: var(--panel-width);
+      margin: 60px auto;
+      padding: 40px;
+      background: linear-gradient(180deg, rgba(9,8,6,0.72), rgba(6,5,4,0.62));
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 30px rgba(255,214,102,0.06) inset;
+      border: 1px solid rgba(255,214,102,0.08);
+      z-index: 2;
+      animation: fadeIn 1.6s ease forwards;
+      opacity: 0;
+    }
 
-  /* panel with fade-in animation */
-  .panel {
-    position:relative;
-    max-width:var(--panel-width);
-    margin:48px auto;
-    background: linear-gradient(180deg, rgba(9,8,6,0.72), rgba(6,5,4,0.62));
-    border-radius:14px;
-    padding:34px 36px;
-    z-index:2;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 30px rgba(255,214,102,0.06) inset;
-    border:1px solid rgba(255,214,102,0.08);
-    opacity: 0;
-    animation: fadeIn 1.6s ease forwards;
-  }
-  @keyframes fadeIn {
-    to { opacity: 1; transform: translateY(0); }
-    from { opacity: 0; transform: translateY(20px); }
-  }
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(20px); }
+    }
 
-  /* magical hover glow */
-  .panel:hover {
-    box-shadow: 0 0 30px rgba(255,214,102,0.3), 0 0 80px rgba(255,214,102,0.15) inset;
-    transition: box-shadow 0.6s ease;
-  }
+    .panel:hover {
+      box-shadow: 0 0 30px rgba(255,214,102,0.3), 0 0 80px rgba(255,214,102,0.15) inset;
+      transition: box-shadow 0.6s ease;
+    }
 
-  header h1{
-    font-family: 'Great Vibes', cursive;
-    color: var(--accent);
-    font-size:44px;
-    margin:4px 0 2px;
-    text-align:center;
-    text-shadow: 0 0 12px rgba(255,214,102,0.25);
-    letter-spacing:0.6px;
-    animation: glowTitle 3s ease-in-out infinite alternate;
-  }
-  @keyframes glowTitle {
-    from { text-shadow: 0 0 12px rgba(255,214,102,0.25); }
-    to { text-shadow: 0 0 22px rgba(255,214,102,0.65); }
-  }
+    header h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 46px;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 10px;
+      text-shadow: 0 0 12px rgba(255,214,102,0.25);
+      animation: glowTitle 3s ease-in-out infinite alternate;
+    }
 
-  header p.meta{
-    text-align:center;
-    margin:6px 0 18px;
-    color:var(--muted);
-    font-size:0.97rem;
-    animation: fadeIn 2.4s ease forwards;
-  }
+    @keyframes glowTitle {
+      from { text-shadow: 0 0 12px rgba(255,214,102,0.25); }
+      to { text-shadow: 0 0 22px rgba(255,214,102,0.65); }
+    }
 
-  .container h2{
-    color:var(--accent);
-    margin-top:22px;
-    font-size:1.45rem;
-    letter-spacing:0.2px;
-    border-bottom:1px solid rgba(255,214,102,0.08);
-    padding-bottom:8px;
-    animation: slideIn 1s ease both;
-  }
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
+    .tagline {
+      text-align: center;
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-bottom: 24px;
+    }
 
-  .container p, .container li {
-    color:var(--muted);
-    font-size:1.03rem;
-    line-height:1.7;
-  }
+    .container h2 {
+      color: var(--accent);
+      font-size: 1.4rem;
+      margin-top: 26px;
+      border-bottom: 1px solid rgba(255,214,102,0.08);
+      padding-bottom: 6px;
+    }
 
-  .container ul{ margin-left:20px; }
+    .container p, .container li {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
 
-  blockquote{
-    margin:16px 0;
-    padding:10px 16px;
-    border-left:4px solid rgba(255,214,102,0.16);
-    background: linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,214,102,0.01));
-    color: #fbeec8;
-    font-style:italic;
-    animation: fadeIn 2s ease forwards;
-  }
+    ul.services {
+      list-style: disc;
+      padding-left: 20px;
+    }
 
-  footer{
-    text-align:center;
-    color:rgba(244,238,222,0.8);
-    margin-top:18px;
-    font-size:0.92rem;
-    border-top:1px solid rgba(255,214,102,0.04);
-    padding-top:14px;
-  }
+    .cta-button {
+      display: block;
+      margin: 30px auto;
+      background: var(--accent);
+      color: #1e1e1e;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 6px;
+      font-weight: bold;
+      text-align: center;
+      transition: background 0.3s;
+      max-width: 300px;
+    }
 
-  /* responsive */
-  @media (max-width:980px){
-    .panel{ margin:28px 18px; padding:24px; }
-    header h1{ font-size:36px; }
-  }
-  @media (max-width:520px){
-    header h1{ font-size:30px; }
-    .container p, .container li { font-size:1rem; }
-  }
-</style>
+    .cta-button:hover {
+      background: #ffdd80;
+    }
+
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      color: rgba(244,238,222,0.8);
+      font-size: 0.9rem;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,214,102,0.04);
+    }
+
+    @media (max-width: 768px) {
+      .panel { margin: 30px 16px; padding: 28px; }
+      header h1 { font-size: 38px; }
+    }
+
+    @media (max-width: 480px) {
+      header h1 { font-size: 30px; }
+    }
+  </style>
 </head>
 <body>
 
 <div class="bg-overlay" aria-hidden="true"></div>
-
-<!-- glowing waves -->
-<div class="waves" aria-hidden="true">
-  <div class="wave"></div>
-  <div class="wave"></div>
-</div>
-
-<!-- decorative sparkles -->
 <div class="sparkles" aria-hidden="true"></div>
 
-<section class="panel" role="main" aria-labelledby="policy-title">
+<section class="panel">
   <header>
-    <h1 id="policy-title">Privacy Policy</h1>
-    <p class="meta"><strong>Author:</strong> Jestin Korleski &nbsp; | &nbsp; <strong>Support Email:</strong> thegoodbookforever@gmail.com &nbsp; | &nbsp; <strong>Mobile:</strong> +1 608 931 6605</p>
+    <h1>Hammad</h1>
+    <p class="tagline">Creative Graphic Designer & Branding Specialist</p>
   </header>
 
   <div class="container">
-    <h2>Introduction</h2>
-    <p>This page is used to inform visitors regarding our policies with the collection, use, and disclosure of Personal Information if anyone decides to use our Service.</p>
-    <p>By using our Service, you agree to the collection and use of information in accordance with this policy. The Personal Information we collect is used for providing and improving the Service. We do not use or share your information with anyone except as described in this Privacy Policy.</p>
+    <h2>About Me</h2>
+    <p>Hello! I'm Hammad, a passionate designer with over 2 years of experience in creating visually stunning and professional designs. Whether you need a logo, business card, or social media graphics, I can help bring your ideas to life.</p>
 
-    <h2>Information Collection and Use</h2>
-    <p>For a better experience, while using our Service, we may require you to provide us with certain personally identifiable information. The information that we request will be retained by us and used as described in this privacy policy.</p>
-    <blockquote>The app does use third-party services that may collect information used to identify you.</blockquote>
-
-    <h2>Log Data</h2>
-    <p>In case of an error in the app, we collect data and information (through third-party products) on your phone called <strong>Log Data</strong>. This Log Data may include:</p>
-    <ul>
-      <li>Your device's Internet Protocol (“IP”) address</li>
-      <li>Device name</li>
-      <li>Operating system version</li>
-      <li>Configuration of the app</li>
-      <li>Time and date of your use of the Service</li>
-      <li>Other statistics</li>
+    <h2>Services I Offer</h2>
+    <ul class="services">
+      <li>Logo Design</li>
+      <li>Business Cards</li>
+      <li>Social Media Posts</li>
+      <li>Flyers & Brochures</li>
+      <li>Branding Kits</li>
     </ul>
 
-    <h2>Your Rights and Choices</h2>
-    <p>You have certain rights in relation to your personal data:</p>
-    <ul>
-      <li><strong>The right to erasure</strong></li>
-      <li><strong>The right to restrict processing</strong></li>
-      <li><strong>The right to object to processing</strong></li>
-      <li><strong>The right to data portability</strong></li>
-    </ul>
-    <blockquote>Please note: The law provides exceptions to these rights in certain cases. If you cannot exercise one of these rights, we will explain why.</blockquote>
-
-    <p>We offer you choices regarding the collection, use, and sharing of your personal data. If you choose not to provide certain data, you may not be able to access all features of the Service.</p>
-
-    <h2>Security</h2>
-    <p>We value your trust in providing us your Personal Information and are committed to protecting it using commercially acceptable means.</p>
-    <blockquote>However, no method of transmission over the internet or electronic storage is 100% secure, and we cannot guarantee absolute security.</blockquote>
-
-    <h2>Children’s Privacy</h2>
-    <p>Our Services do <strong>not</strong> address anyone under the age of 13. We do <strong>not knowingly</strong> collect personally identifiable information from children under 13.</p>
-    <p>If we discover a child under 13 has provided us with personal information, we will immediately delete it. If you are a parent or guardian and are aware that your child has provided us with personal information, please contact us.</p>
-
-    <h2>Changes to This Privacy Policy</h2>
-    <p>We may update our Privacy Policy from time to time. You are advised to review this page periodically for any changes.</p>
-    <blockquote>Changes are effective immediately after they are posted on this page.</blockquote>
-
-    <h2>Contact Us</h2>
-    <p>If you have any questions or need support, please contact us at:</p>
-    <p>📧 <strong>thegoodbookforever@gmail.com</strong><br>📞 <strong>+1 608 931 6605</strong></p>
+    <h2>Let’s Work Together</h2>
+    <p>I’m available on Fiverr! Click below to view my gigs and place your order:</p>
+    <a href="https://www.fiverr.com/your-username" class="cta-button" target="_blank">📎 Visit My Fiverr Profile</a>
   </div>
 
-  <footer>&copy; 2025 Jestin Korleski. All Rights Reserved.</footer>
+  <footer>&copy; 2025 Hammad. All Rights Reserved.</footer>
 </section>
 
-<!-- sparkles script -->
 <script>
 (function createSparkles(){
   const container = document.querySelector('.sparkles');
@@ -269,11 +201,4 @@
     el.style.opacity = 0.85 * Math.random();
     el.style.setProperty('--dur', (6 + Math.random()*8) + 's');
     el.style.transform = `scale(${0.6 + Math.random()*0.9})`;
-    el.style.filter = 'blur(0.3px)';
-    container.appendChild(el);
-  }
-})();
-</script>
-
-</body>
-</html>
+    el.style.filter = 'blur(0.3
