@@ -1,8 +1,8 @@
 # Privacy Policy
 
-**Author:** Jestin Korleski  
-**Support Email:** [thegoodbookforever@gmail.com](mailto:thegoodbookforever@gmail.com)  
-**Mobile Number:** +1 608 931 6605
+**Author:** Ali Hammad Shehzad  
+**Support Email:** [thatsmehammad@gmail.com](mailto:thatsmehammad@gmail.com)  
+**Mobile Number:** +923414292789
 
 ---
 
