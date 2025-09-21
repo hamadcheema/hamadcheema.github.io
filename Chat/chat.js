@@ -1,9 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, onChildChanged, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-import { getAuth, onAuthStateChanged, signOut, updateEmail, updatePassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { notify } from "../App/notify.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded, onChildChanged, set } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
-// ✅ Firebase Config
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
   authDomain: "devchatbyhamad.firebaseapp.com",
@@ -31,54 +30,6 @@ const imgPreview = document.getElementById('imgPreview');
 let currentUser = null;
 let pendingImage = null;
 
-// ✅ Auth check
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.href = "../Login";
-  } else if (!user.emailVerified) {
-    notify("Please verify your email first!", "error");
-    signOut(auth);
-    window.location.href = "../Login";
-  } else {
-    currentUser = user;
-    document.getElementById("welcome").innerText = "Welcome, " + (user.displayName || user.email);
-    // Load messages
-    onChildAdded(ref(db, 'messages'), (snap)=> renderMessage(snap.key, snap.val()));
-    onChildChanged(ref(db, 'messages'), (snap)=> updateMessage(snap.key, snap.val()));
-  }
-});
-
-// Logout
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-  await signOut(auth);
-  notify("Logged out", "success");
-  window.location.href = "../Login";
-});
-
-// Change Email
-document.getElementById("changeEmailBtn").addEventListener("click", async () => {
-  const newEmail = prompt("Enter new email:");
-  if (newEmail) {
-    try { 
-      await updateEmail(auth.currentUser, newEmail); 
-      notify("Email updated", "success"); 
-    }
-    catch(err){ notify(err.message, "error"); }
-  }
-});
-
-// Change Password
-document.getElementById("changePasswordBtn").addEventListener("click", async () => {
-  const newPass = prompt("Enter new password:");
-  if (newPass) {
-    try { 
-      await updatePassword(auth.currentUser, newPass); 
-      notify("Password updated", "success"); 
-    }
-    catch(err){ notify(err.message, "error"); }
-  }
-});
-
 // Emojis
 const emojis = ["😀","😁","😂","😍","😎","😢","😡","👍","🙏","🔥","❤️","🎉"];
 emojis.forEach(e=>{
@@ -91,14 +42,34 @@ emojiToggle.addEventListener('click', ()=> {
   emojiPicker.style.display = emojiPicker.style.display==='flex'?'none':'flex';
 });
 
+// Auth check
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "../Login/index.html";
+  } else {
+    currentUser = user;
+    document.getElementById("welcome").innerText = "Welcome, " + (user.displayName || user.email);
+
+    // Load messages
+    onChildAdded(ref(db, 'messages'), (snap)=> renderMessage(snap.key, snap.val()));
+    onChildChanged(ref(db, 'messages'), (snap)=> updateMessage(snap.key, snap.val()));
+  }
+});
+
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.href = "../Login/index.html";
+});
+
 // Send message
 async function sendMessage(){
   const text = msgInput.value.trim();
   if(!text && !pendingImage) return;
   const payload = {
-    uid:currentUser.uid,
-    username:currentUser.displayName || currentUser.email,
-    ts:Date.now()
+    uid: currentUser.uid,
+    username: currentUser.displayName || currentUser.email,
+    ts: Date.now()
   };
   if(pendingImage){
     payload.type='image'; payload.text=pendingImage;
@@ -115,7 +86,7 @@ msgInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 });
 
-// Image upload preview (as base64)
+// Image preview
 imgBtn.addEventListener('click',()=> fileInput.click());
 fileInput.addEventListener('change', e=>{
   const file=e.target.files[0];
@@ -174,11 +145,16 @@ function renderReactions(id,msg){
   reactionsDiv.innerHTML='';
   const reactions=msg.reactions||{};
   const counts={}; let myReaction=null;
-  for(const uid in reactions){ const em=reactions[uid]; if(!em) continue;
-    counts[em]=(counts[em]||0)+1; if(uid===currentUser?.uid) myReaction=em; }
+  for(const uid in reactions){ 
+    const em=reactions[uid]; 
+    if(!em) continue;
+    counts[em]=(counts[em]||0)+1; 
+    if(uid===currentUser?.uid) myReaction=em; 
+  }
   ["👍","😂","❤️","🔥","😢","😡"].forEach(em=>{
     const btn=document.createElement('span');
-    btn.className='reaction-btn'; if(myReaction===em) btn.classList.add('you');
+    btn.className='reaction-btn'; 
+    if(myReaction===em) btn.classList.add('you');
     btn.textContent=counts[em]?`${em} ${counts[em]}`:em;
     btn.onclick=()=>toggleReaction(id,em,myReaction);
     reactionsDiv.appendChild(btn);
