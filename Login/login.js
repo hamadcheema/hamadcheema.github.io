@@ -1,5 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
@@ -11,40 +11,45 @@ const firebaseConfig = {
   appId: "1:798871184058:web:c735bea9756f8109149883",
   measurementId: "G-QTCCWC70QH"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const notify = (msg, type = "error") => {
-  const box = document.getElementById("notification");
-  box.innerText = msg;
-  box.style.color = type === "success" ? "green" : "red";
-  setTimeout(() => (box.innerText = ""), 3000);
-};
+const loginForm = document.getElementById('loginForm');
+const googleBtn = document.getElementById('googleSignIn');
+const forgotBtn = document.getElementById('forgotPass');
+const banner = document.getElementById('banner');
 
-// Email/Password Login
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
+function showBanner(msg,type='success'){
+  banner.textContent=msg; banner.className=`banner ${type} show`;
+  setTimeout(()=> banner.className='banner',3000);
+}
+
+loginForm.addEventListener('submit', async e=>{
   e.preventDefault();
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
-
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    notify("Login successful!", "success");
-    setTimeout(() => window.location.href = "../Chat/index.html", 1500);
-  } catch (error) {
-    notify(error.message);
-  }
+  const email=document.getElementById('email').value;
+  const password=document.getElementById('password').value;
+  try{
+    const user=await signInWithEmailAndPassword(auth,email,password);
+    if(!user.user.emailVerified){
+      showBanner('Please verify your email first','error'); return;
+    }
+    window.location.href="../Chat/";
+  }catch(err){ showBanner(err.message,'error'); }
 });
 
-// Google Login
-const googleProvider = new GoogleAuthProvider();
-document.getElementById("googleLoginBtn").addEventListener("click", async () => {
-  try {
-    await signInWithPopup(auth, googleProvider);
-    notify("Google login successful!", "success");
-    setTimeout(() => window.location.href = "../Chat/index.html", 1500);
-  } catch (error) {
-    notify(error.message);
-  }
+googleBtn.addEventListener('click', async ()=>{
+  try{
+    const provider=new GoogleAuthProvider();
+    await signInWithPopup(auth,provider);
+    window.location.href="../Chat/";
+  }catch(err){ showBanner(err.message,'error'); }
+});
+
+forgotBtn.addEventListener('click', async ()=>{
+  const email=prompt("Enter your email for password reset:");
+  if(!email) return;
+  try{
+    await sendPasswordResetEmail(auth,email);
+    showBanner("Password reset email sent!");
+  }catch(err){ showBanner(err.message,'error'); }
 });
