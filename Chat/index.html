@@ -3,37 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baatly</title>
+<title>Baatly Chat</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-  <div class="header">
+<div class="chat-container">
+  <div class="chat-header">
     <h2 id="welcome">Welcome</h2>
-    <div class="menu-btn" id="menuBtn">☰</div>
-    <div class="menu-panel" id="menuPanel">
+    <div class="menu-btn">☰</div>
+    <div class="menu-panel">
       <button id="logoutBtn">Logout</button>
-      <button id="settingsBtn">Settings</button>
     </div>
   </div>
 
   <div id="messages"></div>
 
-  <div class="reply-preview" id="replyPreview" style="display:none">
-    <span id="replyText"></span>
-    <button id="cancelReply">✖️</button>
-  </div>
-
-  <div class="controls">
-    <input id="msgInput" placeholder="Type a message...">
-    <input type="file" id="fileInput" accept="image/*" style="display:none">
-    <button id="imgBtn">📷</button>
-    <button id="sendBtn">Send</button>
+  <div class="input-area">
+    <button id="imgBtn" class="icon-btn">📷</button>
+    <input id="fileInput" type="file" accept="image/*" style="display:none">
+    <input id="msgInput" placeholder="Type a message..."/>
+    <button id="sendBtn" class="send-btn">➡️</button>
   </div>
 
   <div class="preview" id="imgPreview" style="display:none"></div>
+  <div id="notifyContainer"></div>
 </div>
 
-<script type="module" src="chat.js"></script>
+<script type="module" src="script.js"></script>
 </body>
 </html>
