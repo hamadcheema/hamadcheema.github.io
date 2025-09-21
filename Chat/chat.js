@@ -88,23 +88,21 @@ fileInput.addEventListener('change',e=>{
 // Send message
 async function sendMessage(){
     const text = msgInput.value.trim();
-
-    if(!text && !pendingImage) return; // dono blank ho tu skip
+    if(!text && !pendingImage) return;
 
     const payload = {
         uid: currentUser.uid,
         username: currentUser.displayName || currentUser.email,
-        ts: Date.now()
+        ts: Date.now(),
+        photoURL: currentUser.photoURL || null
     };
 
     if(pendingImage){
         payload.type='image';
-        payload.text=pendingImage; // Base64
+        payload.text=pendingImage;
         pendingImage = null;
         imgPreview.style.display='none';
-    }
-
-    if(text && !payload.type){ // agar sirf text hai
+    }else{
         payload.type='text';
         payload.text=text;
     }
@@ -122,16 +120,9 @@ function renderMessage(id,msg){
 
     const avatar=document.createElement('img'); avatar.className='avatar';
 
-    // ✅ Google login users ka apna photoURL
-    if(msg.uid && msg.uid === currentUser.uid && currentUser.photoURL){
-        avatar.src=currentUser.photoURL;
-    }
-    // ✅ Agar message kisi aur Google user ka hai aur usne apna photoURL bheja
-    else if(msg.photoURL){
+    if(msg.photoURL){ // google login user ka apna photo
         avatar.src=msg.photoURL;
-    }
-    // ✅ Email login wale users ka random identicon
-    else{
+    }else{
         avatar.src="https://avatars.dicebear.com/api/identicon/"+encodeURIComponent(msg.username)+".svg";
     }
 
@@ -151,7 +142,6 @@ function renderMessage(id,msg){
     row.appendChild(bubble); messagesEl.appendChild(row); messagesEl.scrollTop=messagesEl.scrollHeight;
     renderReactions(id,msg);
 
-    // Fullscreen image
     if(msg.type==='image'){
         const img=row.querySelector('.chat-img');
         img.addEventListener('click',()=>{fullScreenImg.style.display='flex'; fullScreenImg.querySelector('img').src=msg.text;});
@@ -179,7 +169,7 @@ function renderReactions(id,msg){
     });
 }
 
-// Colored banner notification
+// Banner
 function showBanner(msg){
     banner.innerText=msg; banner.style.display='block';
     setTimeout(()=>{banner.style.display='none';},3000);
