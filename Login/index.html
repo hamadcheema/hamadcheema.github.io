@@ -11,7 +11,7 @@
       authDomain: "devchatbyhamad.firebaseapp.com",
       databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
       projectId: "devchatbyhamad",
-      storageBucket: "devchatbyhamad.firebasestorage.app",
+      storageBucket: "devchatbyhamad.appspot.com",
       messagingSenderId: "798871184058",
       appId: "1:798871184058:web:c735bea9756f8109149883",
       measurementId: "G-QTCCWC70QH"
@@ -32,7 +32,7 @@
             alert("❌ Please verify your email first.");
             return;
           }
-          window.location.href = "Chat";
+          window.location.href = "../Chat/index.html";
         } catch (err) {
           alert("❌ " + err.message);
         }
@@ -59,7 +59,6 @@
     <button type="submit">Login</button>
   </form>
   <p><a href="#" id="forgotBtn">Forgot Password?</a></p>
-  <p>Don’t have an account? <a href="Signup">Signup</a></p>
+  <p>Don’t have an account? <a href="../Signup/index.html">Signup</a></p>
 </body>
 </html>
-
