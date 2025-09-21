@@ -1,34 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Baatly Chat</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat App with Reply</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <h2 id="welcome">Welcome</h2>
-    <div class="menu-btn">☰</div>
-    <div class="menu-panel">
-      <button id="logoutBtn">Logout</button>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <h2>Chat App</h2>
+      <div class="menu-btn">☰</div>
+      <div class="menu-panel">
+        <button id="logoutBtn">Logout</button>
+      </div>
     </div>
+
+    <!-- Messages -->
+    <div id="messages"></div>
+
+    <!-- Reply Preview Bar -->
+    <div id="replyBar" class="reply-bar" style="display:none"></div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <input type="file" id="imgInput" style="display:none" accept="image/*"/>
+      <button class="icon-btn" onclick="document.getElementById('imgInput').click()">📷</button>
+      <input id="msgInput" placeholder="Type a message"/>
+      <button class="send-btn" id="sendBtn">➤</button>
+    </div>
+
+    <!-- Preview -->
+    <div id="imgPreview" class="preview" style="display:none"></div>
+
   </div>
 
-  <div id="messages"></div>
-
-  <div class="controls">
-    <button id="imgBtn" class="icon-btn">📷</button>
-    <input id="fileInput" type="file" accept="image/*" style="display:none">
-    <input id="msgInput" placeholder="Type a message..."/>
-    <button id="sendBtn" class="send-btn">➡️</button>
-  </div>
-  <div class="preview" id="imgPreview" style="display:none"></div>
-
+  <!-- Notify -->
   <div id="notifyContainer"></div>
-</div>
 
-<script type="module" src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
