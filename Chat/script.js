@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, onChildChanged, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getDatabase, ref, push, onChildAdded, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -38,11 +38,16 @@ function notify(msg,type='success'){
 
 onAuthStateChanged(auth,user=>{
   if(!user) window.location.href="../Login";
-  else currentUser=user;
+  else {
+    currentUser=user;
 
-  const messagesRef = ref(db,'messages');
-  onChildAdded(messagesRef, snap=>renderMessage(snap.key,snap.val()));
-  onChildChanged(messagesRef, snap=>updateMessage(snap.key,snap.val()));
+    // sabhi messages listen karo
+    onChildAdded(ref(db,'messages'), snap=>{
+      renderMessage(snap.key,snap.val());
+      // sirf us message ke reactions ko realtime listen karo
+      listenReactions(snap.key);
+    });
+  }
 });
 
 menuBtn.addEventListener('click', ()=>menuPanel.style.display=menuPanel.style.display==='flex'?'none':'flex');
@@ -96,10 +101,10 @@ function renderMessage(id,msg){
   if(msg.text) bubble.innerHTML += `<div>${msg.text}</div>`;
   row.appendChild(bubble);
 
-  // Reactions
+  // Reactions container
   const reactionsDiv=document.createElement('div'); reactionsDiv.className='reactions';
+  reactionsDiv.dataset.msg=id;
   bubble.appendChild(reactionsDiv);
-  renderReactions(reactionsDiv, id, msg.reactions||{});
 
   messagesEl.appendChild(row);
   messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -115,14 +120,16 @@ function renderMessage(id,msg){
   }
 }
 
-function updateMessage(id,msg){
-  const row=document.querySelector(`.msg-row[data-id="${id}"]`);
-  if(!row) return;
-  const reactionsDiv=row.querySelector('.reactions');
-  renderReactions(reactionsDiv,id,msg.reactions||{});
+// realtime listener for reactions
+function listenReactions(msgId){
+  const reactRef = ref(db, `messages/${msgId}/reactions`);
+  onValue(reactRef, snap=>{
+    const reactions = snap.val() || {};
+    const container = document.querySelector(`.reactions[data-msg="${msgId}"]`);
+    if(container) renderReactions(container,msgId,reactions);
+  });
 }
 
-// Reactions
 function renderReactions(container,msgId,reactions){
   container.innerHTML='';
   const emojis=["👍","😂","❤️","🔥","😢","😡"];
@@ -144,3 +151,13 @@ function renderReactions(container,msgId,reactions){
     container.appendChild(btn);
   });
 }
+
+/* -----------------
+   Mobile Sticky Fix
+------------------*/
+function fixViewport(){
+  document.querySelector('.container').style.height = window.innerHeight + 'px';
+}
+window.addEventListener('resize', fixViewport);
+window.addEventListener('orientationchange', fixViewport);
+fixViewport();
