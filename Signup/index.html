@@ -1,165 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Signup - DevChat</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f9;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    form, .social-signup, .phone-signup {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      margin-bottom: 16px;
-      width: 300px;
-      text-align: center;
-    }
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    button {
-      width: 95%;
-      padding: 10px;
-      background: #667eea;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-    button:hover { background: #5563c1; }
-    .google-btn {
-      background: #fff;
-      color: #444;
-      border: 1px solid #ccc;
-      font-weight: bold;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup</title>
+  <script type="module">
+    // Import Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+    // Your Firebase Config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // Signup with Email/Password
+    document.addEventListener("DOMContentLoaded", () => {
+      const signupForm = document.getElementById("signupForm");
+
+      signupForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            alert("Signup successful: " + user.email);
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      });
+
+      // Google Signup
+      document.getElementById("googleSignup").addEventListener("click", () => {
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            const user = result.user;
+            alert("Google Signup successful: " + user.email);
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      });
+    });
+  </script>
 </head>
 <body>
   <h2>Signup</h2>
-
-  <!-- Email Signup -->
   <form id="signupForm">
-    <input type="text" id="username" placeholder="Username" required><br>
-    <input type="email" id="email" placeholder="Email" required><br>
-    <input type="password" id="password" placeholder="Password" required><br>
+    <input type="text" id="name" placeholder="Full Name" required><br><br>
+    <input type="email" id="email" placeholder="Email" required><br><br>
+    <input type="password" id="password" placeholder="Password" required><br><br>
     <button type="submit">Signup</button>
   </form>
-
-  <!-- Google Signup -->
-  <div class="social-signup">
-    <button id="googleSignup" class="google-btn">✨ Signup with Google</button>
-  </div>
-
-  <!-- Phone Signup -->
-  <div class="phone-signup">
-    <input type="text" id="phoneNumber" placeholder="+92xxxxxxxxxx"><br>
-    <div id="recaptcha-container"></div>
-    <button id="sendOtp">Send OTP</button>
-    <input type="text" id="otp" placeholder="Enter OTP" style="display:none;"><br>
-    <button id="verifyOtp" style="display:none;">Verify OTP</button>
-  </div>
-
-  <p>Already have an account? <a href="../Login/">Login</a></p>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { 
-      getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, 
-      GoogleAuthProvider, signInWithPopup, 
-      RecaptchaVerifier, signInWithPhoneNumber 
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-    // ✅ Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
-      authDomain: "devchatbyhamad.firebaseapp.com",
-      databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
-      projectId: "devchatbyhamad",
-      storageBucket: "devchatbyhamad.appspot.com",
-      messagingSenderId: "798871184058",
-      appId: "1:798871184058:web:c735bea9756f8109149883",
-      measurementId: "G-QTCCWC70QH"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // 🔹 Email Signup
-    document.getElementById("signupForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const username = document.getElementById("username").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        await updateProfile(userCredential.user, { displayName: username });
-        await sendEmailVerification(userCredential.user);
-        alert("Signup successful! Please check your email for verification.");
-        window.location.href = "../Login/";
-      } catch (error) {
-        alert("Signup failed: " + error.message);
-      }
-    });
-
-    // 🔹 Google Signup
-    document.getElementById("googleSignup").addEventListener("click", async () => {
-      const provider = new GoogleAuthProvider();
-      try {
-        await signInWithPopup(auth, provider);
-        alert("Google signup successful!");
-        window.location.href = "../Chat/";
-      } catch (error) {
-        alert("Google signup failed: " + error.message);
-      }
-    });
-
-    // 🔹 Phone Signup
-    let confirmationResult;
-
-    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-      size: 'normal',
-      callback: (response) => { console.log("Recaptcha verified"); }
-    });
-
-    document.getElementById("sendOtp").addEventListener("click", async () => {
-      const phoneNumber = document.getElementById("phoneNumber").value;
-      try {
-        confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier);
-        alert("OTP sent!");
-        document.getElementById("otp").style.display = "block";
-        document.getElementById("verifyOtp").style.display = "block";
-      } catch (error) {
-        alert("Error sending OTP: " + error.message);
-      }
-    });
-
-    document.getElementById("verifyOtp").addEventListener("click", async () => {
-      const code = document.getElementById("otp").value;
-      try {
-        await confirmationResult.confirm(code);
-        alert("Phone signup successful!");
-        window.location.href = "../Chat/";
-      } catch (error) {
-        alert("OTP verification failed: " + error.message);
-      }
-    });
-  </script>
+  <br>
+  <button id="googleSignup">Signup with Google</button>
 </body>
 </html>
