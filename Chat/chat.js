@@ -1,141 +1,151 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-// ✅ Firebase Config
+// Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
-  authDomain: "devchatbyhamad.firebaseapp.com",
-  databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
-  projectId: "devchatbyhamad",
-  storageBucket: "devchatbyhamad.appspot.com",
-  messagingSenderId: "798871184058",
-  appId: "1:798871184058:web:c735bea9756f8109149883",
-  measurementId: "G-QTCCWC70QH"
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  databaseURL: "YOUR_DB",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_BUCKET",
+  messagingSenderId: "YOUR_ID",
+  appId: "YOUR_APPID"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth(app);
+firebase.initializeApp(firebaseConfig);
 
-const messagesEl = document.getElementById('messages');
-const msgInput = document.getElementById('msgInput');
-const sendBtn = document.getElementById('sendBtn');
-const fileInput = document.getElementById('fileInput');
-const imgBtn = document.getElementById('imgBtn');
-const imgPreview = document.getElementById('imgPreview');
-const logoutBtn = document.getElementById("logoutBtn");
+const auth = firebase.auth();
+const db = firebase.database();
+
+const messagesEl = document.getElementById("messages");
+const inputEl = document.getElementById("message-input");
+const sendBtn = document.getElementById("send-btn");
+const fileInput = document.getElementById("file-input");
+const toggleBtn = document.getElementById("options-btn");
+const optionsPanel = document.getElementById("options-panel");
+const logoutBtn = document.getElementById("logout-btn");
 
 let currentUser = null;
-let pendingImage = null;
 
-// ✅ Auth check
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.href = "../Login/index.html";
-  } else {
+// 🔹 Auth state
+auth.onAuthStateChanged(user => {
+  if (user) {
     currentUser = user;
-    document.getElementById("welcome").innerText =
-      "Welcome, " + (user.displayName || user.email);
-
-    // Load messages
-    onChildAdded(ref(db, 'messages'), (snap) => renderMessage(snap.key, snap.val()));
+    loadMessages();
+  } else {
+    // redirect to login
+    window.location = "login.html";
   }
 });
 
-// ✅ Logout
-logoutBtn.addEventListener("click", async () => {
-  await signOut(auth);
-  window.location.href = "../Login/index.html";
+// 🔹 Logout
+logoutBtn.onclick = () => {
+  auth.signOut();
+};
+
+// 🔹 Toggle options
+toggleBtn.onclick = () => {
+  optionsPanel.classList.toggle("show");
+};
+
+// 🔹 Send message (text only)
+sendBtn.onclick = sendMessage;
+inputEl.addEventListener("keypress", e => {
+  if (e.key === "Enter") sendMessage();
 });
 
-// ✅ Send message (Text + Image both allowed)
-async function sendMessage() {
-  const text = msgInput.value.trim();
+function sendMessage() {
+  const text = inputEl.value.trim();
+  const file = fileInput.files[0];
 
-  if (!text && !pendingImage) return;
+  if (!text && !file) return;
 
-  const payload = {
-    uid: currentUser.uid,
-    username: currentUser.displayName || currentUser.email,
-    photoURL: currentUser.photoURL || null,
-    ts: Date.now(),
-    text: text || "",
-    image: pendingImage || null
-  };
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      db.ref("messages").push({
+        uid: currentUser.uid,
+        username: currentUser.displayName || "Guest",
+        photoURL: currentUser.photoURL || null,
+        ts: Date.now(),
+        type: "image",
+        text: text || "",
+        image: e.target.result
+      });
+    };
+    reader.readAsDataURL(file);
+  } else {
+    db.ref("messages").push({
+      uid: currentUser.uid,
+      username: currentUser.displayName || "Guest",
+      photoURL: currentUser.photoURL || null,
+      ts: Date.now(),
+      type: "text",
+      text: text
+    });
+  }
 
-  await push(ref(db, 'messages'), payload);
-
-  msgInput.value = "";
+  inputEl.value = "";
   fileInput.value = "";
-  imgPreview.style.display = "none";
-  pendingImage = null;
 }
 
-sendBtn.addEventListener('click', sendMessage);
-msgInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-});
+// 🔹 Load messages
+function loadMessages() {
+  db.ref("messages").on("child_added", snap => {
+    const msg = snap.val();
+    renderMessage(snap.key, msg);
+  });
+}
 
-// ✅ Image select preview
-imgBtn.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    pendingImage = ev.target.result;
-    imgPreview.innerHTML = `<img src="${pendingImage}" alt="preview" style="max-width:120px;border-radius:8px"/>`;
-    imgPreview.style.display = "block";
-  };
-  reader.readAsDataURL(file);
-});
-
-// ✅ Render message
+// 🔹 Render message
 function renderMessage(id, msg) {
-  const row = document.createElement('div');
-  row.className = 'msg-row';
-  row.id = 'msg-' + id;
+  const row = document.createElement("div");
+  row.className = "msg-row";
+  row.id = "msg-" + id;
 
-  const avatar = document.createElement('img');
-  avatar.className = 'avatar';
+  const avatar = document.createElement("img");
+  avatar.className = "avatar";
 
-  // 🔹 Avatar logic
   if (msg.photoURL) {
     avatar.src = msg.photoURL;
   } else {
-    avatar.src = "https://avatars.dicebear.com/api/identicon/" + encodeURIComponent(msg.username) + ".svg";
+    avatar.src =
+      "https://avatars.dicebear.com/api/identicon/" +
+      encodeURIComponent(msg.username || "user") +
+      ".svg";
   }
 
   row.appendChild(avatar);
 
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble';
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
   bubble.innerHTML = `
     <div class="meta">
-      ${msg.username} 
+      ${msg.username || "Unknown"} 
       <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span>
     </div>
   `;
 
-  // 🔹 Show text (if any)
-  if (msg.text) {
+  // ✅ Case: text-only
+  if (msg.type === "text" && msg.text) {
     bubble.innerHTML += `<div>${msg.text}</div>`;
   }
 
-  // 🔹 Show image (if any)
-  if (msg.image) {
+  // ✅ Case: image-only (old format)
+  if (msg.type === "image" && msg.image) {
+    if (msg.text) bubble.innerHTML += `<div>${msg.text}</div>`;
     const imgEl = document.createElement("img");
     imgEl.src = msg.image;
     imgEl.className = "chat-img";
     imgEl.style.cursor = "pointer";
-
-    // Full screen view
     imgEl.onclick = () => openImageFullscreen(msg.image);
+    bubble.appendChild(imgEl);
+  }
 
+  // ✅ Case: old messages jahan sirf text me hi base64 image thi
+  if (msg.type === "image" && !msg.image && msg.text) {
+    const imgEl = document.createElement("img");
+    imgEl.src = msg.text;
+    imgEl.className = "chat-img";
+    imgEl.style.cursor = "pointer";
+    imgEl.onclick = () => openImageFullscreen(msg.text);
     bubble.appendChild(imgEl);
   }
 
@@ -144,9 +154,10 @@ function renderMessage(id, msg) {
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
-// ✅ Fullscreen image viewer
+// 🔹 Fullscreen Image Viewer
 function openImageFullscreen(src) {
-  const overlay = document.createElement("div");
+  let overlay = document.createElement("div");
+  overlay.id = "img-overlay";
   overlay.style.position = "fixed";
   overlay.style.top = 0;
   overlay.style.left = 0;
@@ -154,27 +165,31 @@ function openImageFullscreen(src) {
   overlay.style.height = "100%";
   overlay.style.background = "rgba(0,0,0,0.9)";
   overlay.style.display = "flex";
-  overlay.style.alignItems = "center";
   overlay.style.justifyContent = "center";
+  overlay.style.alignItems = "center";
   overlay.style.zIndex = 9999;
 
-  const img = document.createElement("img");
+  let img = document.createElement("img");
   img.src = src;
   img.style.maxWidth = "90%";
   img.style.maxHeight = "90%";
   img.style.borderRadius = "10px";
+  overlay.appendChild(img);
 
-  const closeBtn = document.createElement("span");
-  closeBtn.innerText = "✖";
+  let closeBtn = document.createElement("span");
+  closeBtn.innerHTML = "✖";
   closeBtn.style.position = "absolute";
   closeBtn.style.top = "20px";
   closeBtn.style.right = "30px";
   closeBtn.style.fontSize = "30px";
-  closeBtn.style.color = "#fff";
+  closeBtn.style.color = "white";
   closeBtn.style.cursor = "pointer";
-  closeBtn.onclick = () => document.body.removeChild(overlay);
-
-  overlay.appendChild(img);
   overlay.appendChild(closeBtn);
+
+  closeBtn.onclick = () => document.body.removeChild(overlay);
+  overlay.onclick = e => {
+    if (e.target === overlay) document.body.removeChild(overlay);
+  };
+
   document.body.appendChild(overlay);
 }
