@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baatly kr</title>
+<title>Baatly Chat</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-  <div class="header">
+<div class="chat-container">
+  <div class="chat-header">
     <h2 id="welcome">Welcome</h2>
     <div class="menu-btn">☰</div>
     <div class="menu-panel">
@@ -18,14 +18,14 @@
 
   <div id="messages"></div>
 
-  <div class="controls">
+  <div class="input-area">
     <button id="imgBtn" class="icon-btn">📷</button>
     <input id="fileInput" type="file" accept="image/*" style="display:none">
     <input id="msgInput" placeholder="Type a message..."/>
     <button id="sendBtn" class="send-btn">➡️</button>
   </div>
-  <div class="preview" id="imgPreview" style="display:none"></div>
 
+  <div class="preview" id="imgPreview" style="display:none"></div>
   <div id="notifyContainer"></div>
 </div>
 
