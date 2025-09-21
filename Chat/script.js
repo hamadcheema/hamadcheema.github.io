@@ -1,107 +1,120 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+// ---- Dummy Firebase-like setup (replace with real Firebase if needed) ----
+let currentUser = { uid: "u1", displayName: "Me" };
+let replyTo = null;
+let pendingImage = null;
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
-  authDomain: "devchatbyhamad.firebaseapp.com",
-  databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
-  projectId: "devchatbyhamad",
-  storageBucket: "devchatbyhamad.appspot.com",
-  messagingSenderId: "798871184058",
-  appId: "1:798871184058:web:c735bea9756f8109149883",
-  measurementId: "G-QTCCWC70QH"
-};
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth(app);
+// Elements
+const messagesEl = document.getElementById("messages");
+const msgInput = document.getElementById("msgInput");
+const sendBtn = document.getElementById("sendBtn");
+const imgInput = document.getElementById("imgInput");
+const imgPreview = document.getElementById("imgPreview");
 
-const messagesEl = document.getElementById('messages');
-const msgInput = document.getElementById('msgInput');
-const sendBtn = document.getElementById('sendBtn');
-const fileInput = document.getElementById('fileInput');
-const imgBtn = document.getElementById('imgBtn');
-const imgPreview = document.getElementById('imgPreview');
-const menuBtn = document.querySelector('.menu-btn');
-const menuPanel = document.querySelector('.menu-panel');
-const logoutBtn = document.getElementById('logoutBtn');
-const notifyContainer = document.getElementById('notifyContainer');
-
-let currentUser=null;
-let pendingImage=null;
-
-function notify(msg,type='success'){
-  const div=document.createElement('div'); div.className=`notification ${type}`; div.textContent=msg;
-  notifyContainer.appendChild(div);
-  setTimeout(()=>div.remove(),3000);
+// Notify
+function notify(msg, type="success"){
+  const box=document.createElement("div");
+  box.className=`notification ${type}`;
+  box.textContent=msg;
+  document.getElementById("notifyContainer").appendChild(box);
+  setTimeout(()=>box.remove(),3000);
 }
 
-onAuthStateChanged(auth,user=>{
-  if(!user) window.location.href="../Login";
-  else currentUser=user;
+// --------------------
+// Send Message
+// --------------------
+sendBtn.onclick = sendMessage;
+msgInput.addEventListener("keypress",(e)=>{if(e.key==="Enter") sendMessage();});
 
-  onChildAdded(ref(db,'messages'), snap=>renderMessage(snap.key,snap.val()));
-});
-
-menuBtn.addEventListener('click', ()=>menuPanel.style.display=menuPanel.style.display==='flex'?'none':'flex');
-logoutBtn.addEventListener('click', async()=>{ await signOut(auth); window.location.href="../Login"; });
-
-imgBtn.addEventListener('click', ()=>fileInput.click());
-fileInput.addEventListener('change', e=>{
-  const file = e.target.files[0]; if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    pendingImage = ev.target.result;
-    imgPreview.style.display='flex';
-    imgPreview.innerHTML = `<img src="${pendingImage}" alt="preview"/>`;
-  };
-  reader.readAsDataURL(file);
-});
-
-async function sendMessage(){
+function sendMessage(){
   const text = msgInput.value.trim();
-  if(!text && !pendingImage){ notify("Message empty","error"); return; }
+  if(!text && !pendingImage){notify("Message empty","error");return;}
 
-  const payload = {
-    uid:currentUser.uid,
-    username:currentUser.displayName||currentUser.email,
-    ts:Date.now(),
-    text:text||"",
-    img:pendingImage||null,
-    reactions:{}
+  const msg = {
+    id: Date.now(),
+    uid: currentUser.uid,
+    username: currentUser.displayName,
+    ts: Date.now(),
+    text: text || "",
+    img: pendingImage || null,
+    replyTo: replyTo
   };
-  await push(ref(db,'messages'),payload);
-  msgInput.value=''; pendingImage=null; imgPreview.style.display='none';
-  notify("Message sent");
+
+  renderMessage(msg.id, msg);
+
+  msgInput.value="";
+  imgPreview.style.display="none";
+  pendingImage=null;
+  replyTo=null;
+  document.getElementById("replyBar").style.display="none";
 }
 
-sendBtn.addEventListener('click', sendMessage);
-msgInput.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
-
+// --------------------
+// Render Message
+// --------------------
 function renderMessage(id,msg){
-  const row = document.createElement('div'); row.className='msg-row';
-  if(msg.uid===currentUser.uid) row.classList.add('self');
+  const row=document.createElement("div");
+  row.className="msg-row";
+  if(msg.uid===currentUser.uid) row.classList.add("self");
 
-  const avatar=document.createElement('img'); avatar.className='avatar';
-  avatar.src = msg.photoURL || `https://avatars.dicebear.com/api/identicon/${encodeURIComponent(msg.username)}.svg`;
+  const avatar=document.createElement("img");
+  avatar.className="avatar";
+  avatar.src=`https://avatars.dicebear.com/api/identicon/${encodeURIComponent(msg.username)}.svg`;
   row.appendChild(avatar);
 
-  const bubble=document.createElement('div'); bubble.className='bubble';
+  const bubble=document.createElement("div");
+  bubble.className="bubble";
   bubble.innerHTML=`<div class="meta">${msg.username} <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span></div>`;
-  if(msg.img) bubble.innerHTML += `<img src="${msg.img}" class="chat-img"/>`;
-  if(msg.text) bubble.innerHTML += `<div>${msg.text}</div>`;
-  row.appendChild(bubble);
 
-  messagesEl.appendChild(row);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
-
-  if(msg.img){
-    bubble.querySelector('.chat-img').addEventListener('click', ()=>{
-      const modal=document.createElement('div');
-      modal.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;z-index:1000;";
-      modal.innerHTML=`<img src="${msg.img}" style="max-width:90%;max-height:90%;border-radius:8px;"><span style="position:absolute;top:20px;right:30px;font-size:30px;color:#fff;cursor:pointer;">&times;</span>`;
-      document.body.appendChild(modal);
-      modal.querySelector('span').addEventListener('click', ()=>modal.remove());
-    });
+  if(msg.replyTo){
+    bubble.innerHTML+=`
+      <div class="reply-quote">
+        <strong>${msg.replyTo.username}</strong>: ${msg.replyTo.text ? msg.replyTo.text : "[Image]"}
+      </div>`;
   }
+
+  if(msg.img) bubble.innerHTML+=`<img src="${msg.img}" class="chat-img"/>`;
+  if(msg.text) bubble.innerHTML+=`<div>${msg.text}</div>`;
+
+  // reply button
+  const replyBtn=document.createElement("span");
+  replyBtn.className="reply-btn";
+  replyBtn.textContent="↩ Reply";
+  replyBtn.onclick=()=>{replyTo={id:msg.id,username:msg.username,text:msg.text||null,img:msg.img||null};showReplyBar();};
+  bubble.appendChild(replyBtn);
+
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop=messagesEl.scrollHeight;
 }
+
+// --------------------
+// Reply Preview Bar
+// --------------------
+function showReplyBar(){
+  const bar=document.getElementById("replyBar");
+  bar.style.display="flex";
+  bar.innerHTML=`
+    <div class="reply-preview">
+      Replying to <strong>${replyTo.username}</strong>: ${replyTo.text ? replyTo.text : "[Image]"}
+    </div>
+    <button id="cancelReply">✕</button>`;
+  document.getElementById("cancelReply").onclick=()=>{
+    replyTo=null;
+    bar.style.display="none";
+  };
+}
+
+// --------------------
+// Image Upload (local preview only)
+// --------------------
+imgInput.onchange=()=>{
+  const file=imgInput.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    pendingImage=e.target.result;
+    imgPreview.style.display="flex";
+    imgPreview.innerHTML=`<img src="${pendingImage}"/>`;
+  };
+  reader.readAsDataURL(file);
+};
