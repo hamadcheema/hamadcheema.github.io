@@ -1,42 +1,50 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { notify } from "../App/notify.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
-const firebaseConfig = { /* same config */ 
-  apiKey:"AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
-  authDomain:"devchatbyhamad.firebaseapp.com",
-  databaseURL:"https://devchatbyhamad-default-rtdb.firebaseio.com",
-  projectId:"devchatbyhamad",
-  storageBucket:"devchatbyhamad.appspot.com",
-  messagingSenderId:"798871184058",
-  appId:"1:798871184058:web:c735bea9756f8109149883"
+const firebaseConfig = {
+  apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
+  authDomain: "devchatbyhamad.firebaseapp.com",
+  databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
+  projectId: "devchatbyhamad",
+  storageBucket: "devchatbyhamad.appspot.com",
+  messagingSenderId: "798871184058",
+  appId: "1:798871184058:web:c735bea9756f8109149883",
+  measurementId: "G-QTCCWC70QH"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-document.getElementById("loginBtn").addEventListener("click", async ()=>{
-  const email = document.getElementById("email").value;
-  const pass = document.getElementById("password").value;
+const notify = (msg, type = "error") => {
+  const box = document.getElementById("notification");
+  box.innerText = msg;
+  box.style.color = type === "success" ? "green" : "red";
+  setTimeout(() => (box.innerText = ""), 3000);
+};
+
+// Email/Password Login
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("loginEmail").value;
+  const password = document.getElementById("loginPassword").value;
+
   try {
-    const res = await signInWithEmailAndPassword(auth, email, pass);
-    if(!res.user.emailVerified){
-      notify("Please verify your email first!", "error");
-      return;
-    }
-    notify("Welcome back!", "success");
-    setTimeout(()=> window.location.href="../Chat", 1000);
-  } catch(err){
-    notify(err.message, "error");
+    await signInWithEmailAndPassword(auth, email, password);
+    notify("Login successful!", "success");
+    setTimeout(() => window.location.href = "../Chat/index.html", 1500);
+  } catch (error) {
+    notify(error.message);
   }
 });
 
-document.getElementById("forgotBtn").addEventListener("click", async ()=>{
-  const email = document.getElementById("email").value;
-  if(!email) return notify("Enter email first!", "error");
+// Google Login
+const googleProvider = new GoogleAuthProvider();
+document.getElementById("googleLoginBtn").addEventListener("click", async () => {
   try {
-    await sendPasswordResetEmail(auth, email);
-    notify("Reset email sent!", "success");
-  } catch(err){
-    notify(err.message, "error");
+    await signInWithPopup(auth, googleProvider);
+    notify("Google login successful!", "success");
+    setTimeout(() => window.location.href = "../Chat/index.html", 1500);
+  } catch (error) {
+    notify(error.message);
   }
 });
