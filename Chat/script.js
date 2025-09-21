@@ -12,7 +12,6 @@ const firebaseConfig = {
   appId: "1:798871184058:web:c735bea9756f8109149883",
   measurementId: "G-QTCCWC70QH"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
@@ -23,111 +22,86 @@ const sendBtn = document.getElementById('sendBtn');
 const fileInput = document.getElementById('fileInput');
 const imgBtn = document.getElementById('imgBtn');
 const imgPreview = document.getElementById('imgPreview');
-
 const menuBtn = document.querySelector('.menu-btn');
 const menuPanel = document.querySelector('.menu-panel');
 const logoutBtn = document.getElementById('logoutBtn');
 const notifyContainer = document.getElementById('notifyContainer');
 
-let currentUser = null;
-let pendingImage = null;
+let currentUser=null;
+let pendingImage=null;
 
-// Notification helper
-function notify(msg, type='success'){
-  const div = document.createElement('div');
-  div.className = `notification ${type}`;
-  div.textContent = msg;
+function notify(msg,type='success'){
+  const div=document.createElement('div'); div.className=`notification ${type}`; div.textContent=msg;
   notifyContainer.appendChild(div);
-  setTimeout(()=> div.remove(), 3000);
+  setTimeout(()=>div.remove(),3000);
 }
 
-// Auth
-onAuthStateChanged(auth, user=>{
+onAuthStateChanged(auth,user=>{
   if(!user) window.location.href="../Login";
-  else{
-    currentUser = user;
-    document.getElementById("welcome").textContent = "Welcome, " + (user.displayName || user.email);
+  else currentUser=user;
 
-    // Listen for messages
-    onChildAdded(ref(db,'messages'), snap=> renderMessage(snap.key, snap.val()));
-  }
+  onChildAdded(ref(db,'messages'), snap=>renderMessage(snap.key,snap.val()));
 });
 
-// Menu toggle
-menuBtn.addEventListener('click', ()=> menuPanel.style.display = menuPanel.style.display==='flex'?'none':'flex');
+menuBtn.addEventListener('click', ()=>menuPanel.style.display=menuPanel.style.display==='flex'?'none':'flex');
 logoutBtn.addEventListener('click', async()=>{ await signOut(auth); window.location.href="../Login"; });
 
-// Image select
-imgBtn.addEventListener('click', ()=> fileInput.click());
+imgBtn.addEventListener('click', ()=>fileInput.click());
 fileInput.addEventListener('change', e=>{
-  const file = e.target.files[0];
-  if(!file) return;
+  const file = e.target.files[0]; if(!file) return;
   const reader = new FileReader();
-  reader.onload = ev=>{
+  reader.onload = ev => {
     pendingImage = ev.target.result;
-    imgPreview.style.display = 'flex';
+    imgPreview.style.display='flex';
     imgPreview.innerHTML = `<img src="${pendingImage}" alt="preview"/>`;
-  }
+  };
   reader.readAsDataURL(file);
 });
 
-// Send message
 async function sendMessage(){
   const text = msgInput.value.trim();
   if(!text && !pendingImage){ notify("Message empty","error"); return; }
 
   const payload = {
-    uid: currentUser.uid,
-    username: currentUser.displayName||currentUser.email,
-    ts: Date.now(),
-    text: text||"",
-    img: pendingImage||null,
+    uid:currentUser.uid,
+    username:currentUser.displayName||currentUser.email,
+    ts:Date.now(),
+    text:text||"",
+    img:pendingImage||null,
     reactions:{}
   };
-
-  await push(ref(db,'messages'), payload);
-
-  msgInput.value='';
-  pendingImage = null;
-  imgPreview.style.display='none';
+  await push(ref(db,'messages'),payload);
+  msgInput.value=''; pendingImage=null; imgPreview.style.display='none';
   notify("Message sent");
 }
 
 sendBtn.addEventListener('click', sendMessage);
-msgInput.addEventListener('keydown', e=>{
-  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }
-});
+msgInput.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
 
-// Render messages
-function renderMessage(id, msg){
-  const row = document.createElement('div');
-  row.className = 'msg-row';
-  if(msg.uid === currentUser.uid) row.classList.add('self');
+function renderMessage(id,msg){
+  const row = document.createElement('div'); row.className='msg-row';
+  if(msg.uid===currentUser.uid) row.classList.add('self');
 
-  const avatar = document.createElement('img');
-  avatar.className = 'avatar';
+  const avatar=document.createElement('img'); avatar.className='avatar';
   avatar.src = msg.photoURL || `https://avatars.dicebear.com/api/identicon/${encodeURIComponent(msg.username)}.svg`;
   row.appendChild(avatar);
 
-  const bubble = document.createElement('div');
-  bubble.className = 'bubble';
-  bubble.innerHTML = `<div class="meta">${msg.username} <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span></div>`;
+  const bubble=document.createElement('div'); bubble.className='bubble';
+  bubble.innerHTML=`<div class="meta">${msg.username} <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span></div>`;
   if(msg.img) bubble.innerHTML += `<img src="${msg.img}" class="chat-img"/>`;
   if(msg.text) bubble.innerHTML += `<div>${msg.text}</div>`;
-
   row.appendChild(bubble);
+
   messagesEl.appendChild(row);
   messagesEl.scrollTop = messagesEl.scrollHeight;
 
-  // Image modal
   if(msg.img){
     bubble.querySelector('.chat-img').addEventListener('click', ()=>{
-      const modal = document.createElement('div');
-      modal.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;z-index:1000;";
-      modal.innerHTML = `<img src="${msg.img}" style="max-width:90%;max-height:90%;border-radius:12px;">
-      <span style="position:absolute;top:20px;right:30px;font-size:30px;color:#fff;cursor:pointer;">&times;</span>`;
+      const modal=document.createElement('div');
+      modal.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;z-index:1000;";
+      modal.innerHTML=`<img src="${msg.img}" style="max-width:90%;max-height:90%;border-radius:8px;"><span style="position:absolute;top:20px;right:30px;font-size:30px;color:#fff;cursor:pointer;">&times;</span>`;
       document.body.appendChild(modal);
-      modal.querySelector('span').addEventListener('click', ()=> modal.remove());
+      modal.querySelector('span').addEventListener('click', ()=>modal.remove());
     });
   }
 }
