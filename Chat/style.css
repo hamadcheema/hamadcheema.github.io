@@ -3,7 +3,12 @@ body {background:#f4f4f9; color:#333;}
 button {cursor:pointer; transition:0.3s; outline:none;}
 button:hover {opacity:0.9;}
 
-.container {max-width:900px; margin:20px auto; background:#fff; border-radius:12px; box-shadow:0 8px 26px rgba(0,0,0,0.1); padding:0; display:flex; flex-direction:column; height:90vh;}
+.container {
+  max-width:900px; margin:20px auto; background:#fff;
+  border-radius:12px; box-shadow:0 8px 26px rgba(0,0,0,0.1);
+  display:flex; flex-direction:column; height:90vh;
+}
+
 .header {display:flex; justify-content:space-between; align-items:center; padding:10px 20px; background:#667eea; color:#fff; border-radius:12px 12px 0 0; position:relative;}
 .header h2 {font-size:20px;}
 .menu-btn {font-size:24px; cursor:pointer;}
@@ -14,19 +19,19 @@ button:hover {opacity:0.9;}
 #messages {flex:1; overflow-y:auto; padding:12px; background:#fafbfd;}
 .msg-row {display:flex; gap:10px; margin-bottom:12px; align-items:flex-start; opacity:0; transform:translateX(-20px); transition:0.3s;}
 .msg-row.slide-in {opacity:1; transform:translateX(0);}
-.avatar {width:38px; height:38px; border-radius:50%;}
+.avatar {width:38px; height:38px; border-radius:50%; object-fit:cover;}
 .bubble {background:#fff; padding:10px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.03); min-width:70px; max-width:74%;}
 .meta {font-weight:700;color:#042a57;margin-bottom:4px;font-size:13px;}
 .time {font-weight:400;color:#666;font-size:11px;margin-left:8px;}
 .chat-img {max-width:220px;border-radius:8px;display:block;margin-top:6px;cursor:pointer;}
+
 .controls {display:flex;gap:6px;align-items:center;padding:8px;background:#fff;border-top:1px solid #ddd;}
 #msgInput {flex:1;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:14px;}
-#emojiPicker {display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;max-height:120px;overflow:auto;opacity:0; transition:0.3s;}
-#emojiPicker.show {opacity:1;}
-#emojiPicker span {cursor:pointer;padding:6px;border-radius:6px;background:#f0f0f0;font-size:18px;}
 .preview {margin:6px 8px;}
 .preview img {max-width:100px;border-radius:8px;display:block;margin-bottom:4px;}
-.notification {position:fixed;top:10px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:6px;color:#fff;font-weight:600;opacity:0; transition:0.3s;}
-.notification.show {opacity:1;}
-.notification.success {background:#38a169;}
-.notification.error {background:#e53e3e;}
+
+/* Responsive */
+@media (max-width:600px){
+  .container{height:95vh;}
+  .bubble{max-width:85%;}
+}
