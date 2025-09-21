@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Firebase Action Handler — verifyEmail</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; display:flex; align-items:center; justify-content:center; min-height:100vh; background:#f7fafc; margin:0 }
+    .card { background: white; padding:24px; border-radius:12px; box-shadow:0 6px 18px rgba(20,20,40,0.08); max-width:720px; width:100%; text-align:center }
+    h1 { margin:0 0 12px 0 }
+    p { margin:8px 0 }
+    .btn { display:inline-block; padding:8px 14px; border-radius:8px; background:#1f2937; color:white; text-decoration:none }
+    .muted { color:#6b7280 }
+    pre { text-align:left; background:#f3f4f6; padding:12px; border-radius:8px; overflow:auto }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 id="title">Processing…</h1>
+    <p id="desc">Please wait while we verify your email.</p>
+    <p class="muted" id="debug" style="display:none"></p>
+    <p style="margin-top:14px"><a id="nextBtn" class="btn" href="#" style="display:none">Continue</a></p>
+  </div>
+
+  <script type="module">
+    // =====================
+    // IMPORTANT: Replace the firebaseConfig object below with your project's config
+    // You can find this in Firebase Console -> Project Settings -> SDK Setup and Configuration (Web)
+    // =====================
+
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+    import { getAuth, applyActionCode } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+
+    // --- EDIT THIS: your Firebase config ---
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      // other fields as provided by Firebase
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Elements
+    const titleEl = document.getElementById('title');
+    const descEl = document.getElementById('desc');
+    const debugEl = document.getElementById('debug');
+    const nextBtn = document.getElementById('nextBtn');
+
+    // Read query params that Firebase provides in the verification email link
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get('mode');           // action mode, e.g. "verifyEmail"
+    const oobCode = params.get('oobCode');     // the action code you must apply
+    const continueUrl = params.get('continueUrl'); // optional continueUrl
+
+    function showDebug(msg) {
+      debugEl.style.display = 'block';
+      debugEl.textContent = msg;
+    }
+
+    function showError(msg) {
+      titleEl.textContent = 'Verification failed';
+      descEl.textContent = msg;
+      nextBtn.style.display = 'inline-block';
+      nextBtn.textContent = 'Go to Login';
+      nextBtn.href = '/login';
+    }
+
+    function showSuccess(msg, redirectTo) {
+      titleEl.textContent = 'Email verified ✓';
+      descEl.textContent = msg;
+      nextBtn.style.display = 'inline-block';
+      nextBtn.textContent = 'Continue';
+      nextBtn.href = redirectTo || '/';
+    }
+
+    // Handler for verifyEmail mode
+    async function handleVerifyEmail(code) {
+      try {
+        await applyActionCode(auth, code);
+        // Success — show message and redirect
+        const redirectTo = continueUrl || '/login';
+        showSuccess('Your email has been verified. Redirecting...', redirectTo);
+        // small delay so user sees message
+        setTimeout(() => { window.location.href = redirectTo; }, 1800);
+      } catch (err) {
+        console.error('applyActionCode error', err);
+        // Map some common Firebase error codes to friendly messages
+        let friendly = 'An error occurred while verifying your email.';
+        if (err && err.code) {
+          switch (err.code) {
+            case 'auth/invalid-action-code':
+              friendly = 'Invalid or already-used link.';
+              break;
+            case 'auth/expired-action-code':
+              friendly = 'This verification link has expired.';
+              break;
+            case 'auth/user-disabled':
+              friendly = 'This user account has been disabled.';
+              break;
+            default:
+              friendly = err.message || friendly;
+          }
+        }
+        showError(friendly);
+        showDebug(JSON.stringify(err));
+      }
+    }
+
+    // Basic routing
+    (function init() {
+      if (mode === 'verifyEmail' && oobCode) {
+        titleEl.textContent = 'Verifying your email…';
+        descEl.textContent = 'Please wait — this will only take a second.';
+        handleVerifyEmail(oobCode);
+      } else {
+        // Not a verification link — show instructions
+        titleEl.textContent = 'No verification code found';
+        descEl.innerHTML = `This page expects an email verification link from Firebase.<br/>If you opened this page directly, please use the verification link we emailed you.`;
+        nextBtn.style.display = 'inline-block';
+        nextBtn.textContent = 'Go to Home';
+        nextBtn.href = '/';
+        showDebug('Query params: ' + window.location.search);
+      }
+    })();
+
+    // -------------------------------
+    // Optional: If you want to also support other modes (resetPassword, recoverEmail),
+    // add handling here using the appropriate Firebase Auth functions.
+    // -------------------------------
+
+  </script>
+
+  <!--
+    DEPLOY NOTES (short):
+
+    1) Add your custom domain to Firebase Console -> Authentication -> Authorized domains.
+    2) In Firebase Console -> Authentication -> Templates, set the Custom action URL to:
+       https://yourdomain.com/__/auth/action
+       (or exactly where you host this file)
+    3) Deploy this HTML to that exact path on your site. For example with Firebase Hosting:
+       Put this file at public/__/auth/action/index.html
+       and add a firebase.json rewrite if needed:
+
+       "hosting": {
+         "public": "public",
+         "rewrites": [
+           { "source": "/__/auth/action", "destination": "/__/auth/action/index.html" },
+           { "source": "/__/auth/action/**", "destination": "/__/auth/action/index.html" }
+         ]
+       }
+
+    4) Test flow:
+       - Create a user and call sendEmailVerification(user) from your app.
+       - Click the link in the email — it should open this page and verify the email.
+
+    5) Troubleshooting:
+       - "Invalid or expired link" => make sure link hasn't been used/expired.
+       - Check browser console for errors and ensure firebaseConfig is correct.
+       - Make sure your site domain is added to Authorized domains in Firebase.
+
+    If you want a React/Next.js version or one that handles resetPassword too, tell me and I'll provide it.
+  -->
+</body>
+</html>
