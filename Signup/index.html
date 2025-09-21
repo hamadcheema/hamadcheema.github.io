@@ -39,7 +39,8 @@ import {
   GoogleAuthProvider, 
   signInWithPopup, 
   updateProfile, 
-  sendEmailVerification 
+  sendEmailVerification, 
+  signOut 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -74,13 +75,17 @@ signupBtn.onclick=async()=>{
   loading.style.display='block';
   try{
     const userCred=await createUserWithEmailAndPassword(auth,emailEl.value,passEl.value);
+    
     if(nameEl.value) await updateProfile(userCred.user,{displayName:nameEl.value});
     
-    // ✅ Send email verification
+    // ✅ send verification mail
     await sendEmailVerification(userCred.user);
-    notify("Signup successful ✅ Check your email to verify your account.","success");
+
+    notify("✅ Signup successful! Please verify your email before login.");
     
-    // ❌ No redirect until email verified
+    // ❌ don’t allow unverified user to stay logged in
+    await signOut(auth);
+
   }catch(err){ notify(err.message,'error'); }
   finally{ loading.style.display='none'; }
 };
