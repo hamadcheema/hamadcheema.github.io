@@ -85,7 +85,7 @@
       try {
         await applyActionCode(auth, code);
         // Success — show message and redirect
-        const redirectTo = continueUrl || '/login';
+        const redirectTo = continueUrl || '/Login';
         showSuccess('Your email has been verified. Redirecting...', redirectTo);
         // small delay so user sees message
         setTimeout(() => { window.location.href = redirectTo; }, 1800);
