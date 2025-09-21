@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, set, onChildChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-import { getAuth, onAuthStateChanged, signOut, updateEmail, updatePassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getDatabase, ref, push, onChildAdded, onChildChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 // Firebase config
 const firebaseConfig = {
@@ -29,20 +29,13 @@ const imgPreview = document.getElementById('imgPreview');
 const optionsBtn = document.getElementById('optionsBtn');
 const optionsPanel = document.getElementById('optionsPanel');
 const settingsBtn = document.getElementById('settingsBtn');
-const settingsPanel = document.getElementById('settingsPanel');
-const closeSettings = document.getElementById('closeSettings');
-const saveSettings = document.getElementById('saveSettings');
-const nameInput = document.getElementById('nameInput');
-const emailInput = document.getElementById('emailInput');
-const passwordInput = document.getElementById('passwordInput');
-const profilePicInput = document.getElementById('profilePicInput');
+const logoutBtn = document.getElementById('logoutBtn');
 const banner = document.getElementById('banner');
 const fullScreenImg = document.getElementById('fullScreenImg');
 const closeFullScreen = document.getElementById('closeFullScreen');
 
 let currentUser = null;
 let pendingImage = null;
-let profilePicData = null;
 
 // Emojis
 const emojis = ["😀","😁","😂","😍","😎","😢","😡","👍","🙏","🔥","❤️","🎉"];
@@ -63,84 +56,80 @@ onAuthStateChanged(auth,user=>{
     onChildChanged(ref(db,'messages'),snap=>updateMessage(snap.key,snap.val()));
 });
 
-// Options button
-optionsBtn.addEventListener('click',()=>{optionsPanel.style.display=optionsPanel.style.display==='flex'?'none':'flex';optionsPanel.style.flexDirection='column';});
+// Options toggle
+optionsBtn.addEventListener('click',()=>{
+    const isVisible = optionsPanel.style.display==='flex';
+    optionsPanel.style.display = isVisible?'none':'flex';
+    optionsPanel.style.flexDirection='column';
+    optionsPanel.style.gap='10px';
+    optionsPanel.style.fontSize='16px';
+});
+
 // Logout
-document.getElementById('logoutBtn').addEventListener('click',async()=>{
+logoutBtn.addEventListener('click',async()=>{
     await signOut(auth);
     window.location.href="../Login/index.html";
 });
-// Settings
-settingsBtn.addEventListener('click',()=>{optionsPanel.style.display='none';settingsPanel.style.display='flex';});
-// Close settings
-closeSettings.addEventListener('click',()=>{settingsPanel.style.display='none';});
-// Profile pic preview
-profilePicInput.addEventListener('change',e=>{
-    const file=e.target.files[0]; if(!file)return;
-    const reader=new FileReader();
-    reader.onload=ev=>{
-        profilePicData=ev.target.result;
-        showBanner("Preview updated");
-    };
-    reader.readAsDataURL(file);
-});
-
-// Save settings
-saveSettings.addEventListener('click',async()=>{
-    try{
-        if(nameInput.value) await updateProfile(currentUser,{displayName:nameInput.value});
-        if(emailInput.value) await updateEmail(currentUser,emailInput.value);
-        if(passwordInput.value) await updatePassword(currentUser,passwordInput.value);
-        if(profilePicData) await updateProfile(currentUser,{photoURL:profilePicData});
-        showBanner("Settings updated");
-        settingsPanel.style.display='none';
-    }catch(err){showBanner("Error: "+err.message);}
-});
-
-// Banner notification
-function showBanner(msg){
-    banner.innerText=msg; banner.style.display='block';
-    setTimeout(()=>{banner.style.display='none';},3000);
-}
 
 // Image send preview
 imgBtn.addEventListener('click',()=>fileInput.click());
 fileInput.addEventListener('change',e=>{
-    const file=e.target.files[0]; if(!file)return;
-    const reader=new FileReader();
-    reader.onload=ev=>{
-        pendingImage=ev.target.result;
-        imgPreview.innerHTML=`<img src="${pendingImage}"/>`; imgPreview.style.display='block';
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev=>{
+        pendingImage = ev.target.result;
+        imgPreview.innerHTML = `<img src="${pendingImage}"/>`;
+        imgPreview.style.display='block';
     };
     reader.readAsDataURL(file);
 });
 
 // Send message
 async function sendMessage(){
-    const text=msgInput.value.trim();
+    const text = msgInput.value.trim();
     if(!text && !pendingImage) return;
-    const payload={uid:currentUser.uid,username:currentUser.displayName||currentUser.email,ts:Date.now()};
-    if(pendingImage){payload.type='image';payload.text=pendingImage; pendingImage=null; imgPreview.style.display='none';}
-    else payload.type='text'; payload.text=text;
+
+    const payload = {
+        uid: currentUser.uid,
+        username: currentUser.displayName || currentUser.email,
+        ts: Date.now()
+    };
+
+    if(pendingImage){
+        payload.type='image';
+        payload.text=pendingImage;
+        pendingImage = null;
+        imgPreview.style.display='none';
+    }else{
+        payload.type='text';
+        payload.text=text;
+    }
+
     await push(ref(db,'messages'),payload);
     msgInput.value=''; fileInput.value='';
 }
 sendBtn.addEventListener('click',sendMessage);
 msgInput.addEventListener('keydown',e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}});
 
-// Render message
+// Render messages
 function renderMessage(id,msg){
     const row=document.createElement('div'); row.className='msg-row'; row.id='msg-'+id;
     setTimeout(()=>row.classList.add('show'),50);
+
     const avatar=document.createElement('img'); avatar.className='avatar';
-    avatar.src=currentUser.photoURL||"https://avatars.dicebear.com/api/identicon/"+encodeURIComponent(msg.username)+".svg";
+    if(currentUser.photoURL) avatar.src=currentUser.photoURL;
+    else avatar.src="https://avatars.dicebear.com/api/identicon/"+encodeURIComponent(msg.username)+".svg";
     row.appendChild(avatar);
+
     const bubble=document.createElement('div'); bubble.className='bubble';
     bubble.innerHTML=`<div class="meta">${msg.username} <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span></div>`;
     if(msg.type==='image'){
         bubble.innerHTML+=`<img src="${msg.text}" class="chat-img"/>`;
-    } else bubble.innerHTML+=`<div>${msg.text}</div>`;
+    }else bubble.innerHTML+=`<div>${msg.text}</div>`;
+
     const reactionsDiv=document.createElement('div'); reactionsDiv.className='reactions'; bubble.appendChild(reactionsDiv);
+
     row.appendChild(bubble); messagesEl.appendChild(row); messagesEl.scrollTop=messagesEl.scrollHeight;
     renderReactions(id,msg);
 
@@ -170,4 +159,10 @@ function renderReactions(id,msg){
         btn.onclick=()=>toggleReaction(id,em,myReaction);
         reactionsDiv.appendChild(btn);
     });
+}
+
+// Colored banner notification
+function showBanner(msg){
+    banner.innerText=msg; banner.style.display='block';
+    setTimeout(()=>{banner.style.display='none';},3000);
 }
