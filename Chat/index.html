@@ -84,7 +84,7 @@
     // ✅ Auth check
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        window.location.href = "login.html";
+        window.location.href = "Login";
       } else {
         currentUser = user;
         document.getElementById("welcome").innerText = "Welcome, " + (user.displayName || user.email);
