@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Chat - DevChat</title>
+  <title>Chat</title>
 </head>
 <body>
-  <h2>Welcome to DevChat 👋</h2>
+  <h2>Welcome to DevChat</h2>
   <p id="userinfo"></p>
-  <button onclick="logout()">Logout</button>
+  <button id="logoutBtn">Logout</button>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
@@ -17,10 +17,9 @@
       apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
       authDomain: "devchatbyhamad.firebaseapp.com",
       projectId: "devchatbyhamad",
-      storageBucket: "devchatbyhamad.firebasestorage.app",
+      storageBucket: "devchatbyhamad.appspot.com",
       messagingSenderId: "798871184058",
-      appId: "1:798871184058:web:c735bea9756f8109149883",
-      measurementId: "G-QTCCWC70QH"
+      appId: "1:798871184058:web:c735bea9756f8109149883"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -29,16 +28,16 @@
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById("userinfo").innerText =
-          `Logged in as: ${user.displayName || "No Name"} (${user.email})`;
+          `Logged in as: ${user.displayName || user.email}`;
       } else {
         window.location.href = "login.html";
       }
     });
 
-    async function logout() {
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
       await signOut(auth);
       window.location.href = "login.html";
-    }
+    });
   </script>
 </body>
 </html>
