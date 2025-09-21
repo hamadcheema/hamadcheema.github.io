@@ -34,7 +34,14 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  sendPasswordResetEmail, 
+  signOut 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
@@ -67,9 +74,18 @@ function notify(msg,type='success'){
 loginBtn.onclick=async()=>{
   loading.style.display='block';
   try{
-    await signInWithEmailAndPassword(auth,emailEl.value,passEl.value);
+    const userCred = await signInWithEmailAndPassword(auth,emailEl.value,passEl.value);
+
+    // ✅ check email verification
+    if(!userCred.user.emailVerified){
+      await signOut(auth);
+      notify("❌ Please verify your email before login","error");
+      return;
+    }
+
     notify("Login successful ✅",'success');
     window.location.href="../Chat/index.html";
+
   }catch(err){ notify(err.message,'error'); }
   finally{ loading.style.display='none'; }
 };
