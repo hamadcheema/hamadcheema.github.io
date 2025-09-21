@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getDatabase, ref, push, onChildAdded, onChildChanged, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -40,7 +40,9 @@ onAuthStateChanged(auth,user=>{
   if(!user) window.location.href="../Login";
   else currentUser=user;
 
-  onChildAdded(ref(db,'messages'), snap=>renderMessage(snap.key,snap.val()));
+  const messagesRef = ref(db,'messages');
+  onChildAdded(messagesRef, snap=>renderMessage(snap.key,snap.val()));
+  onChildChanged(messagesRef, snap=>updateMessage(snap.key,snap.val()));
 });
 
 menuBtn.addEventListener('click', ()=>menuPanel.style.display=menuPanel.style.display==='flex'?'none':'flex');
@@ -79,7 +81,9 @@ sendBtn.addEventListener('click', sendMessage);
 msgInput.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
 
 function renderMessage(id,msg){
-  const row = document.createElement('div'); row.className='msg-row';
+  const row = document.createElement('div'); 
+  row.className='msg-row';
+  row.dataset.id=id;
   if(msg.uid===currentUser.uid) row.classList.add('self');
 
   const avatar=document.createElement('img'); avatar.className='avatar';
@@ -109,6 +113,13 @@ function renderMessage(id,msg){
       modal.querySelector('span').addEventListener('click', ()=>modal.remove());
     });
   }
+}
+
+function updateMessage(id,msg){
+  const row=document.querySelector(`.msg-row[data-id="${id}"]`);
+  if(!row) return;
+  const reactionsDiv=row.querySelector('.reactions');
+  renderReactions(reactionsDiv,id,msg.reactions||{});
 }
 
 // Reactions
