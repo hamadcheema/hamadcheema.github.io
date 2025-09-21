@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Signup</title>
   <script type="module">
-    // Import Firebase SDK
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
-    // Your Firebase Config
+    // 🔹 Yahan apna firebase config paste karo
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      authDomain: "project-798871184058.firebaseapp.com",
+      projectId: "project-798871184058",
+      storageBucket: "project-798871184058.appspot.com",
+      messagingSenderId: "798871184058",
+      appId: "YOUR_APP_ID",
+      measurementId: "YOUR_MEASUREMENT_ID"
     };
 
-    // Initialize Firebase
+    // Firebase init
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // Signup with Email/Password
     document.addEventListener("DOMContentLoaded", () => {
-      const signupForm = document.getElementById("signupForm");
-
-      signupForm.addEventListener("submit", (e) => {
+      // Email signup
+      document.getElementById("signupForm").addEventListener("submit", (e) => {
         e.preventDefault();
         const name = document.getElementById("name").value;
         const email = document.getElementById("email").value;
@@ -44,7 +42,7 @@
           });
       });
 
-      // Google Signup
+      // Google signup
       document.getElementById("googleSignup").addEventListener("click", () => {
         signInWithPopup(auth, provider)
           .then((result) => {
