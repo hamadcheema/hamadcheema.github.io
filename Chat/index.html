@@ -53,7 +53,7 @@
     import { getDatabase, ref, push, onChildAdded, onChildChanged, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
     import { getAuth, onAuthStateChanged, signOut, updateEmail, updatePassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
-    // ✅ Aapka Firebase Config (ready-to-use)
+    // ✅ Firebase Config (consistent everywhere)
     const firebaseConfig = {
       apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
       authDomain: "devchatbyhamad.firebaseapp.com",
@@ -84,7 +84,7 @@
     // ✅ Auth check
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        window.location.href = "Login";
+        window.location.href = "../Login/index.html";
       } else {
         currentUser = user;
         document.getElementById("welcome").innerText = "Welcome, " + (user.displayName || user.email);
@@ -97,6 +97,7 @@
     // Logout
     document.getElementById("logoutBtn").addEventListener("click", async () => {
       await signOut(auth);
+      window.location.href = "../Login/index.html";
     });
 
     // Change Email
