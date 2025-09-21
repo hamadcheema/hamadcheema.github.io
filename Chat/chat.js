@@ -14,13 +14,14 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 
+// ✅ Fixed selectors to match your HTML
 const messagesEl = document.getElementById("messages");
-const inputEl = document.getElementById("message-input");
-const sendBtn = document.getElementById("send-btn");
-const fileInput = document.getElementById("file-input");
-const toggleBtn = document.getElementById("options-btn");
-const optionsPanel = document.getElementById("options-panel");
-const logoutBtn = document.getElementById("logout-btn");
+const inputEl = document.getElementById("msgInput");
+const sendBtn = document.getElementById("sendBtn");
+const fileInput = document.getElementById("fileInput");
+const toggleBtn = document.getElementById("optionsBtn");
+const optionsPanel = document.getElementById("optionsPanel");
+const logoutBtn = document.getElementById("logoutBtn");
 
 let currentUser = null;
 
@@ -31,7 +32,7 @@ auth.onAuthStateChanged(user => {
     loadMessages();
   } else {
     // redirect to login
-    window.location = "login.html";
+    window.location = "../Login/index.html";
   }
 });
 
@@ -42,10 +43,11 @@ logoutBtn.onclick = () => {
 
 // 🔹 Toggle options
 toggleBtn.onclick = () => {
-  optionsPanel.classList.toggle("show");
+  optionsPanel.style.display =
+    optionsPanel.style.display === "flex" ? "none" : "flex";
 };
 
-// 🔹 Send message (text only)
+// 🔹 Send message
 sendBtn.onclick = sendMessage;
 inputEl.addEventListener("keypress", e => {
   if (e.key === "Enter") sendMessage();
@@ -97,7 +99,7 @@ function loadMessages() {
 // 🔹 Render message
 function renderMessage(id, msg) {
   const row = document.createElement("div");
-  row.className = "msg-row";
+  row.className = "msg-row show";
   row.id = "msg-" + id;
 
   const avatar = document.createElement("img");
@@ -123,29 +125,19 @@ function renderMessage(id, msg) {
     </div>
   `;
 
-  // ✅ Case: text-only
+  // Text-only
   if (msg.type === "text" && msg.text) {
     bubble.innerHTML += `<div>${msg.text}</div>`;
   }
 
-  // ✅ Case: image-only (old format)
-  if (msg.type === "image" && msg.image) {
+  // Image + optional text
+  if (msg.type === "image") {
     if (msg.text) bubble.innerHTML += `<div>${msg.text}</div>`;
     const imgEl = document.createElement("img");
-    imgEl.src = msg.image;
+    imgEl.src = msg.image || msg.text;
     imgEl.className = "chat-img";
     imgEl.style.cursor = "pointer";
-    imgEl.onclick = () => openImageFullscreen(msg.image);
-    bubble.appendChild(imgEl);
-  }
-
-  // ✅ Case: old messages jahan sirf text me hi base64 image thi
-  if (msg.type === "image" && !msg.image && msg.text) {
-    const imgEl = document.createElement("img");
-    imgEl.src = msg.text;
-    imgEl.className = "chat-img";
-    imgEl.style.cursor = "pointer";
-    imgEl.onclick = () => openImageFullscreen(msg.text);
+    imgEl.onclick = () => openImageFullscreen(imgEl.src);
     bubble.appendChild(imgEl);
   }
 
@@ -156,7 +148,10 @@ function renderMessage(id, msg) {
 
 // 🔹 Fullscreen Image Viewer
 function openImageFullscreen(src) {
-  let overlay = document.createElement("div");
+  let overlay = document.getElementById("img-overlay");
+  if (overlay) overlay.remove();
+
+  overlay = document.createElement("div");
   overlay.id = "img-overlay";
   overlay.style.position = "fixed";
   overlay.style.top = 0;
@@ -184,12 +179,8 @@ function openImageFullscreen(src) {
   closeBtn.style.fontSize = "30px";
   closeBtn.style.color = "white";
   closeBtn.style.cursor = "pointer";
-  overlay.appendChild(closeBtn);
-
   closeBtn.onclick = () => document.body.removeChild(overlay);
-  overlay.onclick = e => {
-    if (e.target === overlay) document.body.removeChild(overlay);
-  };
 
+  overlay.appendChild(closeBtn);
   document.body.appendChild(overlay);
 }
