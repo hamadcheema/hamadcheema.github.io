@@ -2,37 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DevChat App</title>
-  <link rel="stylesheet" href="../App/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baatly - Welcome</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <style>
+    body{
+      display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2); color:#fff;
+    }
+    .btn {
+      display:inline-block;margin:10px;padding:12px 24px;font-size:16px;font-weight:bold;color:#764ba2;background:#fff;border-radius:8px;text-decoration:none;transition:0.3s;
+    }
+    .btn:hover{background:#f1f1f1; transform: scale(1.05);}
+  </style>
 </head>
 <body>
-  <div id="notify"></div>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-    // ✅ Firebase config (same sab jagah)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
-      authDomain: "devchatbyhamad.firebaseapp.com",
-      databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
-      projectId: "devchatbyhamad",
-      storageBucket: "devchatbyhamad.appspot.com",
-      messagingSenderId: "798871184058",
-      appId: "1:798871184058:web:c735bea9756f8109149883",
-      measurementId: "G-QTCCWC70QH"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user)=>{
-      if(user && user.emailVerified){
-        window.location.href="../Chat";
-      } else {
-        window.location.href="../Login";
-      }
-    });
-  </script>
+  <h1>🚀 Welcome to Baatly</h1>
+  <a href="../Login/" class="btn">Login</a>
+  <a href="../Signup/" class="btn">Signup</a>
 </body>
 </html>
