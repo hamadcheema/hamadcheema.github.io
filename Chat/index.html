@@ -1,38 +1,15 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Real Time Chat</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Chat</title>
   <style>
     body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f9;margin:0;padding:0}
-    .wrap{
-      max-width:860px;
-      margin:0 auto;
-      background:#fff;
-      padding:0; /* padding hata diya */
-      border-radius:10px;
-      box-shadow:0 8px 26px rgba(10,20,30,0.06);
-      display:flex;
-      flex-direction:column;
-      height:100vh;
-    }
-    h1{margin:0;color:#042a57;font-size:20px;text-align:center;padding:8px}
-    #status{color:#333;text-align:center;font-size:14px;padding:4px}
-    #usernameArea{display:flex;gap:6px;align-items:center;padding:8px}
-    #usernameInput{flex:1;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:14px}
-    button{padding:9px 12px;border-radius:8px;border:0;background:#e63946;color:#fff;font-weight:600;cursor:pointer;font-size:14px}
-    button.secondary{background:#042a57}
-    #messages{
-      flex:1;
-      overflow-y:auto;
-      border-radius:0;
-      border:0;
-      padding:12px;
-      background:#fafbfd;
-    }
+    .wrap{max-width:860px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 8px 26px rgba(10,20,30,0.06);display:flex;flex-direction:column;height:100vh}
+    h2{margin:0;color:#042a57;font-size:20px;text-align:center;padding:8px}
+    #messages{flex:1;overflow-y:auto;padding:12px;background:#fafbfd}
     .msg-row{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
-    .avatar{width:38px;height:38px;border-radius:50%;flex:0 0 38px}
+    .avatar{width:38px;height:38px;border-radius:50%}
     .bubble{background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.03);min-width:70px;max-width:74%}
     .meta{font-weight:700;color:#042a57;margin-bottom:4px;font-size:13px}
     .time{font-weight:400;color:#666;font-size:11px;margin-left:8px}
@@ -45,83 +22,54 @@
     .preview{margin-top:6px;padding:0 8px}
     .preview img{max-width:100px;border-radius:8px;display:block;margin-bottom:4px}
     .reactions {margin-top:6px; display:flex; gap:6px; align-items:center; flex-wrap:wrap}
-    .reaction-btn{padding:4px 8px;border-radius:14px;background:#f6f6f6;cursor:pointer; font-size:12px}
+    .reaction-btn{padding:4px 8px;border-radius:14px;background:#f6f6f6;cursor:pointer;font-size:12px}
     .reaction-btn.you{background:#dfeffd}
-    /* sticky header + input */
-    h1, #status, #usernameArea {
-      background:#fff;
-      position:sticky;
-      top:0;
-      z-index:10;
-    }
-    #compose {
-      background:#fff;
-      position:sticky;
-      bottom:0;
-      z-index:10;
-      border-top:1px solid #ddd;
-    }
-    /* mobile adjust */
-    @media(max-width:600px){
-      .wrap{border-radius:0;box-shadow:none}
-      #messages{border:0}
-      .controls{padding:6px}
-      #msgInput{font-size:13px}
-      button{font-size:13px;padding:7px 10px}
-    }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>💬 Chat</h1>
-    <div id="status">Connecting...</div>
-
-    <div id="usernameArea">
-      <input id="usernameInput" placeholder="Choose username (required to send)"/>
-      <button id="saveUsernameBtn" class="secondary">Save</button>
-      <button id="readOnlyBtn">Read Only</button>
+    <h2 id="welcome">Welcome</h2>
+    <div style="padding:6px;text-align:center">
+      <button id="logoutBtn">Logout</button>
+      <button id="changeEmailBtn">Change Email</button>
+      <button id="changePasswordBtn">Change Password</button>
     </div>
 
-    <div id="messages" aria-live="polite"></div>
+    <div id="messages"></div>
 
-    <div id="compose" style="display:none">
-      <div class="preview" id="imgPreview" style="display:none"></div>
-      <div class="controls">
-        <input id="msgInput" placeholder="Write a message"/>
-        <button id="emojiToggle">😀</button>
-        <input id="fileInput" type="file" accept="image/*" style="display:none" />
-        <button id="imgBtn">📷</button>
-        <button id="sendBtn">Send</button>
-      </div>
-      <div id="emojiPicker" style="display:none"></div>
+    <div class="preview" id="imgPreview" style="display:none"></div>
+    <div class="controls">
+      <input id="msgInput" placeholder="Write a message"/>
+      <button id="emojiToggle">😀</button>
+      <input id="fileInput" type="file" accept="image/*" style="display:none" />
+      <button id="imgBtn">📷</button>
+      <button id="sendBtn">Send</button>
     </div>
+    <div id="emojiPicker" style="display:none"></div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded, onChildChanged, set, child, get } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getDatabase, ref, push, onChildAdded, onChildChanged, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+    import { getAuth, onAuthStateChanged, signOut, updateEmail, updatePassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
+    // ✅ Aapka Firebase Config (ready-to-use)
     const firebaseConfig = {
-      apiKey: "AIzaSyAqcF-u7zaTc0CwgXORBNi0ehhYYMG5a6g",
-      authDomain: "titibankpumpfun.firebaseapp.com",
-      databaseURL: "https://titibankpumpfun-default-rtdb.firebaseio.com",
-      projectId: "titibankpumpfun",
-      storageBucket: "",
-      messagingSenderId: "713215451720",
-      appId: "1:713215451720:web:a9ead74e25448f431fee7d"
+      apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
+      authDomain: "devchatbyhamad.firebaseapp.com",
+      databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
+      projectId: "devchatbyhamad",
+      storageBucket: "devchatbyhamad.appspot.com",
+      messagingSenderId: "798871184058",
+      appId: "1:798871184058:web:c735bea9756f8109149883",
+      measurementId: "G-QTCCWC70QH"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const auth = getAuth(app);
 
-    const statusEl = document.getElementById('status');
     const messagesEl = document.getElementById('messages');
-    const usernameInput = document.getElementById('usernameInput');
-    const saveUsernameBtn = document.getElementById('saveUsernameBtn');
-    const readOnlyBtn = document.getElementById('readOnlyBtn');
-    const compose = document.getElementById('compose');
     const msgInput = document.getElementById('msgInput');
     const sendBtn = document.getElementById('sendBtn');
     const emojiToggle = document.getElementById('emojiToggle');
@@ -131,11 +79,46 @@
     const imgPreview = document.getElementById('imgPreview');
 
     let currentUser = null;
-    let canSend = false;
     let pendingImage = null;
 
-    // emojis
-    const emojis = ["😀","😁","😂","🤣","😊","😍","😎","😢","😡","👍","🙏","🔥","❤️","💔","🎉","👏","👌","😴","🤔","🙄","😱","🥶","🤯","🥳","🤗","🤩","😇","😈","💯","⚡","🌹"];
+    // ✅ Auth check
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        currentUser = user;
+        document.getElementById("welcome").innerText = "Welcome, " + (user.displayName || user.email);
+        // Load messages
+        onChildAdded(ref(db, 'messages'), (snap)=> renderMessage(snap.key, snap.val()));
+        onChildChanged(ref(db, 'messages'), (snap)=> updateMessage(snap.key, snap.val()));
+      }
+    });
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    // Change Email
+    document.getElementById("changeEmailBtn").addEventListener("click", async () => {
+      const newEmail = prompt("Enter new email:");
+      if (newEmail) {
+        try { await updateEmail(auth.currentUser, newEmail); alert("✅ Email updated"); }
+        catch(err){ alert("❌ " + err.message); }
+      }
+    });
+
+    // Change Password
+    document.getElementById("changePasswordBtn").addEventListener("click", async () => {
+      const newPass = prompt("Enter new password:");
+      if (newPass) {
+        try { await updatePassword(auth.currentUser, newPass); alert("✅ Password updated"); }
+        catch(err){ alert("❌ " + err.message); }
+      }
+    });
+
+    // Emojis
+    const emojis = ["😀","😁","😂","😍","😎","😢","😡","👍","🙏","🔥","❤️","🎉"];
     emojis.forEach(e=>{
       const s = document.createElement('span');
       s.textContent = e;
@@ -146,100 +129,31 @@
       emojiPicker.style.display = emojiPicker.style.display==='flex'?'none':'flex';
     });
 
-    function avatarFor(name){ return `https://avatars.dicebear.com/api/identicon/${encodeURIComponent(name)}.svg`; }
-
-    signInAnonymously(auth);
-    onAuthStateChanged(auth, async (user)=>{
-      if(!user) return;
-      currentUser = { uid:user.uid, username:null, avatar:null };
-      statusEl.textContent = "Connected";
-
-      const snap = await get(child(ref(db),'users/'+user.uid));
-      if(snap.exists()){
-        const d=snap.val();
-        currentUser.username=d.username;
-        currentUser.avatar=d.avatar;
-        openChat();
-      }
-
-      onChildAdded(ref(db,'messages'), (snap)=> renderMessage(snap.key, snap.val()));
-      onChildChanged(ref(db,'messages'), (snap)=> updateMessage(snap.key, snap.val()));
-    });
-
-    saveUsernameBtn.addEventListener('click', async ()=>{
-      const name = usernameInput.value.trim();
-      if(!name) return alert("Enter username");
-      const avatar = avatarFor(name);
-      await set(ref(db,'users/'+currentUser.uid),{username:name,avatar});
-      currentUser.username=name;
-      currentUser.avatar=avatar;
-      openChat();
-    });
-
-    readOnlyBtn.addEventListener('click', ()=>{
-      document.getElementById('usernameArea').style.display='none';
-      compose.style.display='none';
-      canSend=false;
-    });
-
-    function openChat(){
-      document.getElementById('usernameArea').style.display='none';
-      compose.style.display='block';
-      canSend=true;
-    }
-
-    // send function with loading indicator
+    // Send message
     async function sendMessage(){
-      if(!canSend) return alert("Set username first");
       const text = msgInput.value.trim();
       if(!text && !pendingImage) return;
-
-      const tempId = "temp-"+Date.now();
-      const tempPayload = {
-        uid:currentUser.uid,
-        username:currentUser.username,
-        avatar:currentUser.avatar,
-        ts:Date.now(),
-        type: pendingImage ? "image" : "text",
-        text:"sending..."
-      };
-      renderMessage(tempId,tempPayload);
-
       const payload = {
         uid:currentUser.uid,
-        username:currentUser.username,
-        avatar:currentUser.avatar,
+        username:currentUser.displayName || currentUser.email,
         ts:Date.now()
       };
-
       if(pendingImage){
-        payload.type='image';
-        payload.text=pendingImage;
-        if(text) payload.caption=text;
-        pendingImage=null;
-        imgPreview.style.display='none';
+        payload.type='image'; payload.text=pendingImage;
+        pendingImage=null; imgPreview.style.display='none';
       } else {
-        payload.type='text';
-        payload.text=text;
+        payload.type='text'; payload.text=text;
       }
-
-      await push(ref(db,'messages'),payload);
-
-      // ✅ input clear
+      await push(ref(db,'messages'), payload);
       msgInput.value='';
       fileInput.value='';
-      document.getElementById("msg-"+tempId)?.remove();
     }
-
     sendBtn.addEventListener('click', sendMessage);
     msgInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
     });
 
-    // image selection preview
+    // Image upload preview (as base64)
     imgBtn.addEventListener('click',()=> fileInput.click());
     fileInput.addEventListener('change', e=>{
       const file=e.target.files[0];
@@ -253,18 +167,7 @@
       reader.readAsDataURL(file);
     });
 
-    // toggle reaction
-    async function toggleReaction(msgId, emoji, prev){
-      if(!currentUser) return;
-      const reactRef = ref(db,`messages/${msgId}/reactions/${currentUser.uid}`);
-      if(prev === emoji){
-        await set(reactRef, null);
-      } else {
-        await set(reactRef, emoji);
-      }
-    }
-
-    // render message
+    // Render message
     function renderMessage(id,msg){
       const row=document.createElement('div');
       row.className='msg-row';
@@ -272,7 +175,7 @@
 
       const avatar=document.createElement('img');
       avatar.className='avatar';
-      avatar.src=msg.avatar||avatarFor(msg.username);
+      avatar.src="https://avatars.dicebear.com/api/identicon/"+encodeURIComponent(msg.username)+".svg";
       row.appendChild(avatar);
 
       const bubble=document.createElement('div');
@@ -280,7 +183,6 @@
       bubble.innerHTML=`<div class="meta">${msg.username} <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span></div>`;
       if(msg.type==='image'){
         bubble.innerHTML+=`<img src="${msg.text}" class="chat-img"/>`;
-        if(msg.caption) bubble.innerHTML+=`<div class="caption">${msg.caption}</div>`;
       } else {
         bubble.innerHTML+=`<div>${msg.text}</div>`;
       }
@@ -288,7 +190,6 @@
       const reactionsDiv=document.createElement('div');
       reactionsDiv.className='reactions';
       bubble.appendChild(reactionsDiv);
-
       row.appendChild(bubble);
       messagesEl.appendChild(row);
       messagesEl.scrollTop=messagesEl.scrollHeight;
@@ -296,35 +197,26 @@
       renderReactions(id,msg);
     }
 
-    // update msg
-    function updateMessage(id,msg){
-      const row=document.getElementById('msg-'+id);
-      if(!row) return renderMessage(id,msg);
-      renderReactions(id,msg);
+    function updateMessage(id,msg){ renderReactions(id,msg); }
+
+    async function toggleReaction(msgId, emoji, prev){
+      const reactRef = ref(db,`messages/${msgId}/reactions/${currentUser.uid}`);
+      if(prev === emoji) await set(reactRef, null);
+      else await set(reactRef, emoji);
     }
 
-    // render reactions
     function renderReactions(id,msg){
       const row=document.getElementById('msg-'+id);
       if(!row) return;
       const reactionsDiv=row.querySelector('.reactions');
       reactionsDiv.innerHTML='';
-
       const reactions=msg.reactions||{};
-      const counts={};
-      let myReaction=null;
-
-      for(const uid in reactions){
-        const em=reactions[uid];
-        if(!em) continue;
-        counts[em]=(counts[em]||0)+1;
-        if(uid===currentUser?.uid) myReaction=em;
-      }
-
+      const counts={}; let myReaction=null;
+      for(const uid in reactions){ const em=reactions[uid]; if(!em) continue;
+        counts[em]=(counts[em]||0)+1; if(uid===currentUser?.uid) myReaction=em; }
       ["👍","😂","❤️","🔥","😢","😡"].forEach(em=>{
         const btn=document.createElement('span');
-        btn.className='reaction-btn';
-        if(myReaction===em) btn.classList.add('you');
+        btn.className='reaction-btn'; if(myReaction===em) btn.classList.add('you');
         btn.textContent=counts[em]?`${em} ${counts[em]}`:em;
         btn.onclick=()=>toggleReaction(id,em,myReaction);
         reactionsDiv.appendChild(btn);
