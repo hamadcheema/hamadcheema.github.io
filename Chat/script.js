@@ -1,22 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+// ...Firebase imports same as before...
 
-// Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
-  authDomain: "devchatbyhamad.firebaseapp.com",
-  databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
-  projectId: "devchatbyhamad",
-  storageBucket: "devchatbyhamad.appspot.com",
-  messagingSenderId: "798871184058",
-  appId: "1:798871184058:web:c735bea9756f8109149883"
-};
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth(app);
-
-// DOM
 const messagesEl = document.getElementById('messages');
 const msgInput = document.getElementById('msgInput');
 const sendBtn = document.getElementById('sendBtn');
@@ -30,7 +13,6 @@ const logoutBtn = document.getElementById('logoutBtn');
 let currentUser = null;
 let pendingImage = null;
 
-// Auth
 onAuthStateChanged(auth,user=>{
   if(!user) window.location.href="../Login";
   else currentUser = user;
@@ -38,24 +20,21 @@ onAuthStateChanged(auth,user=>{
   onChildAdded(ref(db,'messages'), snap=>renderMessage(snap.key,snap.val()));
 });
 
-// Menu toggle
 menuBtn.addEventListener('click', ()=> menuPanel.style.display = menuPanel.style.display==='flex'?'none':'flex');
 logoutBtn.addEventListener('click', async()=>{ await signOut(auth); window.location.href="../Login"; });
 
-// Image preview
 imgBtn.addEventListener('click', ()=> fileInput.click());
 fileInput.addEventListener('change', e=>{
   const file = e.target.files[0]; if(!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
     pendingImage = ev.target.result;
-    imgPreview.style.display='block';
+    imgPreview.style.display='flex';
     imgPreview.innerHTML = `<img src="${pendingImage}" alt="preview"/>`;
   };
   reader.readAsDataURL(file);
 });
 
-// Send message
 async function sendMessage(){
   const text = msgInput.value.trim();
   if(!text && !pendingImage) return;
@@ -63,21 +42,21 @@ async function sendMessage(){
   const payload = {
     uid: currentUser.uid,
     username: currentUser.displayName || currentUser.email,
-    ts: Date.now(),
+    ts:Date.now(),
     type: pendingImage?'image-text':'text',
-    text: text,
+    text:text,
     img: pendingImage || null
   };
   await push(ref(db,'messages'), payload);
   msgInput.value=''; pendingImage=null; imgPreview.style.display='none';
 }
+
 sendBtn.addEventListener('click', sendMessage);
 msgInput.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
 
-// Render messages
+// Render message
 function renderMessage(id,msg){
-  const row = document.createElement('div'); row.className='msg-row slide-in';
-
+  const row = document.createElement('div'); row.className='msg-row';
   const avatar = document.createElement('img'); avatar.className='avatar';
   avatar.src = msg.photoURL || `https://avatars.dicebear.com/api/identicon/${encodeURIComponent(msg.username)}.svg`;
   row.appendChild(avatar);
@@ -86,10 +65,8 @@ function renderMessage(id,msg){
   bubble.innerHTML = `<div class="meta">${msg.username} <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span></div>`;
   if(msg.img) bubble.innerHTML += `<img src="${msg.img}" class="chat-img"/>`;
   if(msg.text) bubble.innerHTML += `<div>${msg.text}</div>`;
-
   row.appendChild(bubble);
-  messagesEl.appendChild(row);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+  messagesEl.prepend(row);
 
   if(msg.img){
     bubble.querySelector('.chat-img').addEventListener('click', ()=>{
