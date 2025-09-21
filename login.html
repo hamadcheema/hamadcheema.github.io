@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - DevChat</title>
+</head>
+<body>
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email" required><br>
+  <input type="password" id="password" placeholder="Password" required><br>
+  <button onclick="login()">Login</button>
+  <p>Don’t have an account? <a href="signup.html">Signup</a></p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
+      authDomain: "devchatbyhamad.firebaseapp.com",
+      projectId: "devchatbyhamad",
+      storageBucket: "devchatbyhamad.firebasestorage.app",
+      messagingSenderId: "798871184058",
+      appId: "1:798871184058:web:c735bea9756f8109149883",
+      measurementId: "G-QTCCWC70QH"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    async function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Login successful ✅");
+        window.location.href = "chat.html";
+      } catch (err) {
+        alert("❌ " + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
