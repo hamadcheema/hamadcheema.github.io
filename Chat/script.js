@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -38,16 +38,9 @@ function notify(msg,type='success'){
 
 onAuthStateChanged(auth,user=>{
   if(!user) window.location.href="../Login";
-  else {
-    currentUser=user;
+  else currentUser=user;
 
-    // sabhi messages listen karo
-    onChildAdded(ref(db,'messages'), snap=>{
-      renderMessage(snap.key,snap.val());
-      // sirf us message ke reactions ko realtime listen karo
-      listenReactions(snap.key);
-    });
-  }
+  onChildAdded(ref(db,'messages'), snap=>renderMessage(snap.key,snap.val()));
 });
 
 menuBtn.addEventListener('click', ()=>menuPanel.style.display=menuPanel.style.display==='flex'?'none':'flex');
@@ -86,9 +79,7 @@ sendBtn.addEventListener('click', sendMessage);
 msgInput.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
 
 function renderMessage(id,msg){
-  const row = document.createElement('div'); 
-  row.className='msg-row';
-  row.dataset.id=id;
+  const row = document.createElement('div'); row.className='msg-row';
   if(msg.uid===currentUser.uid) row.classList.add('self');
 
   const avatar=document.createElement('img'); avatar.className='avatar';
@@ -101,11 +92,6 @@ function renderMessage(id,msg){
   if(msg.text) bubble.innerHTML += `<div>${msg.text}</div>`;
   row.appendChild(bubble);
 
-  // Reactions container
-  const reactionsDiv=document.createElement('div'); reactionsDiv.className='reactions';
-  reactionsDiv.dataset.msg=id;
-  bubble.appendChild(reactionsDiv);
-
   messagesEl.appendChild(row);
   messagesEl.scrollTop = messagesEl.scrollHeight;
 
@@ -113,51 +99,9 @@ function renderMessage(id,msg){
     bubble.querySelector('.chat-img').addEventListener('click', ()=>{
       const modal=document.createElement('div');
       modal.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;z-index:1000;";
-      modal.innerHTML=`<img src="${msg.img}" style="max-width:90%;max-height:90%;border-radius:8px;"><span style='position:absolute;top:20px;right:30px;font-size:30px;color:#fff;cursor:pointer;'>&times;</span>`;
+      modal.innerHTML=`<img src="${msg.img}" style="max-width:90%;max-height:90%;border-radius:8px;"><span style="position:absolute;top:20px;right:30px;font-size:30px;color:#fff;cursor:pointer;">&times;</span>`;
       document.body.appendChild(modal);
       modal.querySelector('span').addEventListener('click', ()=>modal.remove());
     });
   }
 }
-
-// realtime listener for reactions
-function listenReactions(msgId){
-  const reactRef = ref(db, `messages/${msgId}/reactions`);
-  onValue(reactRef, snap=>{
-    const reactions = snap.val() || {};
-    const container = document.querySelector(`.reactions[data-msg="${msgId}"]`);
-    if(container) renderReactions(container,msgId,reactions);
-  });
-}
-
-function renderReactions(container,msgId,reactions){
-  container.innerHTML='';
-  const emojis=["👍","😂","❤️","🔥","😢","😡"];
-  let myReaction = reactions[currentUser.uid]||null;
-
-  emojis.forEach(em=>{
-    let count=0;
-    Object.values(reactions).forEach(r=>{if(r===em) count++;});
-
-    const btn=document.createElement('span'); btn.className='reaction-btn';
-    if(myReaction===em) btn.classList.add('you');
-    btn.textContent = count>0?`${em} ${count}`:em;
-
-    btn.addEventListener('click', async()=>{
-      const reactRef = ref(db, `messages/${msgId}/reactions/${currentUser.uid}`);
-      if(myReaction===em) await set(reactRef,null);
-      else await set(reactRef,em);
-    });
-    container.appendChild(btn);
-  });
-}
-
-/* -----------------
-   Mobile Sticky Fix
-------------------*/
-function fixViewport(){
-  document.querySelector('.container').style.height = window.innerHeight + 'px';
-}
-window.addEventListener('resize', fixViewport);
-window.addEventListener('orientationchange', fixViewport);
-fixViewport();
