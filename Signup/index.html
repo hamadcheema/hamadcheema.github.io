@@ -2,18 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Signup</title>
-  <link rel="stylesheet" href="../App/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="notify"></div>
-  <div class="wrap">
+  <div class="form-container">
     <h2>Signup</h2>
-    <input type="text" id="name" placeholder="Name">
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
-    <button id="signupBtn">Signup</button>
-    <p>Already have an account? <a href="../Login">Login</a></p>
+
+    <div id="notification"></div>
+
+    <form id="signupForm">
+      <input type="email" id="signupEmail" placeholder="Email" required>
+      <input type="password" id="signupPassword" placeholder="Password" required>
+      <button type="submit">Signup</button>
+    </form>
+
+    <button id="googleSignupBtn" class="google-btn">Signup with Google</button>
+
+    <p>Already have an account? <a href="../Login/index.html">Login here</a></p>
   </div>
 
   <script type="module" src="signup.js"></script>
