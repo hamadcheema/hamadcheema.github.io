@@ -1,211 +1,208 @@
-// ----------------- Firebase Imports -----------------
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import {
-  getAuth,
-  onAuthStateChanged,
-  signOut
-} from "firebase/auth";
+  getDatabase, ref, push, onChildAdded, onChildChanged, set
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 import {
-  getDatabase,
-  ref,
-  push,
-  onChildAdded
-} from "firebase/database";
+  getAuth, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import {
-  getStorage,
-  ref as sRef,
-  uploadBytes,
-  getDownloadURL
-} from "firebase/storage";
+  getStorage, ref as sRef, uploadBytes, getDownloadURL
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 
-// ----------------- Firebase Config -----------------
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
   authDomain: "devchatbyhamad.firebaseapp.com",
   databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
   projectId: "devchatbyhamad",
-  storageBucket: "devchatbyhamad.appspot.com", // ✅ fixed
+  storageBucket: "devchatbyhamad.appspot.com",
   messagingSenderId: "798871184058",
   appId: "1:798871184058:web:c735bea9756f8109149883",
   measurementId: "G-QTCCWC70QH"
 };
 
-// ----------------- Init -----------------
+// Init
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getDatabase(app);
+const auth = getAuth(app);
 const storage = getStorage(app);
 
-// ----------------- Elements -----------------
-const messagesEl = document.getElementById("messages");
-const inputEl = document.getElementById("msgInput");
-const sendBtn = document.getElementById("sendBtn");
-const fileInput = document.getElementById("fileInput");
-const imgBtn = document.getElementById("imgBtn");
-const optionsBtn = document.getElementById("optionsBtn");
-const optionsPanel = document.getElementById("optionsPanel");
-const logoutBtn = document.getElementById("logoutBtn");
+// Elements
+const messagesEl = document.getElementById('messages');
+const msgInput = document.getElementById('msgInput');
+const sendBtn = document.getElementById('sendBtn');
+const emojiToggle = document.getElementById('emojiToggle');
+const emojiPicker = document.getElementById('emojiPicker');
+const fileInput = document.getElementById('fileInput');
+const imgBtn = document.getElementById('imgBtn');
+const imgPreview = document.getElementById('imgPreview');
+const optionsBtn = document.getElementById('optionsBtn');
+const optionsPanel = document.getElementById('optionsPanel');
+const settingsBtn = document.getElementById('settingsBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const banner = document.getElementById('banner');
+const fullScreenImg = document.getElementById('fullScreenImg');
+const closeFullScreen = document.getElementById('closeFullScreen');
 
 let currentUser = null;
+let pendingImageFile = null;
 
-// ----------------- Auth Listener -----------------
-onAuthStateChanged(auth, user => {
-  if (user) {
-    currentUser = user;
-    loadMessages();
-  } else {
-    window.location = "login.html";
-  }
+// Emojis
+const emojis = ["😀","😁","😂","😍","😎","😢","😡","👍","🙏","🔥","❤️","🎉"];
+emojis.forEach(e=>{
+  const s = document.createElement('span');
+  s.textContent=e;
+  s.onclick=()=>{ msgInput.value+=e; emojiPicker.style.display='none';};
+  emojiPicker.appendChild(s);
+});
+emojiToggle.addEventListener('click',()=>{
+  emojiPicker.style.display=emojiPicker.style.display==='flex'?'none':'flex';
 });
 
-// ----------------- Logout -----------------
-logoutBtn.onclick = () => {
-  signOut(auth);
-};
-
-// ----------------- Options toggle -----------------
-optionsBtn.onclick = () => {
-  optionsPanel.style.display =
-    optionsPanel.style.display === "flex" ? "none" : "flex";
-};
-
-// ----------------- Send Msg -----------------
-sendBtn.onclick = sendMessage;
-inputEl.addEventListener("keypress", e => {
-  if (e.key === "Enter") sendMessage();
+// Auth check
+onAuthStateChanged(auth,user=>{
+  if(!user){ window.location.href="../Login/index.html"; return;}
+  currentUser = user;
+  document.getElementById("welcome").innerText="Welcome, "+(user.displayName||user.email);
+  onChildAdded(ref(db,'messages'),snap=>renderMessage(snap.key,snap.val()));
+  onChildChanged(ref(db,'messages'),snap=>updateMessage(snap.key,snap.val()));
 });
 
-imgBtn.onclick = () => fileInput.click();
+// Options toggle
+optionsBtn.addEventListener('click',()=>{
+  optionsPanel.style.display = optionsPanel.style.display==='flex'?'none':'flex';
+  optionsPanel.style.flexDirection='column';
+  optionsPanel.style.gap='10px';
+  optionsPanel.style.fontSize='16px';
+});
 
-async function sendMessage() {
-  const text = inputEl.value.trim();
-  const file = fileInput.files[0];
+// Logout
+logoutBtn.addEventListener('click',async()=>{
+  await signOut(auth);
+  window.location.href="../Login/index.html";
+});
 
-  if (!text && !file) return;
+// Image send preview
+imgBtn.addEventListener('click',()=>fileInput.click());
+fileInput.addEventListener('change',e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  pendingImageFile = file;
+  imgPreview.innerHTML = `<img src="${URL.createObjectURL(file)}"/>`;
+  imgPreview.style.display='block';
+});
 
-  let imageUrl = null;
+// Send message
+async function sendMessage(){
+  const text = msgInput.value.trim();
+  if(!text && !pendingImageFile) return;
 
-  // ✅ If file selected → upload to storage
-  if (file) {
-    const imgRef = sRef(
-      storage,
-      "chatImages/" + Date.now() + "-" + file.name
-    );
-    await uploadBytes(imgRef, file);
-    imageUrl = await getDownloadURL(imgRef);
-  }
-
-  const msg = {
+  const payload = {
     uid: currentUser.uid,
-    username: currentUser.displayName || "Guest",
-    photoURL: currentUser.photoURL || null,
+    username: currentUser.displayName || currentUser.email,
     ts: Date.now(),
-    type: file ? "image" : "text",
-    text: text || "",
-    image: imageUrl
+    type: "text",
+    text: text
   };
 
-  await push(ref(db, "messages"), msg);
+  // If image selected → upload to storage
+  if(pendingImageFile){
+    const imgRef = sRef(storage, "chatImages/" + Date.now() + "-" + pendingImageFile.name);
+    await uploadBytes(imgRef, pendingImageFile);
+    const url = await getDownloadURL(imgRef);
+    payload.type = "image";
+    payload.image = url;
+    if(text) payload.text = text; else payload.text = "";
+    pendingImageFile = null;
+    imgPreview.style.display='none';
+  }
 
-  inputEl.value = "";
-  fileInput.value = "";
+  await push(ref(db,'messages'),payload);
+  msgInput.value=''; fileInput.value='';
 }
+sendBtn.addEventListener('click',sendMessage);
+msgInput.addEventListener('keydown',e=>{
+  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}
+});
 
-// ----------------- Load Messages -----------------
-function loadMessages() {
-  const msgRef = ref(db, "messages");
-  onChildAdded(msgRef, snap => {
-    const msg = snap.val();
-    renderMessage(snap.key, msg);
-  });
-}
+// Render messages
+function renderMessage(id,msg){
+  const row=document.createElement('div');
+  row.className='msg-row';
+  row.id='msg-'+id;
+  setTimeout(()=>row.classList.add('show'),50);
 
-// ----------------- Render -----------------
-function renderMessage(id, msg) {
-  const row = document.createElement("div");
-  row.className = "msg-row show";
-  row.id = "msg-" + id;
-
-  // Avatar
-  const avatar = document.createElement("img");
-  avatar.className = "avatar";
-  if (msg.photoURL) {
-    avatar.src = msg.photoURL;
+  const avatar=document.createElement('img');
+  avatar.className='avatar';
+  if(msg.photoURL){ 
+    avatar.src=msg.photoURL;
   } else {
-    avatar.src =
-      "https://avatars.dicebear.com/api/identicon/" +
-      encodeURIComponent(msg.username || "user") +
-      ".svg";
+    avatar.src=currentUser.photoURL || "https://avatars.dicebear.com/api/identicon/"+encodeURIComponent(msg.username)+".svg";
   }
   row.appendChild(avatar);
 
-  // Bubble
-  const bubble = document.createElement("div");
-  bubble.className = "bubble";
-  bubble.innerHTML = `
-    <div class="meta">
-      ${msg.username || "Unknown"} 
-      <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span>
-    </div>
-  `;
+  const bubble=document.createElement('div');
+  bubble.className='bubble';
+  bubble.innerHTML=`<div class="meta">${msg.username} <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span></div>`;
 
-  if (msg.type === "text" && msg.text) {
-    bubble.innerHTML += `<div>${msg.text}</div>`;
+  if(msg.type==='image' && msg.image){
+    if(msg.text) bubble.innerHTML+=`<div>${msg.text}</div>`;
+    const img=document.createElement('img');
+    img.src=msg.image;
+    img.className='chat-img';
+    img.addEventListener('click',()=>{
+      fullScreenImg.style.display='flex';
+      fullScreenImg.querySelector('img').src=msg.image;
+    });
+    bubble.appendChild(img);
+  }else{
+    bubble.innerHTML+=`<div>${msg.text}</div>`;
   }
 
-  if (msg.type === "image" && msg.image) {
-    if (msg.text) bubble.innerHTML += `<div>${msg.text}</div>`;
-    const imgEl = document.createElement("img");
-    imgEl.src = msg.image;
-    imgEl.className = "chat-img";
-    imgEl.onclick = () => openImageFullscreen(msg.image);
-    bubble.appendChild(imgEl);
-  }
+  const reactionsDiv=document.createElement('div');
+  reactionsDiv.className='reactions';
+  bubble.appendChild(reactionsDiv);
 
   row.appendChild(bubble);
   messagesEl.appendChild(row);
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+  messagesEl.scrollTop=messagesEl.scrollHeight;
+
+  renderReactions(id,msg);
+}
+closeFullScreen.addEventListener('click',()=>{fullScreenImg.style.display='none';});
+
+// Reactions
+function updateMessage(id,msg){renderReactions(id,msg);}
+async function toggleReaction(msgId,emoji,prev){
+  const reactRef = ref(db,`messages/${msgId}/reactions/${currentUser.uid}`);
+  if(prev===emoji) await set(reactRef,null); else await set(reactRef,emoji);
+}
+function renderReactions(id,msg){
+  const row=document.getElementById('msg-'+id);
+  if(!row) return;
+  const reactionsDiv=row.querySelector('.reactions');
+  reactionsDiv.innerHTML='';
+  const reactions=msg.reactions||{};
+  let counts={}; let myReaction=null;
+  for(const uid in reactions){
+    const em=reactions[uid];
+    if(!em) continue;
+    counts[em]=(counts[em]||0)+1;
+    if(uid===currentUser?.uid) myReaction=em;
+  }
+  ["👍","😂","❤️","🔥","😢","😡"].forEach(em=>{
+    const btn=document.createElement('span');
+    btn.className='reaction-btn';
+    if(myReaction===em) btn.classList.add('you');
+    btn.textContent=counts[em]?`${em} ${counts[em]}`:em;
+    btn.onclick=()=>toggleReaction(id,em,myReaction);
+    reactionsDiv.appendChild(btn);
+  });
 }
 
-// ----------------- Fullscreen Viewer -----------------
-function openImageFullscreen(src) {
-  let overlay = document.getElementById("img-overlay");
-  if (overlay) overlay.remove();
-
-  overlay = document.createElement("div");
-  overlay.id = "img-overlay";
-  overlay.style.position = "fixed";
-  overlay.style.top = 0;
-  overlay.style.left = 0;
-  overlay.style.width = "100%";
-  overlay.style.height = "100%";
-  overlay.style.background = "rgba(0,0,0,0.9)";
-  overlay.style.display = "flex";
-  overlay.style.justifyContent = "center";
-  overlay.style.alignItems = "center";
-  overlay.style.zIndex = 9999;
-
-  const img = document.createElement("img");
-  img.src = src;
-  img.style.maxWidth = "90%";
-  img.style.maxHeight = "90%";
-  img.style.borderRadius = "10px";
-  overlay.appendChild(img);
-
-  const closeBtn = document.createElement("span");
-  closeBtn.innerHTML = "✖";
-  closeBtn.style.position = "absolute";
-  closeBtn.style.top = "20px";
-  closeBtn.style.right = "30px";
-  closeBtn.style.fontSize = "30px";
-  closeBtn.style.color = "white";
-  closeBtn.style.cursor = "pointer";
-  closeBtn.onclick = () => overlay.remove();
-
-  overlay.appendChild(closeBtn);
-  overlay.onclick = e => {
-    if (e.target === overlay) overlay.remove();
-  };
-
-  document.body.appendChild(overlay);
+// Banner notification
+function showBanner(msg){
+  banner.innerText=msg;
+  banner.style.display='block';
+  setTimeout(()=>{banner.style.display='none';},3000);
 }
