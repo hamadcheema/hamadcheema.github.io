@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - DevChat</title>
+</head>
+<body>
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button type="submit">Login</button>
+  </form>
+  <p>Don’t have an account? <a href="../Signup/">Signup</a></p>
+
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
@@ -20,45 +32,22 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("loginForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-        try {
-          const userCred = await signInWithEmailAndPassword(auth, email, password);
-          if (!userCred.user.emailVerified) {
-            alert("❌ Please verify your email first.");
-            return;
-          }
-          window.location.href = "../Chat/index.html";
-        } catch (err) {
-          alert("❌ " + err.message);
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        if (!userCredential.user.emailVerified) {
+          alert("Please verify your email before logging in.");
+          return;
         }
-      });
-
-      document.getElementById("forgotBtn").addEventListener("click", async () => {
-        const email = prompt("Enter your registered email:");
-        if (!email) return;
-        try {
-          await sendPasswordResetEmail(auth, email);
-          alert("✅ Password reset link sent to your email.");
-        } catch (err) {
-          alert("❌ " + err.message);
-        }
-      });
+        window.location.href = "../Chat/";
+      } catch (error) {
+        alert("Login failed: " + error.message);
+      }
     });
   </script>
-</head>
-<body>
-  <h2>Login</h2>
-  <form id="loginForm">
-    <input type="email" id="email" placeholder="Email" required><br>
-    <input type="password" id="password" placeholder="Password" required><br>
-    <button type="submit">Login</button>
-  </form>
-  <p><a href="#" id="forgotBtn">Forgot Password?</a></p>
-  <p>Don’t have an account? <a href="../Signup/index.html">Signup</a></p>
 </body>
 </html>
