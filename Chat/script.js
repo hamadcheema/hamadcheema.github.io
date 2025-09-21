@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
@@ -104,7 +104,7 @@ function renderMessage(id,msg){
     bubble.querySelector('.chat-img').addEventListener('click', ()=>{
       const modal=document.createElement('div');
       modal.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;z-index:1000;";
-      modal.innerHTML=`<img src="${msg.img}" style="max-width:90%;max-height:90%;border-radius:8px;"><span style="position:absolute;top:20px;right:30px;font-size:30px;color:#fff;cursor:pointer;">&times;</span>`;
+      modal.innerHTML=`<img src="${msg.img}" style="max-width:90%;max-height:90%;border-radius:8px;"><span style='position:absolute;top:20px;right:30px;font-size:30px;color:#fff;cursor:pointer;'>&times;</span>`;
       document.body.appendChild(modal);
       modal.querySelector('span').addEventListener('click', ()=>modal.remove());
     });
@@ -118,9 +118,13 @@ function renderReactions(container,msgId,reactions){
   let myReaction = reactions[currentUser.uid]||null;
 
   emojis.forEach(em=>{
+    let count=0;
+    Object.values(reactions).forEach(r=>{if(r===em) count++;});
+
     const btn=document.createElement('span'); btn.className='reaction-btn';
     if(myReaction===em) btn.classList.add('you');
-    btn.textContent = reactions[em]?`${em} ${reactions[em]}`:em;
+    btn.textContent = count>0?`${em} ${count}`:em;
+
     btn.addEventListener('click', async()=>{
       const reactRef = ref(db, `messages/${msgId}/reactions/${currentUser.uid}`);
       if(myReaction===em) await set(reactRef,null);
