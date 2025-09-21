@@ -84,7 +84,7 @@
     // ✅ Auth check
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        window.location.href = "../Login/index.html";
+        window.location.href = "../Login";
       } else {
         currentUser = user;
         document.getElementById("welcome").innerText = "Welcome, " + (user.displayName || user.email);
@@ -97,7 +97,7 @@
     // Logout
     document.getElementById("logoutBtn").addEventListener("click", async () => {
       await signOut(auth);
-      window.location.href = "../Login/index.html";
+      window.location.href = "../Login";
     });
 
     // Change Email
