@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Chat..</title>
+  <title>Chat</title>
   <style>
     body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f9;margin:0;padding:0}
     .wrap{max-width:860px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 8px 26px rgba(10,20,30,0.06);display:flex;flex-direction:column;height:100vh}
@@ -53,11 +53,16 @@
     import { getDatabase, ref, push, onChildAdded, onChildChanged, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
     import { getAuth, onAuthStateChanged, signOut, updateEmail, updatePassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
+    // ✅ Aapka Firebase Config (ready-to-use)
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-      projectId: "YOUR_PROJECT_ID",
+      apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
+      authDomain: "devchatbyhamad.firebaseapp.com",
+      databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
+      projectId: "devchatbyhamad",
+      storageBucket: "devchatbyhamad.appspot.com",
+      messagingSenderId: "798871184058",
+      appId: "1:798871184058:web:c735bea9756f8109149883",
+      measurementId: "G-QTCCWC70QH"
     };
 
     const app = initializeApp(firebaseConfig);
