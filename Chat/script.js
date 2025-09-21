@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getDatabase, ref, push, onChildAdded, onChildChanged, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
@@ -9,9 +9,9 @@ const firebaseConfig = {
   projectId: "devchatbyhamad",
   storageBucket: "devchatbyhamad.appspot.com",
   messagingSenderId: "798871184058",
-  appId: "1:798871184058:web:c735bea9756f8109149883",
-  measurementId: "G-QTCCWC70QH"
+  appId: "1:798871184058:web:c735bea9756f8109149883"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
@@ -22,75 +22,94 @@ const sendBtn = document.getElementById('sendBtn');
 const fileInput = document.getElementById('fileInput');
 const imgBtn = document.getElementById('imgBtn');
 const imgPreview = document.getElementById('imgPreview');
-const menuBtn = document.querySelector('.menu-btn');
-const menuPanel = document.querySelector('.menu-panel');
+
+const menuBtn = document.getElementById('menuBtn');
+const menuPanel = document.getElementById('menuPanel');
 const logoutBtn = document.getElementById('logoutBtn');
-const notifyContainer = document.getElementById('notifyContainer');
 
-let currentUser=null;
-let pendingImage=null;
+const replyPreview = document.getElementById('replyPreview');
+const replyTextEl = document.getElementById('replyText');
+const cancelReplyBtn = document.getElementById('cancelReply');
+let replyToId = null;
 
-function notify(msg,type='success'){
-  const div=document.createElement('div'); div.className=`notification ${type}`; div.textContent=msg;
-  notifyContainer.appendChild(div);
-  setTimeout(()=>div.remove(),3000);
-}
+let currentUser = null;
+let pendingImage = null;
 
-onAuthStateChanged(auth,user=>{
+// Auth
+onAuthStateChanged(auth, user=>{
   if(!user) window.location.href="../Login";
-  else currentUser=user;
-
-  onChildAdded(ref(db,'messages'), snap=>renderMessage(snap.key,snap.val()));
+  else{
+    currentUser=user;
+    document.getElementById("welcome").innerText = "Welcome, "+(user.displayName||user.email);
+    onChildAdded(ref(db,'messages'), snap=>renderMessage(snap.key,snap.val()));
+    onChildChanged(ref(db,'messages'), snap=>updateMessage(snap.key,snap.val()));
+  }
 });
 
-menuBtn.addEventListener('click', ()=>menuPanel.style.display=menuPanel.style.display==='flex'?'none':'flex');
-logoutBtn.addEventListener('click', async()=>{ await signOut(auth); window.location.href="../Login"; });
+// Menu toggle
+menuBtn.onclick = ()=>{menuPanel.style.display=menuPanel.style.display==='flex'?'none':'flex';};
+logoutBtn.onclick = async()=>{await signOut(auth); window.location.href="../Login";};
 
-imgBtn.addEventListener('click', ()=>fileInput.click());
-fileInput.addEventListener('change', e=>{
+// Cancel reply
+cancelReplyBtn.onclick = ()=>{replyToId=null; replyPreview.style.display='none';};
+
+// Image selection
+imgBtn.onclick=()=>fileInput.click();
+fileInput.onchange = e=>{
   const file = e.target.files[0]; if(!file) return;
   const reader = new FileReader();
-  reader.onload = ev => {
+  reader.onload = ev=>{
     pendingImage = ev.target.result;
-    imgPreview.style.display='flex';
     imgPreview.innerHTML = `<img src="${pendingImage}" alt="preview"/>`;
-  };
+    imgPreview.style.display='block';
+  }
   reader.readAsDataURL(file);
-});
+}
+
+// Send message
+sendBtn.onclick = sendMessage;
+msgInput.addEventListener('keydown', e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault(); sendMessage();}});
 
 async function sendMessage(){
   const text = msgInput.value.trim();
-  if(!text && !pendingImage){ notify("Message empty","error"); return; }
+  if(!text && !pendingImage) return;
 
   const payload = {
-    uid:currentUser.uid,
-    username:currentUser.displayName||currentUser.email,
-    ts:Date.now(),
-    text:text||"",
-    img:pendingImage||null,
+    uid: currentUser.uid,
+    username: currentUser.displayName||currentUser.email,
+    ts: Date.now(),
+    text: text||"",
+    img: pendingImage||null,
+    replyTo: replyToId || null,
     reactions:{}
   };
   await push(ref(db,'messages'),payload);
   msgInput.value=''; pendingImage=null; imgPreview.style.display='none';
-  notify("Message sent");
+  replyToId=null; replyPreview.style.display='none';
 }
 
-sendBtn.addEventListener('click', sendMessage);
-msgInput.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } });
-
+// Render messages
 function renderMessage(id,msg){
   const row = document.createElement('div'); row.className='msg-row';
   if(msg.uid===currentUser.uid) row.classList.add('self');
 
-  const avatar=document.createElement('img'); avatar.className='avatar';
+  const avatar = document.createElement('img'); avatar.className='avatar';
   avatar.src = msg.photoURL || `https://avatars.dicebear.com/api/identicon/${encodeURIComponent(msg.username)}.svg`;
   row.appendChild(avatar);
 
-  const bubble=document.createElement('div'); bubble.className='bubble';
+  const bubble = document.createElement('div'); bubble.className='bubble';
   bubble.innerHTML=`<div class="meta">${msg.username} <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span></div>`;
+  if(msg.replyTo){
+    const replyDiv = document.createElement('div'); replyDiv.style.fontSize='12px'; replyDiv.style.color='#555';
+    replyDiv.textContent = "Replying...";
+    bubble.appendChild(replyDiv);
+  }
   if(msg.img) bubble.innerHTML += `<img src="${msg.img}" class="chat-img"/>`;
   if(msg.text) bubble.innerHTML += `<div>${msg.text}</div>`;
   row.appendChild(bubble);
+
+  addReactions(bubble,id);
+  addReplyFeature(bubble,id,msg.text);
 
   messagesEl.appendChild(row);
   messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -105,3 +124,34 @@ function renderMessage(id,msg){
     });
   }
 }
+
+// Reactions
+const emojiList = ["👍","😂","❤️","🔥","😢","😡"];
+function addReactions(bubble,msgId){
+  const reactDiv = document.createElement('div'); reactDiv.className='reactions';
+  emojiList.forEach(emoji=>{
+    const btn = document.createElement('span'); btn.className='reaction-btn'; btn.textContent = emoji;
+    btn.addEventListener('click', async()=>{
+      const reactRef = ref(db, `messages/${msgId}/reactions/${currentUser.uid}`);
+      await set(reactRef, emoji);
+    });
+    reactDiv.appendChild(btn);
+  });
+  bubble.appendChild(reactDiv);
+}
+
+// Reply button
+function addReplyFeature(bubble,msgId,msgText){
+  const replyBtn = document.createElement('span'); replyBtn.textContent='Reply';
+  replyBtn.style.fontSize='12px'; replyBtn.style.marginLeft='8px'; replyBtn.style.cursor='pointer';
+  replyBtn.addEventListener('click', ()=>{
+    replyToId = msgId;
+    replyPreview.style.display='flex';
+    replyTextEl.textContent = msgText;
+    msgInput.focus();
+  });
+  bubble.appendChild(replyBtn);
+}
+
+// Update message
+function updateMessage(id,msg){ /* For reactions update */ }
