@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login - DevChat</title>
+  <title>Login</title>
 </head>
 <body>
   <h2>Login</h2>
-  <input type="email" id="email" placeholder="Email" required><br>
-  <input type="password" id="password" placeholder="Password" required><br>
-  <button onclick="login()">Login</button>
-  <p>Don’t have an account? <a href="signup.html">Signup</a></p>
+  <input type="email" id="email" placeholder="Email"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <button id="loginBtn">Login</button>
+  <p>No account? <a href="signup.html">Signup</a></p>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
@@ -19,16 +19,15 @@
       apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
       authDomain: "devchatbyhamad.firebaseapp.com",
       projectId: "devchatbyhamad",
-      storageBucket: "devchatbyhamad.firebasestorage.app",
+      storageBucket: "devchatbyhamad.appspot.com",
       messagingSenderId: "798871184058",
-      appId: "1:798871184058:web:c735bea9756f8109149883",
-      measurementId: "G-QTCCWC70QH"
+      appId: "1:798871184058:web:c735bea9756f8109149883"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    async function login() {
+    document.getElementById("loginBtn").addEventListener("click", async () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
@@ -37,9 +36,9 @@
         alert("Login successful ✅");
         window.location.href = "chat.html";
       } catch (err) {
-        alert("❌ " + err.message);
+        alert(err.message);
       }
-    }
+    });
   </script>
 </body>
 </html>
