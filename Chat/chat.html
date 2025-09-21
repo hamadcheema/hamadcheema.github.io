@@ -1,90 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Baatly at</title>
-  <link rel="stylesheet" href="chat.css">
-  <style>
-    body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f9;margin:0;padding:0}
-    .wrap{max-width:860px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 8px 26px rgba(10,20,30,0.06);display:flex;flex-direction:column;height:100vh;position:relative;overflow:hidden}
-    h2{margin:0;color:#042a57;font-size:20px;text-align:center;padding:8px}
-    #messages{flex:1;overflow-y:auto;padding:12px;background:#fafbfd;transition:all 0.3s ease;}
-    .msg-row{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start;opacity:0;transform:translateX(-20px);animation:slideIn 0.3s forwards;}
-    @keyframes slideIn{to{opacity:1;transform:translateX(0);}}
-    .avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;cursor:pointer}
-    .bubble{background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.03);min-width:70px;max-width:74%;position:relative;transition:all 0.2s;}
-    .bubble:hover{transform:scale(1.02);}
-    .meta{font-weight:700;color:#042a57;margin-bottom:4px;font-size:13px}
-    .time{font-weight:400;color:#666;font-size:11px;margin-left:8px}
-    .chat-img{max-width:220px;border-radius:8px;display:block;margin-top:6px;cursor:pointer;transition:all 0.2s;}
-    .chat-img:hover{transform:scale(1.03);}
-    .caption{color:#222;margin-top:4px;font-size:13px}
-    .controls{display:flex;gap:6px;align-items:center;padding:8px;background:#fff;border-top:1px solid #ddd;position:relative;z-index:2}
-    #msgInput{flex:1;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:14px}
-    #emojiPicker{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;max-height:120px;overflow:auto;transition:all 0.3s ease;}
-    #emojiPicker span{cursor:pointer;padding:6px;border-radius:6px;background:#f0f0f0;font-size:18px;transition:0.2s;}
-    #emojiPicker span:hover{background:#dfeffd;}
-    .preview{margin-top:6px;padding:0 8px}
-    .preview img{max-width:100px;border-radius:8px;display:block;margin-bottom:4px}
-    .reactions {margin-top:6px; display:flex; gap:6px; align-items:center; flex-wrap:wrap}
-    .reaction-btn{padding:4px 8px;border-radius:14px;background:#f6f6f6;cursor:pointer;font-size:12px;transition:0.2s}
-    .reaction-btn.you{background:#dfeffd}
-    /* full screen image overlay */
-    #fullScreenOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:10}
-    #fullScreenOverlay img{max-width:90%;max-height:90%;border-radius:10px}
-    #fullScreenOverlay button{position:absolute;top:20px;right:20px;padding:10px 15px;border:none;background:#fff;border-radius:6px;cursor:pointer;font-size:16px}
-    /* settings panel */
-    #settingsPanel{position:absolute;top:0;right:-300px;width:300px;height:100%;background:#fff;border-left:1px solid #ddd;padding:20px;transition:all 0.3s ease;z-index:5;overflow:auto;}
-    #settingsPanel.open{right:0;}
-    #settingsPanel h3{margin-top:0;color:#042a57;}
-    #settingsPanel input{width:100%;padding:8px;margin-bottom:10px;border-radius:6px;border:1px solid #ccc;}
-    #settingsPanel button{width:100%;padding:10px;margin-bottom:8px;border-radius:6px;border:none;background:#042a57;color:#fff;cursor:pointer;}
-    /* top menu */
-    #topMenu{position:absolute;top:8px;right:8px;cursor:pointer;z-index:3;}
-    #topMenu div{width:25px;height:3px;background:#042a57;margin:5px 0;transition:0.3s;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baatly Chat</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="wrap">
+<div class="container">
+  <div class="header">
     <h2 id="welcome">Welcome</h2>
-    <div id="topMenu">
-      <div></div><div></div><div></div>
-    </div>
-    <div id="messages"></div>
-
-    <div class="preview" id="imgPreview" style="display:none"></div>
-    <div class="controls">
-      <input id="msgInput" placeholder="Write a message"/>
-      <button id="emojiToggle">😀</button>
-      <input id="fileInput" type="file" accept="image/*" style="display:none" />
-      <button id="imgBtn">📷</button>
-      <button id="sendBtn">Send</button>
-    </div>
-    <div id="emojiPicker" style="display:none"></div>
-
-    <!-- full screen image overlay -->
-    <div id="fullScreenOverlay">
-      <button id="closeFullScreen">Close</button>
-      <img src="" alt="full view"/>
-    </div>
-
-    <!-- settings panel -->
-    <div id="settingsPanel">
-      <h3>Settings</h3>
-      <label>Profile Picture</label>
-      <input type="file" id="profilePicInput" accept="image/*"/>
-      <div class="preview" id="profilePreview" style="display:none"></div>
-      <label>Username</label>
-      <input type="text" id="usernameInput"/>
-      <label>Email</label>
-      <input type="email" id="emailInput"/>
-      <label>Password</label>
-      <input type="password" id="passwordInput"/>
-      <button id="saveSettingsBtn">Save Changes</button>
+    <div class="menu-btn">☰</div>
+    <div class="menu-panel">
       <button id="logoutBtn">Logout</button>
     </div>
   </div>
 
-  <script type="module" src="./chat.js"></script>
+  <div id="messages"></div>
+
+  <div class="preview" id="imgPreview" style="display:none"></div>
+
+  <div class="controls">
+    <input id="msgInput" placeholder="Write a message"/>
+    <button id="emojiToggle">😀</button>
+    <input id="fileInput" type="file" accept="image/*" style="display:none">
+    <button id="imgBtn">📷</button>
+    <button id="sendBtn">Send</button>
+  </div>
+
+  <div id="emojiPicker"></div>
+</div>
+
+<script type="module" src="script.js"></script>
 </body>
 </html>
