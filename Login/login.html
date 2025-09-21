@@ -1,1 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baatly Login</title>
+<link rel="stylesheet" href="../styles.css">
+<style>
+  .form-wrap { max-width:400px; margin:80px auto; background:#fff; padding:30px; border-radius:12px; box-shadow:0 8px 26px rgba(0,0,0,0.1);}
+  input { width:100%; padding:12px; margin:10px 0; border-radius:6px; border:1px solid #ccc; font-size:16px;}
+  button { width:100%; padding:12px; margin-top:10px; border:none; border-radius:6px; background:#667eea; color:#fff; font-weight:600; font-size:16px;}
+  button:hover{ background:#556cd6;}
+  #loading { display:none; text-align:center; margin:10px 0; }
+  .forgot { text-align:right; font-size:14px; color:#667eea; cursor:pointer; }
+</style>
+</head>
+<body>
 
+<div class="form-wrap">
+  <h2>Login to Baatly</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <div class="forgot" id="forgotPwd">Forgot Password?</div>
+  <button id="loginBtn">Login</button>
+  <button id="googleLoginBtn">Login with Google</button>
+  <div id="loading">Logging in...</div>
+  <div style="text-align:center;margin-top:12px;">Don't have an account? <a href="../Signup/signup.html">Signup</a></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
+  authDomain: "devchatbyhamad.firebaseapp.com",
+  databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
+  projectId: "devchatbyhamad",
+  storageBucket: "devchatbyhamad.appspot.com",
+  messagingSenderId: "798871184058",
+  appId: "1:798871184058:web:c735bea9756f8109149883"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const emailEl = document.getElementById('email');
+const passEl = document.getElementById('password');
+const loginBtn = document.getElementById('loginBtn');
+const googleBtn = document.getElementById('googleLoginBtn');
+const forgotPwd = document.getElementById('forgotPwd');
+const loading = document.getElementById('loading');
+
+// Notification function
+function notify(msg,type='success'){
+  const n=document.createElement('div');
+  n.className=`notification ${type}`;
+  n.textContent=msg;
+  document.body.appendChild(n);
+  setTimeout(()=>n.remove(),3000);
+}
+
+// Login with email/password
+loginBtn.onclick = async () => {
+  loading.style.display='block';
+  try{
+    await signInWithEmailAndPassword(auth,emailEl.value,passEl.value);
+    notify("Login successful ✅",'success');
+    window.location.href="../Chat/chat.html";
+  }catch(err){
+    notify(err.message,'error');
+  }finally{ loading.style.display='none'; }
+};
+
+// Login with Google
+googleBtn.onclick = async () => {
+  const provider = new GoogleAuthProvider();
+  try{
+    await signInWithPopup(auth,provider);
+    notify("Google login successful ✅",'success');
+    window.location.href="../Chat/chat.html";
+  }catch(err){ notify(err.message,'error'); }
+};
+
+// Forgot password
+forgotPwd.onclick = async () => {
+  if(!emailEl.value){ notify("Enter email first",'error'); return; }
+  try{
+    await sendPasswordResetEmail(auth,emailEl.value);
+    notify("Password reset email sent ✅",'success');
+  }catch(err){ notify(err.message,'error'); }
+};
+</script>
+</body>
+</html>
