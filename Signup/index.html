@@ -1,22 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baatly - Signup</title>
-<link rel="stylesheet" href="../assets/styles.css">
+  <meta charset="utf-8" />
+  <title>Baatly Signup</title>
+  <link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
-<h2>Create your Baatly account</h2>
-<div>
-  <form id="signupForm">
-    <input type="text" id="displayName" placeholder="Full Name" required><br>
-    <input type="email" id="email" placeholder="Email" required><br>
-    <input type="password" id="password" placeholder="Password" required><br>
-    <button type="submit">Signup</button>
-  </form>
-  <button id="googleSignUp">Signup with Google</button><br>
-  <p>Already have an account? <a href="../Login/">Login</a></p>
+<div class="wrap" style="padding:20px;">
+  <h2>Create your Baatly Account</h2>
+  <input type="text" id="nameInput" placeholder="Name" style="width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc;">
+  <input type="email" id="emailInput" placeholder="Email" style="width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc;">
+  <input type="password" id="passInput" placeholder="Password" style="width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc;">
+  <button id="signupBtn" style="width:100%;padding:10px;margin:10px 0;border:none;border-radius:8px;background:#42a5f5;color:white;font-weight:bold;cursor:pointer;">Signup</button>
+  <button id="googleBtn" style="width:100%;padding:10px;margin:6px 0;border:none;border-radius:8px;background:#f44336;color:white;font-weight:bold;cursor:pointer;">Signup with Google</button>
+  <p>Already have account? <a href="../Login/index.html">Login</a></p>
 </div>
 <div class="banner" id="banner"></div>
 <script type="module" src="signup.js"></script>
