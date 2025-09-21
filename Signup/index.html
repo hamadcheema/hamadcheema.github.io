@@ -33,7 +33,14 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  updateProfile, 
+  sendEmailVerification 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
@@ -68,8 +75,12 @@ signupBtn.onclick=async()=>{
   try{
     const userCred=await createUserWithEmailAndPassword(auth,emailEl.value,passEl.value);
     if(nameEl.value) await updateProfile(userCred.user,{displayName:nameEl.value});
-    notify("Signup successful ✅",'success');
-    window.location.href="../Chat/index.html";
+    
+    // ✅ Send email verification
+    await sendEmailVerification(userCred.user);
+    notify("Signup successful ✅ Check your email to verify your account.","success");
+    
+    // ❌ No redirect until email verified
   }catch(err){ notify(err.message,'error'); }
   finally{ loading.style.display='none'; }
 };
