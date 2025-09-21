@@ -1,5 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendEmailVerification, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
@@ -15,36 +15,38 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const notify = (msg, type = "error") => {
-  const box = document.getElementById("notification");
-  box.innerText = msg;
-  box.style.color = type === "success" ? "green" : "red";
-  setTimeout(() => (box.innerText = ""), 3000);
-};
+const signupForm = document.getElementById('signupForm');
+const googleBtn = document.getElementById('googleSignUp');
+const banner = document.getElementById('banner');
 
-// Email/Password Signup
-document.getElementById("signupForm").addEventListener("submit", async (e) => {
+function showBanner(msg,type='success'){
+  banner.textContent=msg; banner.className=`banner ${type} show`;
+  setTimeout(()=> banner.className='banner',3000);
+}
+
+signupForm.addEventListener('submit', async e=>{
   e.preventDefault();
-  const email = document.getElementById("signupEmail").value;
-  const password = document.getElementById("signupPassword").value;
-
-  try {
-    const userCred = await createUserWithEmailAndPassword(auth, email, password);
+  const email=document.getElementById('email').value;
+  const password=document.getElementById('password').value;
+  const displayName=document.getElementById('displayName').value;
+  try{
+    const userCred = await createUserWithEmailAndPassword(auth,email,password);
+    await updateProfile(userCred.user,{displayName});
     await sendEmailVerification(userCred.user);
-    notify("Signup successful! Please verify your email.", "success");
-  } catch (error) {
-    notify(error.message);
-  }
+    showBanner("Verification email sent! Check your inbox.",'success');
+    signupForm.reset();
+  }catch(err){ showBanner(err.message,'error'); }
 });
 
-// Google Signup
-const googleProvider = new GoogleAuthProvider();
-document.getElementById("googleSignupBtn").addEventListener("click", async () => {
-  try {
-    await signInWithPopup(auth, googleProvider);
-    notify("Google signup successful!", "success");
-    setTimeout(() => window.location.href = "../Chat/index.html", 1500);
-  } catch (error) {
-    notify(error.message);
-  }
+googleBtn.addEventListener('click', async ()=>{
+  try{
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth,provider);
+    if(!result.user.emailVerified){
+      await sendEmailVerification(result.user);
+      showBanner("Verification email sent! Check your inbox.",'success');
+    } else {
+      window.location.href="../Chat/";
+    }
+  }catch(err){ showBanner(err.message,'error'); }
 });
