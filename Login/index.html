@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
+      authDomain: "devchatbyhamad.firebaseapp.com",
+      databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
+      projectId: "devchatbyhamad",
+      storageBucket: "devchatbyhamad.firebasestorage.app",
+      messagingSenderId: "798871184058",
+      appId: "1:798871184058:web:c735bea9756f8109149883",
+      measurementId: "G-QTCCWC70QH"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          const userCred = await signInWithEmailAndPassword(auth, email, password);
+          if (!userCred.user.emailVerified) {
+            alert("❌ Please verify your email first.");
+            return;
+          }
+          window.location.href = "chat.html";
+        } catch (err) {
+          alert("❌ " + err.message);
+        }
+      });
+
+      document.getElementById("forgotBtn").addEventListener("click", async () => {
+        const email = prompt("Enter your registered email:");
+        if (!email) return;
+        try {
+          await sendPasswordResetEmail(auth, email);
+          alert("✅ Password reset link sent to your email.");
+        } catch (err) {
+          alert("❌ " + err.message);
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button type="submit">Login</button>
+  </form>
+  <p><a href="#" id="forgotBtn">Forgot Password?</a></p>
+  <p>Don’t have an account? <a href="signup.html">Signup</a></p>
+</body>
+</html>
 
