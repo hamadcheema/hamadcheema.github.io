@@ -1,28 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Signup</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baatly - Signup</title>
+<link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
-  <div class="form-container">
-    <h2>Signup</h2>
-
-    <div id="notification"></div>
-
-    <form id="signupForm">
-      <input type="email" id="signupEmail" placeholder="Email" required>
-      <input type="password" id="signupPassword" placeholder="Password" required>
-      <button type="submit">Signup</button>
-    </form>
-
-    <button id="googleSignupBtn" class="google-btn">Signup with Google</button>
-
-    <p>Already have an account? <a href="../Login/index.html">Login here</a></p>
-  </div>
-
-  <script type="module" src="signup.js"></script>
+<h2>Create your Baatly account</h2>
+<div>
+  <form id="signupForm">
+    <input type="text" id="displayName" placeholder="Full Name" required><br>
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button type="submit">Signup</button>
+  </form>
+  <button id="googleSignUp">Signup with Google</button><br>
+  <p>Already have an account? <a href="../Login/">Login</a></p>
+</div>
+<div class="banner" id="banner"></div>
+<script type="module" src="signup.js"></script>
 </body>
 </html>
