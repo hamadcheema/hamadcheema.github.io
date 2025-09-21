@@ -1,7 +1,6 @@
-// Firebase imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
@@ -68,7 +67,8 @@ async function sendMessage(){
     username:currentUser.displayName||currentUser.email,
     ts:Date.now(),
     text:text||"",
-    img:pendingImage||null
+    img:pendingImage||null,
+    reactions:{}
   };
   await push(ref(db,'messages'),payload);
   msgInput.value=''; pendingImage=null; imgPreview.style.display='none';
@@ -91,7 +91,14 @@ function renderMessage(id,msg){
   if(msg.img) bubble.innerHTML += `<img src="${msg.img}" class="chat-img"/>`;
   if(msg.text) bubble.innerHTML += `<div>${msg.text}</div>`;
   row.appendChild(bubble);
-  messagesEl.prepend(row);
+
+  // Reactions
+  const reactionsDiv=document.createElement('div'); reactionsDiv.className='reactions';
+  bubble.appendChild(reactionsDiv);
+  renderReactions(reactionsDiv, id, msg.reactions||{});
+
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
 
   if(msg.img){
     bubble.querySelector('.chat-img').addEventListener('click', ()=>{
@@ -102,4 +109,23 @@ function renderMessage(id,msg){
       modal.querySelector('span').addEventListener('click', ()=>modal.remove());
     });
   }
+}
+
+// Reactions
+function renderReactions(container,msgId,reactions){
+  container.innerHTML='';
+  const emojis=["👍","😂","❤️","🔥","😢","😡"];
+  let myReaction = reactions[currentUser.uid]||null;
+
+  emojis.forEach(em=>{
+    const btn=document.createElement('span'); btn.className='reaction-btn';
+    if(myReaction===em) btn.classList.add('you');
+    btn.textContent = reactions[em]?`${em} ${reactions[em]}`:em;
+    btn.addEventListener('click', async()=>{
+      const reactRef = ref(db, `messages/${msgId}/reactions/${currentUser.uid}`);
+      if(myReaction===em) await set(reactRef,null);
+      else await set(reactRef,em);
+    });
+    container.appendChild(btn);
+  });
 }
