@@ -1,0 +1,335 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Real Time Chat</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f9;margin:0;padding:0}
+    .wrap{
+      max-width:860px;
+      margin:0 auto;
+      background:#fff;
+      padding:0; /* padding hata diya */
+      border-radius:10px;
+      box-shadow:0 8px 26px rgba(10,20,30,0.06);
+      display:flex;
+      flex-direction:column;
+      height:100vh;
+    }
+    h1{margin:0;color:#042a57;font-size:20px;text-align:center;padding:8px}
+    #status{color:#333;text-align:center;font-size:14px;padding:4px}
+    #usernameArea{display:flex;gap:6px;align-items:center;padding:8px}
+    #usernameInput{flex:1;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:14px}
+    button{padding:9px 12px;border-radius:8px;border:0;background:#e63946;color:#fff;font-weight:600;cursor:pointer;font-size:14px}
+    button.secondary{background:#042a57}
+    #messages{
+      flex:1;
+      overflow-y:auto;
+      border-radius:0;
+      border:0;
+      padding:12px;
+      background:#fafbfd;
+    }
+    .msg-row{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start}
+    .avatar{width:38px;height:38px;border-radius:50%;flex:0 0 38px}
+    .bubble{background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.03);min-width:70px;max-width:74%}
+    .meta{font-weight:700;color:#042a57;margin-bottom:4px;font-size:13px}
+    .time{font-weight:400;color:#666;font-size:11px;margin-left:8px}
+    .chat-img{max-width:220px;border-radius:8px;display:block;margin-top:6px}
+    .caption{color:#222;margin-top:4px;font-size:13px}
+    .controls{display:flex;gap:6px;align-items:center;padding:8px;background:#fff;border-top:1px solid #ddd}
+    #msgInput{flex:1;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:14px}
+    #emojiPicker{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;max-height:120px;overflow:auto}
+    #emojiPicker span{cursor:pointer;padding:6px;border-radius:6px;background:#f0f0f0;font-size:18px}
+    .preview{margin-top:6px;padding:0 8px}
+    .preview img{max-width:100px;border-radius:8px;display:block;margin-bottom:4px}
+    .reactions {margin-top:6px; display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+    .reaction-btn{padding:4px 8px;border-radius:14px;background:#f6f6f6;cursor:pointer; font-size:12px}
+    .reaction-btn.you{background:#dfeffd}
+    /* sticky header + input */
+    h1, #status, #usernameArea {
+      background:#fff;
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+    #compose {
+      background:#fff;
+      position:sticky;
+      bottom:0;
+      z-index:10;
+      border-top:1px solid #ddd;
+    }
+    /* mobile adjust */
+    @media(max-width:600px){
+      .wrap{border-radius:0;box-shadow:none}
+      #messages{border:0}
+      .controls{padding:6px}
+      #msgInput{font-size:13px}
+      button{font-size:13px;padding:7px 10px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>💬 Chat</h1>
+    <div id="status">Connecting...</div>
+
+    <div id="usernameArea">
+      <input id="usernameInput" placeholder="Choose username (required to send)"/>
+      <button id="saveUsernameBtn" class="secondary">Save</button>
+      <button id="readOnlyBtn">Read Only</button>
+    </div>
+
+    <div id="messages" aria-live="polite"></div>
+
+    <div id="compose" style="display:none">
+      <div class="preview" id="imgPreview" style="display:none"></div>
+      <div class="controls">
+        <input id="msgInput" placeholder="Write a message"/>
+        <button id="emojiToggle">😀</button>
+        <input id="fileInput" type="file" accept="image/*" style="display:none" />
+        <button id="imgBtn">📷</button>
+        <button id="sendBtn">Send</button>
+      </div>
+      <div id="emojiPicker" style="display:none"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded, onChildChanged, set, child, get } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAqcF-u7zaTc0CwgXORBNi0ehhYYMG5a6g",
+      authDomain: "titibankpumpfun.firebaseapp.com",
+      databaseURL: "https://titibankpumpfun-default-rtdb.firebaseio.com",
+      projectId: "titibankpumpfun",
+      storageBucket: "",
+      messagingSenderId: "713215451720",
+      appId: "1:713215451720:web:a9ead74e25448f431fee7d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+
+    const statusEl = document.getElementById('status');
+    const messagesEl = document.getElementById('messages');
+    const usernameInput = document.getElementById('usernameInput');
+    const saveUsernameBtn = document.getElementById('saveUsernameBtn');
+    const readOnlyBtn = document.getElementById('readOnlyBtn');
+    const compose = document.getElementById('compose');
+    const msgInput = document.getElementById('msgInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const emojiToggle = document.getElementById('emojiToggle');
+    const emojiPicker = document.getElementById('emojiPicker');
+    const fileInput = document.getElementById('fileInput');
+    const imgBtn = document.getElementById('imgBtn');
+    const imgPreview = document.getElementById('imgPreview');
+
+    let currentUser = null;
+    let canSend = false;
+    let pendingImage = null;
+
+    // emojis
+    const emojis = ["😀","😁","😂","🤣","😊","😍","😎","😢","😡","👍","🙏","🔥","❤️","💔","🎉","👏","👌","😴","🤔","🙄","😱","🥶","🤯","🥳","🤗","🤩","😇","😈","💯","⚡","🌹"];
+    emojis.forEach(e=>{
+      const s = document.createElement('span');
+      s.textContent = e;
+      s.onclick = ()=>{ msgInput.value += e; emojiPicker.style.display='none'; };
+      emojiPicker.appendChild(s);
+    });
+    emojiToggle.addEventListener('click', ()=> {
+      emojiPicker.style.display = emojiPicker.style.display==='flex'?'none':'flex';
+    });
+
+    function avatarFor(name){ return `https://avatars.dicebear.com/api/identicon/${encodeURIComponent(name)}.svg`; }
+
+    signInAnonymously(auth);
+    onAuthStateChanged(auth, async (user)=>{
+      if(!user) return;
+      currentUser = { uid:user.uid, username:null, avatar:null };
+      statusEl.textContent = "Connected";
+
+      const snap = await get(child(ref(db),'users/'+user.uid));
+      if(snap.exists()){
+        const d=snap.val();
+        currentUser.username=d.username;
+        currentUser.avatar=d.avatar;
+        openChat();
+      }
+
+      onChildAdded(ref(db,'messages'), (snap)=> renderMessage(snap.key, snap.val()));
+      onChildChanged(ref(db,'messages'), (snap)=> updateMessage(snap.key, snap.val()));
+    });
+
+    saveUsernameBtn.addEventListener('click', async ()=>{
+      const name = usernameInput.value.trim();
+      if(!name) return alert("Enter username");
+      const avatar = avatarFor(name);
+      await set(ref(db,'users/'+currentUser.uid),{username:name,avatar});
+      currentUser.username=name;
+      currentUser.avatar=avatar;
+      openChat();
+    });
+
+    readOnlyBtn.addEventListener('click', ()=>{
+      document.getElementById('usernameArea').style.display='none';
+      compose.style.display='none';
+      canSend=false;
+    });
+
+    function openChat(){
+      document.getElementById('usernameArea').style.display='none';
+      compose.style.display='block';
+      canSend=true;
+    }
+
+    // send function with loading indicator
+    async function sendMessage(){
+      if(!canSend) return alert("Set username first");
+      const text = msgInput.value.trim();
+      if(!text && !pendingImage) return;
+
+      const tempId = "temp-"+Date.now();
+      const tempPayload = {
+        uid:currentUser.uid,
+        username:currentUser.username,
+        avatar:currentUser.avatar,
+        ts:Date.now(),
+        type: pendingImage ? "image" : "text",
+        text:"sending..."
+      };
+      renderMessage(tempId,tempPayload);
+
+      const payload = {
+        uid:currentUser.uid,
+        username:currentUser.username,
+        avatar:currentUser.avatar,
+        ts:Date.now()
+      };
+
+      if(pendingImage){
+        payload.type='image';
+        payload.text=pendingImage;
+        if(text) payload.caption=text;
+        pendingImage=null;
+        imgPreview.style.display='none';
+      } else {
+        payload.type='text';
+        payload.text=text;
+      }
+
+      await push(ref(db,'messages'),payload);
+
+      // ✅ input clear
+      msgInput.value='';
+      fileInput.value='';
+      document.getElementById("msg-"+tempId)?.remove();
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    msgInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // image selection preview
+    imgBtn.addEventListener('click',()=> fileInput.click());
+    fileInput.addEventListener('change', e=>{
+      const file=e.target.files[0];
+      if(!file) return;
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        pendingImage=ev.target.result;
+        imgPreview.innerHTML=`<img src="${pendingImage}" alt="preview"/>`;
+        imgPreview.style.display='block';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // toggle reaction
+    async function toggleReaction(msgId, emoji, prev){
+      if(!currentUser) return;
+      const reactRef = ref(db,`messages/${msgId}/reactions/${currentUser.uid}`);
+      if(prev === emoji){
+        await set(reactRef, null);
+      } else {
+        await set(reactRef, emoji);
+      }
+    }
+
+    // render message
+    function renderMessage(id,msg){
+      const row=document.createElement('div');
+      row.className='msg-row';
+      row.id='msg-'+id;
+
+      const avatar=document.createElement('img');
+      avatar.className='avatar';
+      avatar.src=msg.avatar||avatarFor(msg.username);
+      row.appendChild(avatar);
+
+      const bubble=document.createElement('div');
+      bubble.className='bubble';
+      bubble.innerHTML=`<div class="meta">${msg.username} <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span></div>`;
+      if(msg.type==='image'){
+        bubble.innerHTML+=`<img src="${msg.text}" class="chat-img"/>`;
+        if(msg.caption) bubble.innerHTML+=`<div class="caption">${msg.caption}</div>`;
+      } else {
+        bubble.innerHTML+=`<div>${msg.text}</div>`;
+      }
+
+      const reactionsDiv=document.createElement('div');
+      reactionsDiv.className='reactions';
+      bubble.appendChild(reactionsDiv);
+
+      row.appendChild(bubble);
+      messagesEl.appendChild(row);
+      messagesEl.scrollTop=messagesEl.scrollHeight;
+
+      renderReactions(id,msg);
+    }
+
+    // update msg
+    function updateMessage(id,msg){
+      const row=document.getElementById('msg-'+id);
+      if(!row) return renderMessage(id,msg);
+      renderReactions(id,msg);
+    }
+
+    // render reactions
+    function renderReactions(id,msg){
+      const row=document.getElementById('msg-'+id);
+      if(!row) return;
+      const reactionsDiv=row.querySelector('.reactions');
+      reactionsDiv.innerHTML='';
+
+      const reactions=msg.reactions||{};
+      const counts={};
+      let myReaction=null;
+
+      for(const uid in reactions){
+        const em=reactions[uid];
+        if(!em) continue;
+        counts[em]=(counts[em]||0)+1;
+        if(uid===currentUser?.uid) myReaction=em;
+      }
+
+      ["👍","😂","❤️","🔥","😢","😡"].forEach(em=>{
+        const btn=document.createElement('span');
+        btn.className='reaction-btn';
+        if(myReaction===em) btn.classList.add('you');
+        btn.textContent=counts[em]?`${em} ${counts[em]}`:em;
+        btn.onclick=()=>toggleReaction(id,em,myReaction);
+        reactionsDiv.appendChild(btn);
+      });
+    }
+  </script>
+</body>
+</html>
