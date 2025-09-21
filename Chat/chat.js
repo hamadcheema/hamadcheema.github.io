@@ -27,6 +27,7 @@ const emojiPicker = document.getElementById('emojiPicker');
 const fileInput = document.getElementById('fileInput');
 const imgBtn = document.getElementById('imgBtn');
 const imgPreview = document.getElementById('imgPreview');
+const notify = document.getElementById('notify');
 
 const menuBtn = document.getElementById('menuBtn');
 const settingsPanel = document.getElementById('settingsPanel');
@@ -38,9 +39,6 @@ const emailInput = document.getElementById('emailInput');
 const changeEmailBtn = document.getElementById('changeEmailBtn');
 const passwordInput = document.getElementById('passwordInput');
 const changePasswordBtn = document.getElementById('changePasswordBtn');
-const profilePicInput = document.getElementById('profilePicInput');
-const profilePreview = document.getElementById('profilePreview');
-const changeProfileBtn = document.getElementById('changeProfileBtn');
 
 const imgModal = document.getElementById('imgModal');
 const modalImg = imgModal.querySelector('img');
@@ -48,6 +46,13 @@ const closeModal = document.getElementById('closeModal');
 
 let currentUser = null;
 let pendingImage = null;
+
+// Notifications inside page
+function showNotify(msg){
+  notify.innerText = msg;
+  notify.style.display="block";
+  setTimeout(()=>notify.style.display="none",2500);
+}
 
 // Auth check
 onAuthStateChanged(auth,user=>{
@@ -57,62 +62,38 @@ onAuthStateChanged(auth,user=>{
     document.getElementById("welcome").innerText = "Welcome, "+(user.displayName||user.email);
     usernameInput.value=user.displayName||"";
     emailInput.value=user.email;
-
     onChildAdded(ref(db,'messages'), snap=>renderMessage(snap.key,snap.val()));
     onChildChanged(ref(db,'messages'), snap=>updateMessage(snap.key,snap.val()));
   }
 });
 
-// Toggle settings panel
+// Settings panel
 menuBtn.onclick = ()=>{settingsPanel.style.display='block';};
 closeSettings.onclick = ()=>{settingsPanel.style.display='none';};
-
-// Logout
 logoutBtn.onclick=async()=>{await signOut(auth); window.location.href="../Login";};
 
-// Change Name
+// Name change
 changeNameBtn.onclick=async()=>{
   const newName=usernameInput.value.trim();
-  if(!newName)return alert("Name cannot be empty");
+  if(!newName)return showNotify("⚠️ Name empty");
   await updateProfile(currentUser,{displayName:newName});
-  alert("✅ Name updated");
+  showNotify("✅ Name updated");
 };
 
-// Change Email
+// Email change
 changeEmailBtn.onclick=async()=>{
   const newEmail=emailInput.value.trim();
-  if(!newEmail)return alert("Email cannot be empty");
-  try{await updateEmail(currentUser,newEmail); alert("✅ Email updated");}
-  catch(err){alert("❌ "+err.message);}
+  if(!newEmail)return showNotify("⚠️ Email empty");
+  try{await updateEmail(currentUser,newEmail); showNotify("✅ Email updated");}
+  catch(err){showNotify("❌ "+err.message);}
 };
 
-// Change Password
+// Password change
 changePasswordBtn.onclick=async()=>{
   const newPass=passwordInput.value.trim();
-  if(!newPass)return alert("Password cannot be empty");
-  try{await updatePassword(currentUser,newPass); alert("✅ Password updated");}
-  catch(err){alert("❌ "+err.message);}
-};
-
-// Profile pic preview
-profilePicInput.onchange=e=>{
-  const file=e.target.files[0]; if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    profilePreview.innerHTML=`<img src="${ev.target.result}" alt="preview" style="max-width:100px; border-radius:50%;">`;
-    profilePreview.style.display='block';
-  };
-  reader.readAsDataURL(file);
-};
-
-// Change Profile Pic
-changeProfileBtn.onclick=async()=>{
-  const file=profilePicInput.files[0]; if(!file)return alert("Select a file first");
-  const storageRef=sRef(storage,'profilePics/'+currentUser.uid);
-  await uploadBytes(storageRef,file);
-  const url=await getDownloadURL(storageRef);
-  await updateProfile(currentUser,{photoURL:url});
-  alert("✅ Profile picture updated");
+  if(!newPass)return showNotify("⚠️ Password empty");
+  try{await updatePassword(currentUser,newPass); showNotify("✅ Password updated");}
+  catch(err){showNotify("❌ "+err.message);}
 };
 
 // Emojis
@@ -124,25 +105,39 @@ emojis.forEach(e=>{
 });
 emojiToggle.onclick=()=>{emojiPicker.style.display=emojiPicker.style.display==='flex'?'none':'flex';};
 
-// Send message
+// Send message (image + text allowed)
 async function sendMessage(){
   const text=msgInput.value.trim();
   if(!text && !pendingImage)return;
-  const payload={uid:currentUser.uid, username:currentUser.displayName||currentUser.email, ts:Date.now()};
-  if(pendingImage){payload.type='image';payload.text=pendingImage; pendingImage=null; imgPreview.style.display='none';}
-  else payload.type='text',payload.text=text;
+  let imageUrl=null;
+  if(pendingImage){
+    const file=fileInput.files[0];
+    const storageRef=sRef(storage,'chatImages/'+Date.now()+'_'+file.name);
+    await uploadBytes(storageRef,file);
+    imageUrl=await getDownloadURL(storageRef);
+  }
+  const payload={
+    uid:currentUser.uid,
+    username:currentUser.displayName||currentUser.email,
+    ts:Date.now(),
+    type:'text',
+    text:text,
+    photoURL:currentUser.photoURL||null,
+    image:imageUrl||null
+  };
   await push(ref(db,'messages'),payload);
-  msgInput.value=''; fileInput.value='';
+  msgInput.value=''; fileInput.value=''; imgPreview.style.display='none'; pendingImage=null;
 }
 sendBtn.onclick=sendMessage;
 msgInput.addEventListener('keydown', e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}});
 
-// Image upload preview
+// Image select
 imgBtn.onclick=()=>fileInput.click();
 fileInput.onchange=e=>{
   const file=e.target.files[0]; if(!file)return;
+  pendingImage=file;
   const reader=new FileReader();
-  reader.onload=ev=>{pendingImage=ev.target.result; imgPreview.innerHTML=`<img src="${pendingImage}" alt="preview"/>`; imgPreview.style.display='block';};
+  reader.onload=ev=>{imgPreview.innerHTML=`<img src="${ev.target.result}" alt="preview"/>`; imgPreview.style.display='block';};
   reader.readAsDataURL(file);
 };
 
@@ -152,15 +147,17 @@ function renderMessage(id,msg){
   const avatar=document.createElement('img'); avatar.className='avatar';
   avatar.src=msg.photoURL||"https://avatars.dicebear.com/api/identicon/"+encodeURIComponent(msg.username)+".svg";
   row.appendChild(avatar);
+
   const bubble=document.createElement('div'); bubble.className='bubble';
   bubble.innerHTML=`<div class="meta">${msg.username} <span class="time">${new Date(msg.ts).toLocaleTimeString()}</span></div>`;
-  if(msg.type==='image'){ bubble.innerHTML+=`<img src="${msg.text}" class="chat-img"/>`; }
-  else{ bubble.innerHTML+=`<div>${msg.text}</div>`;}
+  if(msg.text) bubble.innerHTML+=`<div>${msg.text}</div>`;
+  if(msg.image) bubble.innerHTML+=`<img src="${msg.image}" class="chat-img"/>`;
+
   const reactionsDiv=document.createElement('div'); reactionsDiv.className='reactions';
   bubble.appendChild(reactionsDiv); row.appendChild(bubble); messagesEl.appendChild(row); messagesEl.scrollTop=messagesEl.scrollHeight;
 
-  if(msg.type==='image'){
-    const img=bubble.querySelector('img');
+  if(msg.image){
+    const img=bubble.querySelector('img.chat-img');
     img.onclick=()=>{modalImg.src=img.src; imgModal.style.display='flex';};
   }
   renderReactions(id,msg);
