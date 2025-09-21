@@ -1,22 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baatly - Login</title>
-<link rel="stylesheet" href="../assets/styles.css">
+  <meta charset="utf-8" />
+  <title>Baatly Login</title>
+  <link rel="stylesheet" href="../assets/styles.css">
 </head>
 <body>
-<h2>Login to Baatly</h2>
-<div>
-  <form id="loginForm">
-    <input type="email" id="email" placeholder="Email" required><br>
-    <input type="password" id="password" placeholder="Password" required><br>
-    <button type="submit">Login</button>
-  </form>
-  <button id="googleSignIn">Login with Google</button><br>
-  <button id="forgotPass">Forgot Password?</button><br>
-  <p>Don’t have an account? <a href="../Signup/">Signup</a></p>
+<div class="wrap" style="padding:20px;">
+  <h2>Login to Baatly</h2>
+  <input type="email" id="emailInput" placeholder="Email" style="width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc;">
+  <input type="password" id="passInput" placeholder="Password" style="width:100%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc;">
+  <button id="loginBtn" style="width:100%;padding:10px;margin:10px 0;border:none;border-radius:8px;background:#42a5f5;color:white;font-weight:bold;cursor:pointer;">Login</button>
+  <button id="googleBtn" style="width:100%;padding:10px;margin:6px 0;border:none;border-radius:8px;background:#f44336;color:white;font-weight:bold;cursor:pointer;">Login with Google</button>
+  <p>No account? <a href="../Signup/index.html">Signup</a></p>
 </div>
 <div class="banner" id="banner"></div>
 <script type="module" src="login.js"></script>
