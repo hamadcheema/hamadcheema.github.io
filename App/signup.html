@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signup - DevChat</title>
+</head>
+<body>
+  <h2>Create Account</h2>
+  <input type="text" id="username" placeholder="Username" required><br>
+  <input type="email" id="email" placeholder="Email" required><br>
+  <input type="password" id="password" placeholder="Password" required><br>
+  <button onclick="signup()">Signup</button>
+  <p>Already have an account? <a href="login.html">Login</a></p>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
+      authDomain: "devchatbyhamad.firebaseapp.com",
+      projectId: "devchatbyhamad",
+      storageBucket: "devchatbyhamad.firebasestorage.app",
+      messagingSenderId: "798871184058",
+      appId: "1:798871184058:web:c735bea9756f8109149883",
+      measurementId: "G-QTCCWC70QH"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    async function signup() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const username = document.getElementById("username").value;
+
+      try {
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+
+        // set displayName as username
+        await updateProfile(userCred.user, {
+          displayName: username
+        });
+
+        alert("Signup successful ✅");
+        window.location.href = "chat.html"; // redirect
+      } catch (err) {
+        alert("❌ " + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
