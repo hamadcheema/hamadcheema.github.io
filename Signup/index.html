@@ -2,19 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Signup | DevChat</title>
+  <title>Signup</title>
   <link rel="stylesheet" href="../App/style.css">
 </head>
 <body>
-  <div class="container">
-    <h2>Create Account</h2>
-    <div id="notification"></div>
-    <input type="email" id="signupEmail" placeholder="Enter Email" required>
-    <input type="password" id="signupPassword" placeholder="Enter Password" required>
-    <button onclick="signup()">Sign Up</button>
-    <button onclick="googleSignup()">Continue with Google</button>
-    <p>Already have an account? <a href="../Login/login.html">Login here</a></p>
+  <div id="notify"></div>
+  <div class="wrap">
+    <h2>Signup</h2>
+    <input type="text" id="name" placeholder="Name">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="signupBtn">Signup</button>
+    <p>Already have an account? <a href="../Login">Login</a></p>
   </div>
-  <script type="module" src="../App/app.js"></script>
+
+  <script type="module" src="signup.js"></script>
 </body>
 </html>
