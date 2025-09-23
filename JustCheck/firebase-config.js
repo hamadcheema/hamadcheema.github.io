@@ -1,22 +1,21 @@
-// Firebase configuration file
-// Replace with your own Firebase project details
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { getDatabase } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+import { getDatabase } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
 
 const firebaseConfig = {
-  apiKey: "YOUR-API-KEY",
-  authDomain: "YOUR-PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR-PROJECT.firebaseio.com",
-  projectId: "YOUR-PROJECT-ID",
-  storageBucket: "YOUR-PROJECT.appspot.com",
-  messagingSenderId: "SENDER-ID",
-  appId: "APP-ID"
+  apiKey: "AIzaSyBHQyKuiAgi831qANOkkWTNprdW1Pq6rbA",
+  authDomain: "devchatbyhamad.firebaseapp.com",
+  databaseURL: "https://devchatbyhamad-default-rtdb.firebaseio.com",
+  projectId: "devchatbyhamad",
+  storageBucket: "devchatbyhamad.firebasestorage.app",
+  messagingSenderId: "798871184058",
+  appId: "1:798871184058:web:c735bea9756f8109149883",
+  measurementId: "G-QTCCWC70QH"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
 
-export const auth = getAuth(app);
-export const db = getDatabase(app);
+export { auth, database };
