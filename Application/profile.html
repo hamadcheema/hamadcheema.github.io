@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile — InstaLite</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html">Back</a>
+    <h1 id="profileName">Profile</h1>
+    <nav>
+      <a href="chat.html">Chats</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="profileCard">
+      <div class="profile-header">
+        <img id="profileImg" src="" alt="profile" />
+        <div>
+          <h2 id="displayName">Full name</h2>
+          <p id="usernameLine">@username</p>
+          <p id="bio">Bio...</p>
+          <button id="followBtn">Follow</button>
+          <button id="messageBtn">Message</button>
+        </div>
+      </div>
+
+      <div id="posts">
+        <h3>Posts</h3>
+        <div id="userPosts">Loading...</div>
+      </div>
+    </section>
+
+    <aside id="requestsBox">
+      <h3>Follow requests</h3>
+      <div id="followRequests">--</div>
+    </aside>
+  </main>
+
+  <script type="module" src="assets/app.js"></script>
+  <script type="module" src="assets/profile.js"></script>
+</body>
+</html>

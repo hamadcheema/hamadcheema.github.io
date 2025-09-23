@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>InstaLite — Home</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="brand">InstaLite</h1>
+    <input id="search" placeholder="Search username or full name" />
+    <nav>
+      <a href="post.html">New Post</a>
+      <a href="chat.html">Chats</a>
+      <a href="profile.html">Profile</a>
+      <a href="settings.html">Settings</a>
+      <a id="logoutBtn" href="#">Logout</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="feed">
+      <h2>Home Feed</h2>
+      <div id="feedList">Loading...</div>
+    </section>
+
+    <aside id="suggestions">
+      <h3>Suggested</h3>
+      <div id="suggestList">Loading...</div>
+    </aside>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script type="module" src="assets/app.js"></script>
+  <script type="module" src="assets/feed.js"></script>
+</body>
+</html>

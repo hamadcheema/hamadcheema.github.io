@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Settings — InstaLite</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html">Back</a>
+    <h1>Settings</h1>
+  </header>
+
+  <main class="container">
+    <form id="settingsForm">
+      <label>Display name</label>
+      <input id="fullname" />
+
+      <label>Bio</label>
+      <textarea id="bio"></textarea>
+
+      <label>
+        <input id="privateAccount" type="checkbox" /> Private account
+      </label>
+
+      <label>Profile image (replace)</label>
+      <input id="profileImage" type="file" accept="image/*" />
+
+      <button type="submit">Save settings</button>
+    </form>
+  </main>
+
+  <script type="module" src="assets/app.js"></script>
+  <script type="module" src="assets/profile.js"></script>
+</body>
+</html>
