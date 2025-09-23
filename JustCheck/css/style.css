@@ -1,1 +1,390 @@
+/* css/style.css */
+:root {
+    --primary-color: #3897f0;
+    --secondary-color: #009688; /* For stories or highlights */
+    --background-color: #fafafa;
+    --card-background: #ffffff;
+    --border-color: #dbdbdb;
+    --text-color: #262626;
+    --light-text-color: #8e8e8e;
+}
 
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+#app-container {
+    width: 100%;
+    max-width: 935px; /* Instagram-like max width */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 5px rgba(0,0,0,0.05);
+}
+
+/* Header */
+#main-header {
+    background-color: var(--card-background);
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#main-header .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+#main-header nav a, #main-header button {
+    margin-left: 15px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+#main-header nav button:hover, #main-header nav a:hover {
+    opacity: 0.7;
+}
+
+/* Main Content Area */
+#main-content {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content like feed */
+}
+
+/* Post Card */
+.post-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px; /* Max width for individual posts */
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-header .profile-pic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.post-header .username {
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.post-media {
+    width: 100%;
+    max-height: 700px; /* Limit media height */
+    object-fit: contain; /* Ensure entire image/video is visible */
+    display: block;
+    background-color: black; /* For videos or loading states */
+}
+
+.post-actions {
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+}
+
+.post-actions button {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    margin-right: 10px;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.post-actions button.liked {
+    color: red; /* Color for liked icon */
+}
+
+.post-info {
+    padding: 0 15px 10px;
+}
+
+.post-info .likes-count {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.post-info .caption {
+    margin-bottom: 5px;
+}
+
+.post-info .caption span {
+    font-weight: 600; /* Username in caption */
+}
+
+.post-comments {
+    padding: 0 15px 10px;
+    max-height: 100px; /* Scrollable comments */
+    overflow-y: auto;
+    border-top: 1px solid var(--border-color);
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.post-comment {
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.post-comment span {
+    font-weight: 600;
+}
+
+.add-comment-form {
+    display: flex;
+    padding: 10px 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.add-comment-form input {
+    flex-grow: 1;
+    border: none;
+    padding: 8px;
+    font-size: 0.9em;
+}
+
+.add-comment-form button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+    padding-left: 10px;
+}
+
+/* Stories Reel */
+.stories-reel {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px 10px;
+    margin-bottom: 20px;
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+}
+.stories-reel::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
+
+.story-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.story-item .story-pic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--secondary-color); /* Highlight for stories */
+    padding: 2px;
+}
+
+.story-item .story-username {
+    font-size: 0.8em;
+    margin-top: 5px;
+    text-align: center;
+    width: 70px; /* Ensure username wraps if long */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Profile Page */
+.profile-page {
+    width: 100%;
+    max-width: 935px;
+}
+
+.profile-header-section {
+    display: flex;
+    align-items: flex-start;
+    padding: 30px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.profile-header-section .profile-pic-container {
+    flex-shrink: 0;
+    margin-right: 50px;
+}
+
+.profile-header-section .profile-pic-container img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-info {
+    flex-grow: 1;
+}
+
+.profile-info h1 {
+    font-size: 2em;
+    margin: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+.profile-info h1 .username {
+    margin-right: 20px;
+}
+
+.profile-info button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.profile-info .stats {
+    display: flex;
+    margin: 20px 0;
+}
+
+.profile-info .stats div {
+    margin-right: 40px;
+    font-weight: 600;
+}
+
+.profile-info .full-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.profile-info .bio {
+    line-height: 1.5;
+}
+
+.profile-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px; /* Instagram-like small gap */
+}
+
+.profile-posts-grid .grid-item {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* For square items */
+    overflow: hidden;
+}
+
+.profile-posts-grid .grid-item img,
+.profile-posts-grid .grid-item video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* Auth/Upload Modals */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 200; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--card-background);
+    margin: auto;
+    padding: 30px;
+    border: 1px solid var(--border-color);
+    width: 80%;
+    max-width: 400px;
+    border-radius: 10px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.modal-content form, .modal-content button:not(.close-modal) {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.modal-content input[type="email"],
+.modal-content input[type="password"],
+.modal-content input[type="text"],
+.modal-content textarea,
+.modal-content input[type="file"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.modal-content button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius:
