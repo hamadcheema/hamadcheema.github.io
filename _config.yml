@@ -1,0 +1,5 @@
+title: "Chillapebanana Blog"
+description: "Blog powered by GitHub Pages + Netlify CMS"
+baseurl: ""
+url: "https://chillapebanana.store"
+theme: minima
