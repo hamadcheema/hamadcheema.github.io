@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hammad | Game Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Great+Vibes&family=EB+Garamond:400,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --panel-width: 900px;
+      --accent: #ffd966;
+      --text: #f4eede;
+      --muted: rgba(244,238,222,0.85);
+    }
+
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: 'EB Garamond', serif;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=90') center/cover no-repeat fixed;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(2,6,23,0.35), rgba(3,10,40,0.45));
+      backdrop-filter: blur(1px);
+      z-index: 0;
+    }
+
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .sparkles i {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      animation: rise var(--dur, 8s) linear infinite;
+    }
+
+    @keyframes rise {
+      0% { transform: translateY(100vh) scale(0.4); opacity: 0; }
+      10% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateY(-120vh) scale(1.1); opacity: 0; }
+    }
+
+    .panel {
+      position: relative;
+      max-width: var(--panel-width);
+      margin: 60px auto;
+      padding: 40px;
+      background: linear-gradient(180deg, rgba(9,8,6,0.72), rgba(6,5,4,0.62));
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 30px rgba(255,214,102,0.06) inset;
+      border: 1px solid rgba(255,214,102,0.08);
+      z-index: 2;
+      animation: fadeIn 1.6s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(20px); }
+    }
+
+    header h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 46px;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 10px;
+      text-shadow: 0 0 12px rgba(255,214,102,0.25);
+      animation: glowTitle 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowTitle {
+      from { text-shadow: 0 0 12px rgba(255,214,102,0.25); }
+      to { text-shadow: 0 0 22px rgba(255,214,102,0.65); }
+    }
+
+    .tagline {
+      text-align: center;
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-bottom: 24px;
+    }
+
+    .container h2 {
+      color: var(--accent);
+      font-size: 1.4rem;
+      margin-top: 26px;
+      border-bottom: 1px solid rgba(255,214,102,0.08);
+      padding-bottom: 6px;
+    }
+
+    .container p, .container li {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    ul.services {
+      list-style: disc;
+      padding-left: 20px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      margin-top: 12px;
+      background: var(--accent);
+      color: #1e1e1e;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-weight: bold;
+      text-align: center;
+      transition: background 0.3s;
+    }
+
+    .cta-button:hover {
+      background: #ffdd80;
+    }
+
+    /* Fiverr Gig Cards */
+    .gig-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .gig-card {
+      background: rgba(30, 30, 30, 0.55);
+      border: 1px solid rgba(255,214,102,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .gig-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    }
+
+    .gig-card h3 {
+      margin: 10px 0;
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+
+    .gig-card p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .gig-icon {
+      font-size: 38px;
+      color: var(--accent);
+    }
+
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      color: rgba(244,238,222,0.8);
+      font-size: 0.9rem;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,214,102,0.04);
+    }
+
+    button {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 4px 10px;
+      margin-left: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    button:hover {
+      background: var(--accent);
+      color: #1e1e1e;
+    }
+
+    @media (max-width: 768px) {
+      .panel { margin: 30px 16px; padding: 28px; }
+      header h1 { font-size: 38px; }
+      .gig-cards { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      header h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-overlay" aria-hidden="true"></div>
+<div class="sparkles" aria-hidden="true"></div>
+
+<section class="panel">
+  <header>
+    <h1>Hammad</h1>
+    <p class="tagline">Game Developer with 2 Years of Experience</p>
+  </header>
+
+  <div class="container">
+    <h2>About Me</h2>
+    <p>I'm Hammad, a passionate and creative game developer with over 2 years of hands-on experience. I specialize in building engaging, fun, and optimized games using Unity and Unreal Engine for Android, PC, and Web platforms.</p>
+
+    <h2>Services I Offer</h2>
+    <ul class="services">
+      <li>2D / 3D Game Development (Unity / Unreal)</li>
+      <li>Android Game Development</li>
+      <li>Bug Fixes & Game Optimization</li>
+      <li>UI/UX for Games</li>
+      <li>Game Publishing Help</li>
+    </ul>
+
+    <h2>Hire Me on Fiverr</h2>
+    <p>You can view my gigs and hire me directly through my Fiverr profile:</p>
+    <a href="https://www.fiverr.com/hamad_cheema" class="cta-button" target="_blank">🎮 Visit My Fiverr Profile</a>
+
+    <h2>My Fiverr Gigs</h2>
+    <div class="gig-cards">
+      <div class="gig-card">
+        <div class="gig-icon">🎨</div>
+        <h3>Game UI & App Screenshots</h3>
+        <p>Professional UI design for mobile & PC games, including Play Store/App Store screenshots.</p>
+        <a href="https://www.fiverr.com/s/P2e7VLo" target="_blank" class="cta-button">View Gig</a>
+      </div>
+      <div class="gig-card">
+        <div class="gig-icon">⚡</div>
+        <h3>Game Development Services</h3>
+        <p>End-to-end game development in Unity/Unreal, from idea to publishing with optimization.</p>
+        <a href="https://www.fiverr.com/s/dDdyVbZ" target="_blank" class="cta-button">View Gig</a>
+      </div>
+    </div>
+
+    <h2>Contact Me</h2>
+    <p>
+      📧 <strong id="email">thatsmehammad@gmail.com</strong>
+      <button onclick="copyToClipboard('email', this)">📋 Copy</button><br>
+      📞 <strong id="phone">+92 341 4292789</strong>
+      <button onclick="copyToClipboard('phone', this)">📋 Copy</button>
+    </p>
+  </div>
+
+  <footer>&copy; 2025 Hammad. All Rights Reserved.</footer>
+</section>
+
+<script>
+  // Sparkles animation
+  (function createSparkles(){
+    const container = document.querySelector('.sparkles');
+    const colors = ['#ffd966','#ff9f9f','#b5e7ff','#c7f3a6'];
+    const count = 30;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    for(let i=0;i<count;i++){
+      const el = document.createElement('i');
+      const size = (Math.random()*6)+3;
+      el.style.width = el.style.height = size + 'px';
+      el.style.left = Math.random()*vw + 'px';
+      el.style.top = Math.random()*vh + 'px';
+      el.style.background = colors[Math.floor(Math.random()*colors.length)];
+      el.style.opacity = 0.85 * Math.random();
+      el.style.setProperty('--dur', (6 + Math.random()*8) + 's');
+      el.style.transform = `scale(${0.6 + Math.random()*0.9})`;
+      el.style.filter = 'blur(0.3px)';
+      container.appendChild(el);
+    }
+  })();
+
+  // Copy to clipboard
+  function copyToClipboard(id, btn) {
+    const text = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.innerHTML;
+      btn.innerHTML = "✅ Copied!";
+      setTimeout(() => {
+        btn.innerHTML = original;
+      }, 1500);
+    });
+  }
+</script>
+
+</body>
+</html>
