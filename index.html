@@ -1,172 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ali Hammad Shehzad | Unity Game Developer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ali Hammad Shehzad | Unity Game Developer</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
-        body {
-            background: #0f172a;
-            color: #e5e7eb;
-            line-height: 1.6;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
 
-        header {
-            background: linear-gradient(135deg, #2563eb, #1e40af);
-            padding: 50px 20px;
-            text-align: center;
-        }
+body{
+    background:#0b0f1a;
+    color:#e5e7eb;
+    overflow-x:hidden;
+}
 
-        header h1 {
-            font-size: 2.5rem;
-        }
+/* ===== Hero ===== */
+.hero{
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    background:radial-gradient(circle at top, #1e40af, #020617);
+}
 
-        header p {
-            margin-top: 10px;
-            font-size: 1.1rem;
-        }
+.hero h1{
+    font-size:3rem;
+    animation:fadeDown 1.2s ease;
+}
 
-        header a {
-            color: #e5e7eb;
-            text-decoration: none;
-            margin: 0 10px;
-        }
+.hero span{
+    color:#60a5fa;
+}
 
-        section {
-            max-width: 900px;
-            margin: auto;
-            padding: 40px 20px;
-        }
+.hero p{
+    margin:15px 0;
+    font-size:1.1rem;
+    animation:fadeUp 1.2s ease;
+}
 
-        h2 {
-            margin-bottom: 15px;
-            color: #60a5fa;
-            border-bottom: 2px solid #1e40af;
-            display: inline-block;
-            padding-bottom: 5px;
-        }
+.btn{
+    display:inline-block;
+    padding:12px 30px;
+    margin-top:15px;
+    background:#2563eb;
+    color:white;
+    text-decoration:none;
+    border-radius:30px;
+    transition:0.3s;
+}
 
-        .card {
-            background: #020617;
-            padding: 20px;
-            margin-top: 15px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
+.btn:hover{
+    background:#1e40af;
+    transform:scale(1.05);
+}
 
-        ul {
-            list-style: none;
-            margin-top: 10px;
-        }
+/* ===== Sections ===== */
+section{
+    padding:80px 10%;
+}
 
-        ul li {
-            margin-bottom: 8px;
-        }
+h2{
+    font-size:2rem;
+    margin-bottom:30px;
+    position:relative;
+}
 
-        .skills span {
-            display: inline-block;
-            background: #1e40af;
-            padding: 8px 12px;
-            margin: 5px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-        }
+h2::after{
+    content:'';
+    width:60px;
+    height:3px;
+    background:#2563eb;
+    position:absolute;
+    bottom:-10px;
+    left:0;
+}
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #020617;
-            margin-top: 40px;
-            font-size: 0.9rem;
-        }
+/* ===== Cards ===== */
+.card{
+    background:#020617;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    margin-bottom:20px;
+    transition:0.4s;
+}
 
-        @media (max-width: 600px) {
-            header h1 {
-                font-size: 2rem;
-            }
-        }
-    </style>
+.card:hover{
+    transform:translateY(-10px);
+}
+
+/* ===== Skills ===== */
+.skills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.skill{
+    background:#1e40af;
+    padding:10px 18px;
+    border-radius:20px;
+    font-size:0.9rem;
+}
+
+/* ===== Projects ===== */
+.projects{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.project{
+    background:#020617;
+    border-radius:15px;
+    overflow:hidden;
+    transition:0.4s;
+}
+
+.project:hover{
+    transform:scale(1.05);
+}
+
+.project-content{
+    padding:20px;
+}
+
+.project a{
+    color:#60a5fa;
+    text-decoration:none;
+}
+
+/* ===== Footer ===== */
+footer{
+    text-align:center;
+    padding:20px;
+    background:#020617;
+    margin-top:50px;
+}
+
+/* ===== Animations ===== */
+@keyframes fadeDown{
+    from{opacity:0; transform:translateY(-30px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes fadeUp{
+    from{opacity:0; transform:translateY(30px);}
+    to{opacity:1; transform:translateY(0);}
+}
+</style>
 </head>
 <body>
 
-<header>
-    <h1>Ali Hammad Shehzad</h1>
-    <p>Unity Game Developer | iOS Games</p>
+<!-- HERO -->
+<div class="hero">
+    <div>
+        <h1>Ali <span>Hammad</span> Shehzad</h1>
+        <p>Unity Game Developer | iOS Games</p>
+        <a href="#projects" class="btn">View My Work</a>
+    </div>
+</div>
+
+<!-- ABOUT -->
+<section>
+<h2>About Me</h2>
+<div class="card">
     <p>
-        📞 0370-4103667 |
-        📧 <a href="mailto:thatsmehammad@gmail.com">thatsmehammad@gmail.com</a> |
-        📍 Sheikhupura, Pakistan
+        I am a dedicated Unity Game Developer with hands-on experience in developing,
+        updating, and publishing iOS games. I enjoy creating engaging gameplay,
+        optimizing performance, and delivering polished gaming experiences.
     </p>
-</header>
-
-<section>
-    <h2>Career Objective</h2>
-    <div class="card">
-        <p>
-            Dedicated and self-motivated Unity Game Developer with hands-on experience
-            in developing, updating, and publishing games for iOS platforms.
-            Passionate about creating engaging gameplay experiences and continuously
-            improving technical skills while contributing to a professional game
-            development team.
-        </p>
-    </div>
+</div>
 </section>
 
+<!-- EXPERIENCE -->
 <section>
-    <h2>Professional Experience</h2>
-    <div class="card">
-        <h3>Unity Game Developer</h3>
-        <p><strong>Emerging Tech</strong> — June 13, 2024 – Present</p>
-        <ul>
-            <li>• Develop and maintain games using Unity Engine</li>
-            <li>• Update and manage iOS games</li>
-            <li>• Upload and publish games on the Apple App Store</li>
-            <li>• Fix bugs and improve game performance</li>
-        </ul>
-    </div>
+<h2>Experience</h2>
+<div class="card">
+    <h3>Unity Game Developer — Emerging Tech</h3>
+    <p>June 2024 – Present</p>
+    <ul>
+        <li>• Developed and maintained Unity 3D games</li>
+        <li>• Published and updated iOS games on App Store</li>
+        <li>• Fixed bugs & optimized performance</li>
+    </ul>
+</div>
 </section>
 
+<!-- SKILLS -->
 <section>
-    <h2>Education</h2>
-    <div class="card">
-        <p><strong>Intermediate</strong> — Institute of Learning and Management</p>
-        <p>Completed: 2024</p>
-        <br>
-        <p><strong>Matriculation</strong> — Bright Misali Secondary High School</p>
-        <p>Completed: 2022</p>
-    </div>
+<h2>Skills</h2>
+<div class="skills">
+    <div class="skill">Unity 2D / 3D</div>
+    <div class="skill">iOS Game Publishing</div>
+    <div class="skill">App Store Management</div>
+    <div class="skill">Game Debugging</div>
+    <div class="skill">Performance Optimization</div>
+</div>
 </section>
 
-<section>
-    <h2>Skills</h2>
-    <div class="card skills">
-        <span>Unity Game Development</span>
-        <span>iOS Game Upload & Updates</span>
-        <span>App Store Management</span>
-        <span>Game Testing & Debugging</span>
+<!-- PROJECTS -->
+<section id="projects">
+<h2>Projects</h2>
+<div class="projects">
+
+<div class="project">
+    <div class="project-content">
+        <h3>4x4 Offroad Jeep Driving 3D</h3>
+        <p>Realistic offroad driving game developed in Unity.</p>
+        <a href="https://apps.apple.com/pk/app/4x4-offroad-jeep-driving-3d/id6743621542" target="_blank">
+            View on App Store →
+        </a>
     </div>
+</div>
+
+<div class="project">
+    <div class="project-content">
+        <h3>Sniper Safari Wild Chase</h3>
+        <p>Action hunting game with smooth mechanics.</p>
+        <a href="https://apps.apple.com/pk/app/sniper-safari-wild-chase/id6743483362" target="_blank">
+            View on App Store →
+        </a>
+    </div>
+</div>
+
+</div>
 </section>
 
+<!-- CONTACT -->
 <section>
-    <h2>Languages</h2>
-    <div class="card">
-        <ul>
-            <li>• English</li>
-            <li>• Urdu</li>
-        </ul>
-    </div>
+<h2>Contact</h2>
+<div class="card">
+    <p>📞 0370-4103667</p>
+    <p>📧 thatsmehammad@gmail.com</p>
+    <p>📍 Sheikhupura, Pakistan</p>
+</div>
 </section>
 
 <footer>
-    © 2025 Ali Hammad Shehzad | Unity Game Developer
+© 2025 Ali Hammad Shehzad | Unity Game Developer
 </footer>
 
 </body>
