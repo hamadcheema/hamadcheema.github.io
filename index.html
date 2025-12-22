@@ -2,52 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ali Hammad Shehzad | Unity Game Developer</title>
+
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #020617, #0f172a);
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
             color: #e5e7eb;
+            line-height: 1.6;
         }
+
         header {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            padding: 50px 20px;
             text-align: center;
-            padding: 60px 20px;
         }
+
         header h1 {
-            font-size: 40px;
-            color: #38bdf8;
+            font-size: 2.5rem;
         }
+
         header p {
-            font-size: 18px;
-            color: #cbd5f5;
+            margin-top: 10px;
+            font-size: 1.1rem;
         }
+
+        header a {
+            color: #e5e7eb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
         section {
-            width: 80%;
-            margin: 40px auto;
-            background: #020617;
-            padding: 30px;
-            border-radius: 10px;
+            max-width: 900px;
+            margin: auto;
+            padding: 40px 20px;
         }
+
         h2 {
-            color: #22c55e;
-            border-bottom: 1px solid #334155;
+            margin-bottom: 15px;
+            color: #60a5fa;
+            border-bottom: 2px solid #1e40af;
+            display: inline-block;
             padding-bottom: 5px;
         }
-        .projects div {
-            background: #0f172a;
+
+        .card {
+            background: #020617;
             padding: 20px;
-            border-radius: 8px;
             margin-top: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-        a {
-            color: #38bdf8;
-            text-decoration: none;
+
+        ul {
+            list-style: none;
+            margin-top: 10px;
         }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        .skills span {
+            display: inline-block;
+            background: #1e40af;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
         footer {
             text-align: center;
             padding: 20px;
-            color: #94a3b8;
+            background: #020617;
+            margin-top: 40px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -55,41 +99,70 @@
 
 <header>
     <h1>Ali Hammad Shehzad</h1>
-    <p>Unity Game Developer | iOS Game Specialist</p>
+    <p>Unity Game Developer | iOS Games</p>
+    <p>
+        📞 0370-4103667 |
+        📧 <a href="mailto:thatsmehammad@gmail.com">thatsmehammad@gmail.com</a> |
+        📍 Sheikhupura, Pakistan
+    </p>
 </header>
 
 <section>
-    <h2>About Me</h2>
-    <p>
-        I am a Unity Game Developer with professional experience in developing and publishing iOS
-        games. I enjoy building interactive games, fixing bugs, and improving performance to deliver
-        high-quality user experiences.
-    </p>
-</section>
-
-<section class="projects">
-    <h2>Projects</h2>
-    <div>
-        🎮 <strong>iOS Unity Games</strong><br>
-        Developed and published multiple Unity-based iOS games on the Apple App Store with optimized
-        performance and engaging gameplay.
-    </div>
-    <div>
-        🛠 <strong>Game Updates & Bug Fixes</strong><br>
-        Regular updates, performance improvements, and bug fixing for live games.
+    <h2>Career Objective</h2>
+    <div class="card">
+        <p>
+            Dedicated and self-motivated Unity Game Developer with hands-on experience
+            in developing, updating, and publishing games for iOS platforms.
+            Passionate about creating engaging gameplay experiences and continuously
+            improving technical skills while contributing to a professional game
+            development team.
+        </p>
     </div>
 </section>
 
 <section>
-    <h2>Contact</h2>
-    <p>
-        📞 0370-4103667 <br>
-        📧 thatsmehammad@gmail.com <br>
-        📍 Sheikhupura, Pakistan
-    </p>
-    <p>
-        👉 <a href="cv.html">View My CV</a>
-    </p>
+    <h2>Professional Experience</h2>
+    <div class="card">
+        <h3>Unity Game Developer</h3>
+        <p><strong>Emerging Tech</strong> — June 13, 2024 – Present</p>
+        <ul>
+            <li>• Develop and maintain games using Unity Engine</li>
+            <li>• Update and manage iOS games</li>
+            <li>• Upload and publish games on the Apple App Store</li>
+            <li>• Fix bugs and improve game performance</li>
+        </ul>
+    </div>
+</section>
+
+<section>
+    <h2>Education</h2>
+    <div class="card">
+        <p><strong>Intermediate</strong> — Institute of Learning and Management</p>
+        <p>Completed: 2024</p>
+        <br>
+        <p><strong>Matriculation</strong> — Bright Misali Secondary High School</p>
+        <p>Completed: 2022</p>
+    </div>
+</section>
+
+<section>
+    <h2>Skills</h2>
+    <div class="card skills">
+        <span>Unity Game Development</span>
+        <span>iOS Game Upload & Updates</span>
+        <span>App Store Management</span>
+        <span>Game Testing & Debugging</span>
+    </div>
+</section>
+
+<section>
+    <h2>Languages</h2>
+    <div class="card">
+        <ul>
+            <li>• English</li>
+            <li>• Urdu</li>
+        </ul>
+    </div>
 </section>
 
 <footer>
