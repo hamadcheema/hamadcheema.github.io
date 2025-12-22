@@ -3,33 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ali Hammad Shehzad | Unity Game Developer</title>
+<title>Hammad | Unity Game Developer</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Poppins;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
 body{
-background:#050a18;
+background:#010214;
 color:#fff;
 overflow-x:hidden;
+cursor:none;
 }
 
-/* ===== PARTICLES ===== */
+/* ===== GLOWING NEON CURSOR ===== */
+.cursor{
+position:fixed;
+width:20px;
+height:20px;
+border-radius:50%;
+pointer-events:none;
+background:transparent;
+border:2px solid #00ffff;
+box-shadow:0 0 10px #00ffff,0 0 20px #ff00ff,0 0 30px #00ffff;
+transform:translate(-50%,-50%);
+transition:width .1s,height .1s;
+z-index:9999;
+}
+
+/* ===== NEON PARTICLES ===== */
 .particle{
 position:fixed;
-width:4px;
-height:4px;
-background:#3b82f6;
+width:5px;
+height:5px;
+background:#00ffff;
 border-radius:50%;
 opacity:.4;
 animation:float 20s linear infinite;
+box-shadow:0 0 10px #00ffff,0 0 20px #ff00ff;
 }
 
 /* ===== HERO ===== */
@@ -39,178 +50,140 @@ display:flex;
 justify-content:center;
 align-items:center;
 text-align:center;
-background:
-radial-gradient(circle at top,#1e40af,#020617),
-url('https://www.transparenttextures.com/patterns/stardust.png');
+background:radial-gradient(circle at top,#0c0c3e,#010214);
 }
 
 .hero h1{
 font-size:3.5rem;
-text-shadow:0 0 25px #2563eb;
+text-shadow:0 0 10px #00ffff,0 0 20px #ff00ff;
 }
 
-.hero span{color:#60a5fa;}
+.hero span{color:#ff00ff;}
 
-.hero p{
-margin:15px 0;
-opacity:.9;
-}
+.hero p{margin:15px 0;opacity:.9;text-shadow:0 0 8px #00ffff;}
 
 .btn{
 padding:12px 35px;
 border-radius:30px;
-background:#2563eb;
-color:#fff;
+background:#00ffff;
+color:#010214;
 text-decoration:none;
+font-weight:600;
 transition:.3s;
+box-shadow:0 0 10px #00ffff,0 0 20px #ff00ff;
+margin:5px;
+display:inline-block;
 }
 
 .btn:hover{
 transform:scale(1.1);
-box-shadow:0 0 30px #2563eb;
+box-shadow:0 0 25px #00ffff,0 0 40px #ff00ff;
 }
 
 /* ===== SECTION ===== */
-section{
-padding:100px 10%;
-}
+section{padding:100px 10%;}
 
 h2{
 font-size:2.2rem;
 margin-bottom:40px;
 position:relative;
+text-shadow:0 0 6px #00ffff;
 }
 
 h2::after{
 content:'';
 width:70px;
 height:3px;
-background:#2563eb;
+background:#ff00ff;
 position:absolute;
 bottom:-12px;
 left:0;
+box-shadow:0 0 10px #ff00ff;
 }
 
 /* ===== SCROLL REVEAL ===== */
-.reveal{
-opacity:0;
-transform:translateY(60px);
-transition:1s;
-}
-
-.reveal.active{
-opacity:1;
-transform:translateY(0);
-}
+.reveal{opacity:0;transform:translateY(60px);transition:1s;}
+.reveal.active{opacity:1;transform:translateY(0);}
 
 /* ===== CARD ===== */
 .card{
-background:linear-gradient(145deg,#020617,#050b1f);
+background:#0a0a25;
 padding:30px;
 border-radius:22px;
-box-shadow:0 0 45px rgba(37,99,235,.25);
+box-shadow:0 0 20px #00ffff,0 0 40px #ff00ff;
 margin-bottom:20px;
+transition:.3s;
 }
+.card:hover{box-shadow:0 0 30px #00ffff,0 0 50px #ff00ff;}
 
 /* ===== SKILLS ===== */
-.skills{
-display:flex;
-flex-wrap:wrap;
-gap:15px;
-}
-
+.skills{display:flex;flex-wrap:wrap;gap:15px;}
 .skill{
-background:#1e40af;
+background:#010214;
 padding:10px 18px;
 border-radius:20px;
-font-size:0.9rem;
+font-size:.9rem;
+border:1px solid #00ffff;
+text-shadow:0 0 5px #00ffff;
 transition:.3s;
 }
+.skill:hover{box-shadow:0 0 15px #00ffff;transform:translateY(-3px);}
 
-.skill:hover{
-box-shadow:0 0 15px #3b82f6;
-transform:translateY(-3px);
+/* ===== AUTO SLIDER ===== */
+.slider{display:flex;gap:20px;overflow:hidden;}
+.slider-track{
+display:flex;gap:20px;
+animation:slide 0s linear infinite;
 }
-
-/* ===== PROJECT SLIDER ===== */
-.slider{
-display:flex;
-gap:20px;
-overflow-x:auto;
-scroll-snap-type:x mandatory;
-padding-bottom:10px;
+.slider-track:hover{
+animation-play-state:paused;
 }
-
 .project{
 min-width:300px;
-background:#020617;
+background:#010214;
 border-radius:20px;
 overflow:hidden;
-scroll-snap-align:center;
+border:1px solid #ff00ff;
+box-shadow:0 0 10px #ff00ff;
 transition:.4s;
 }
+.project:hover{transform:scale(1.07);box-shadow:0 0 20px #00ffff,0 0 40px #ff00ff;}
+.project img{width:100%;height:180px;object-fit:cover;}
+.project div{padding:20px;}
+.project a{color:#00ffff;text-decoration:none;}
 
-.project:hover{
-transform:scale(1.07);
-box-shadow:0 0 25px rgba(37,99,235,.4);
-}
+/* ===== CONTACT ===== */
+.contact a{display:block;color:#fff;text-decoration:none;margin-bottom:10px;transition:.3s;}
+.contact a:hover{color:#00ffff;transform:translateX(5px);}
 
-.project img{
-width:100%;
-height:180px;
-object-fit:cover;
-}
+footer{text-align:center;padding:30px;background:#010214;opacity:.9;}
 
-.project div{
-padding:20px;
-}
-
-.project a{
-color:#60a5fa;
-text-decoration:none;
-}
-
-/* ===== CONTACT LINKS ===== */
-.contact a{
-display:flex;
-align-items:center;
-gap:10px;
-color:#fff;
-text-decoration:none;
-margin-bottom:10px;
-transition:.3s;
-}
-
-.contact a:hover{
-color:#60a5fa;
-transform:translateX(5px);
-}
-
-/* ===== FOOTER ===== */
-footer{
-text-align:center;
-padding:30px;
-background:#020617;
-opacity:.8;
-}
-
-@keyframes float{
-from{transform:translateY(100vh);}
-to{transform:translateY(-100vh);}
-}
+/* ===== ANIMATIONS ===== */
+@keyframes float{from{transform:translateY(100vh);}to{transform:translateY(-100vh);}}
+@keyframes slide{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 </style>
 </head>
 <body>
 
-<!-- PARTICLES -->
+<!-- NEON CURSOR -->
+<div class="cursor"></div>
+
+<!-- NEON PARTICLES -->
 <script>
-for(let i=0;i<45;i++){
+for(let i=0;i<50;i++){
 let p=document.createElement("div");
 p.className="particle";
 p.style.left=Math.random()*100+"%";
 p.style.animationDuration=10+Math.random()*20+"s";
 document.body.appendChild(p);
 }
+
+// CURSOR FOLLOW
+const cursor=document.querySelector('.cursor');
+document.addEventListener('mousemove',e=>{
+cursor.style.left=e.clientX+'px';
+cursor.style.top=e.clientY+'px';
+});
 </script>
 
 <!-- HERO -->
@@ -218,7 +191,8 @@ document.body.appendChild(p);
 <div>
 <h1>Ali <span>Hammad</span> Shehzad</h1>
 <p>Unity Game Developer | iOS Games</p>
-<a href="#projects" class="btn">View My Games</a>
+<a href="#projects" class="btn">View Games</a>
+<a href="Ali-Hammad-Shehzad-CV.pdf" class="btn" download>Download CV</a>
 </div>
 </div>
 
@@ -226,9 +200,8 @@ document.body.appendChild(p);
 <section class="reveal">
 <h2>About Me</h2>
 <div class="card">
-Dedicated Unity Game Developer with hands-on experience in developing,
-updating, and publishing iOS games. Passionate about gameplay mechanics,
-performance optimization, and delivering engaging gaming experiences.
+Unity Game Developer with experience in developing, publishing,
+and optimizing iOS games. Passionate about neon-style polished UI.
 </div>
 </section>
 
@@ -239,10 +212,10 @@ performance optimization, and delivering engaging gaming experiences.
 <h3>Unity Game Developer — Emerging Tech</h3>
 <p>June 2024 – Present</p>
 <ul>
-<li>• Developed and maintained Unity 3D games</li>
-<li>• Published and updated iOS games on Apple App Store</li>
-<li>• Fixed bugs and optimized game performance</li>
-<li>• Improved gameplay mechanics and user experience</li>
+<li>• Unity 3D game development</li>
+<li>• iOS App Store publishing</li>
+<li>• Bug fixing & optimization</li>
+<li>• Gameplay improvement</li>
 </ul>
 </div>
 </section>
@@ -253,20 +226,20 @@ performance optimization, and delivering engaging gaming experiences.
 <div class="card">
 <div class="skills">
 <div class="skill">Unity 2D / 3D</div>
-<div class="skill">C# for Unity</div>
-<div class="skill">iOS Game Publishing</div>
+<div class="skill">C#</div>
+<div class="skill">iOS Publishing</div>
 <div class="skill">App Store Management</div>
-<div class="skill">Game Testing & Debugging</div>
-<div class="skill">Performance Optimization</div>
+<div class="skill">Debugging</div>
+<div class="skill">Optimization</div>
 </div>
 </div>
 </section>
 
-<!-- PROJECTS -->
+<!-- PROJECTS AUTO SLIDER -->
 <section id="projects" class="reveal">
 <h2>Projects</h2>
-
 <div class="slider">
+<div class="slider-track">
 
 <div class="project">
 <img src="images/game1ss1.jpg">
@@ -295,6 +268,7 @@ performance optimization, and delivering engaging gaming experiences.
 </div>
 
 </div>
+</div>
 </section>
 
 <!-- CONTACT -->
@@ -314,8 +288,7 @@ performance optimization, and delivering engaging gaming experiences.
 <script>
 window.addEventListener("scroll",()=>{
 document.querySelectorAll(".reveal").forEach(el=>{
-let top=el.getBoundingClientRect().top;
-if(top < window.innerHeight-100){
+if(el.getBoundingClientRect().top < window.innerHeight-100){
 el.classList.add("active");
 }
 });
