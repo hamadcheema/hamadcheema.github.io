@@ -8,133 +8,142 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins;
+}
 
 body{
-    background:#060b18;
-    color:#fff;
-    overflow-x:hidden;
+background:#050a18;
+color:#fff;
+overflow-x:hidden;
 }
 
 /* ===== PARTICLES ===== */
 .particle{
-    position:fixed;
-    width:4px;
-    height:4px;
-    background:#3b82f6;
-    border-radius:50%;
-    animation:float 15s infinite linear;
-    opacity:.4;
+position:fixed;
+width:4px;
+height:4px;
+background:#3b82f6;
+border-radius:50%;
+opacity:.4;
+animation:float 20s linear infinite;
 }
 
 /* ===== HERO ===== */
 .hero{
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    background:radial-gradient(circle at top,#1e40af,#020617);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+background:radial-gradient(circle at top,#1e40af,#020617);
 }
 
 .hero h1{
-    font-size:3.5rem;
-    text-shadow:0 0 20px #2563eb;
+font-size:3.5rem;
+text-shadow:0 0 25px #2563eb;
 }
 
 .hero span{color:#60a5fa;}
 
 .hero p{
-    margin:15px 0;
-    opacity:.9;
+margin:15px 0;
+opacity:.9;
 }
 
 .btn{
-    padding:12px 35px;
-    border-radius:30px;
-    background:#2563eb;
-    text-decoration:none;
-    color:#fff;
-    transition:.3s;
+padding:12px 35px;
+border-radius:30px;
+background:#2563eb;
+color:#fff;
+text-decoration:none;
+transition:.3s;
 }
 
 .btn:hover{
-    transform:scale(1.1);
-    box-shadow:0 0 25px #2563eb;
+transform:scale(1.1);
+box-shadow:0 0 30px #2563eb;
 }
 
-/* ===== SECTIONS ===== */
+/* ===== SECTION ===== */
 section{
-    padding:100px 10%;
+padding:100px 10%;
 }
 
 h2{
-    font-size:2.2rem;
-    margin-bottom:40px;
+font-size:2.2rem;
+margin-bottom:40px;
 }
 
+/* ===== SCROLL REVEAL ===== */
 .reveal{
-    opacity:0;
-    transform:translateY(50px);
-    transition:1s;
+opacity:0;
+transform:translateY(60px);
+transition:1s;
 }
 
 .reveal.active{
-    opacity:1;
-    transform:translateY(0);
+opacity:1;
+transform:translateY(0);
 }
 
-/* ===== CARDS ===== */
+/* ===== CARD ===== */
 .card{
-    background:#020617;
-    padding:30px;
-    border-radius:18px;
-    box-shadow:0 0 40px rgba(37,99,235,.2);
+background:#020617;
+padding:30px;
+border-radius:20px;
+box-shadow:0 0 40px rgba(37,99,235,.25);
 }
 
 /* ===== PROJECT SLIDER ===== */
 .slider{
-    display:flex;
-    gap:20px;
-    overflow-x:auto;
-    scroll-snap-type:x mandatory;
+display:flex;
+gap:20px;
+overflow-x:auto;
+scroll-snap-type:x mandatory;
 }
 
 .project{
-    min-width:300px;
-    background:#020617;
-    border-radius:18px;
-    overflow:hidden;
-    scroll-snap-align:center;
+min-width:300px;
+background:#020617;
+border-radius:18px;
+overflow:hidden;
+scroll-snap-align:center;
+transition:.4s;
+}
+
+.project:hover{
+transform:scale(1.05);
 }
 
 .project img{
-    width:100%;
-    height:180px;
-    object-fit:cover;
+width:100%;
+height:180px;
+object-fit:cover;
 }
 
 .project div{
-    padding:20px;
+padding:20px;
 }
 
-.project h3{margin-bottom:10px;}
-
 .project a{
-    color:#60a5fa;
-    text-decoration:none;
+color:#60a5fa;
+text-decoration:none;
 }
 
 /* ===== FOOTER ===== */
 footer{
-    text-align:center;
-    padding:30px;
-    background:#020617;
+text-align:center;
+padding:30px;
+background:#020617;
 }
 
 @keyframes float{
-    from{transform:translateY(100vh);}
-    to{transform:translateY(-100vh);}
+from{transform:translateY(100vh);}
+to{transform:translateY(-100vh);}
 }
 </style>
 </head>
@@ -143,31 +152,35 @@ footer{
 <!-- PARTICLES -->
 <script>
 for(let i=0;i<40;i++){
-    let p=document.createElement("div");
-    p.className="particle";
-    p.style.left=Math.random()*100+"%";
-    p.style.animationDuration=10+Math.random()*20+"s";
-    document.body.appendChild(p);
+let p=document.createElement("div");
+p.className="particle";
+p.style.left=Math.random()*100+"%";
+p.style.animationDuration=10+Math.random()*20+"s";
+document.body.appendChild(p);
 }
 </script>
 
 <!-- HERO -->
 <div class="hero">
-    <div>
-        <h1>Ali <span>Hammad</span> Shehzad</h1>
-        <p>Unity Game Developer | iOS Games</p>
-        <a href="#projects" class="btn">View Games</a>
-    </div>
+<div>
+<h1>Ali <span>Hammad</span> Shehzad</h1>
+<p>Unity Game Developer | iOS Games</p>
+<a href="#projects" class="btn">View My Games</a>
+</div>
 </div>
 
+<!-- ABOUT -->
 <section class="reveal">
 <h2>About Me</h2>
 <div class="card">
-Unity Game Developer with experience in building, publishing, and optimizing iOS games. Passionate about game mechanics, performance, and player experience.
+I am a Unity Game Developer with experience in developing, publishing,
+and optimizing iOS games. I focus on gameplay mechanics, performance,
+and player experience.
 </div>
 </section>
 
-<section class="reveal">
+<!-- PROJECTS -->
+<section id="projects" class="reveal">
 <h2>Projects</h2>
 
 <div class="slider">
@@ -176,7 +189,9 @@ Unity Game Developer with experience in building, publishing, and optimizing iOS
 <img src="images/game1ss1.jpg">
 <div>
 <h3>4x4 Offroad Jeep Driving 3D</h3>
-<a href="https://apps.apple.com/pk/app/4x4-offroad-jeep-driving-3d/id6743621542" target="_blank">App Store →</a>
+<a href="https://apps.apple.com/pk/app/4x4-offroad-jeep-driving-3d/id6743621542" target="_blank">
+App Store →
+</a>
 </div>
 </div>
 
@@ -191,7 +206,9 @@ Unity Game Developer with experience in building, publishing, and optimizing iOS
 <img src="images/game2ss1.jpg">
 <div>
 <h3>Sniper Safari Wild Chase</h3>
-<a href="https://apps.apple.com/pk/app/sniper-safari-wild-chase/id6743483362" target="_blank">App Store →</a>
+<a href="https://apps.apple.com/pk/app/sniper-safari-wild-chase/id6743483362" target="_blank">
+App Store →
+</a>
 </div>
 </div>
 
@@ -205,6 +222,16 @@ Unity Game Developer with experience in building, publishing, and optimizing iOS
 </div>
 </section>
 
+<!-- CONTACT -->
+<section class="reveal">
+<h2>Contact</h2>
+<div class="card">
+<p>📞 0370-4103667</p>
+<p>📧 thatsmehammad@gmail.com</p>
+<p>📍 Sheikhupura, Pakistan</p>
+</div>
+</section>
+
 <footer>
 © 2025 Ali Hammad Shehzad | Unity Game Developer
 </footer>
@@ -213,7 +240,9 @@ Unity Game Developer with experience in building, publishing, and optimizing iOS
 window.addEventListener("scroll",()=>{
 document.querySelectorAll(".reveal").forEach(el=>{
 let top=el.getBoundingClientRect().top;
-if(top<window.innerHeight-100) el.classList.add("active");
+if(top < window.innerHeight-100){
+el.classList.add("active");
+}
 });
 });
 </script>
