@@ -39,7 +39,9 @@ display:flex;
 justify-content:center;
 align-items:center;
 text-align:center;
-background:radial-gradient(circle at top,#1e40af,#020617);
+background:
+radial-gradient(circle at top,#1e40af,#020617),
+url('https://www.transparenttextures.com/patterns/stardust.png');
 }
 
 .hero h1{
@@ -76,6 +78,17 @@ padding:100px 10%;
 h2{
 font-size:2.2rem;
 margin-bottom:40px;
+position:relative;
+}
+
+h2::after{
+content:'';
+width:70px;
+height:3px;
+background:#2563eb;
+position:absolute;
+bottom:-12px;
+left:0;
 }
 
 /* ===== SCROLL REVEAL ===== */
@@ -92,10 +105,10 @@ transform:translateY(0);
 
 /* ===== CARD ===== */
 .card{
-background:#020617;
+background:linear-gradient(145deg,#020617,#050b1f);
 padding:30px;
-border-radius:20px;
-box-shadow:0 0 40px rgba(37,99,235,.25);
+border-radius:22px;
+box-shadow:0 0 45px rgba(37,99,235,.25);
 margin-bottom:20px;
 }
 
@@ -111,6 +124,12 @@ background:#1e40af;
 padding:10px 18px;
 border-radius:20px;
 font-size:0.9rem;
+transition:.3s;
+}
+
+.skill:hover{
+box-shadow:0 0 15px #3b82f6;
+transform:translateY(-3px);
 }
 
 /* ===== PROJECT SLIDER ===== */
@@ -119,19 +138,21 @@ display:flex;
 gap:20px;
 overflow-x:auto;
 scroll-snap-type:x mandatory;
+padding-bottom:10px;
 }
 
 .project{
 min-width:300px;
 background:#020617;
-border-radius:18px;
+border-radius:20px;
 overflow:hidden;
 scroll-snap-align:center;
 transition:.4s;
 }
 
 .project:hover{
-transform:scale(1.05);
+transform:scale(1.07);
+box-shadow:0 0 25px rgba(37,99,235,.4);
 }
 
 .project img{
@@ -149,11 +170,28 @@ color:#60a5fa;
 text-decoration:none;
 }
 
+/* ===== CONTACT LINKS ===== */
+.contact a{
+display:flex;
+align-items:center;
+gap:10px;
+color:#fff;
+text-decoration:none;
+margin-bottom:10px;
+transition:.3s;
+}
+
+.contact a:hover{
+color:#60a5fa;
+transform:translateX(5px);
+}
+
 /* ===== FOOTER ===== */
 footer{
 text-align:center;
 padding:30px;
 background:#020617;
+opacity:.8;
 }
 
 @keyframes float{
@@ -166,7 +204,7 @@ to{transform:translateY(-100vh);}
 
 <!-- PARTICLES -->
 <script>
-for(let i=0;i<40;i++){
+for(let i=0;i<45;i++){
 let p=document.createElement("div");
 p.className="particle";
 p.style.left=Math.random()*100+"%";
@@ -179,7 +217,7 @@ document.body.appendChild(p);
 <div class="hero">
 <div>
 <h1>Ali <span>Hammad</span> Shehzad</h1>
-<p>Unity Game Developer</p>
+<p>Unity Game Developer | iOS Games</p>
 <a href="#projects" class="btn">View My Games</a>
 </div>
 </div>
@@ -199,7 +237,7 @@ performance optimization, and delivering engaging gaming experiences.
 <h2>Experience</h2>
 <div class="card">
 <h3>Unity Game Developer — Emerging Tech</h3>
-<p>June 2024 – Oct 2025</p>
+<p>June 2024 – Present</p>
 <ul>
 <li>• Developed and maintained Unity 3D games</li>
 <li>• Published and updated iOS games on Apple App Store</li>
@@ -234,34 +272,26 @@ performance optimization, and delivering engaging gaming experiences.
 <img src="images/game1ss1.jpg">
 <div>
 <h3>4x4 Offroad Jeep Driving 3D</h3>
-<a href="https://apps.apple.com/pk/app/4x4-offroad-jeep-driving-3d/id6743621542" target="_blank">
-App Store →
-</a>
+<a href="https://apps.apple.com/pk/app/4x4-offroad-jeep-driving-3d/id6743621542" target="_blank">App Store →</a>
 </div>
 </div>
 
 <div class="project">
 <img src="images/game1ss2.jpg">
-<div>
-<h3>4x4 Offroad Jeep Driving 3D</h3>
-</div>
+<div><h3>4x4 Offroad Jeep Driving 3D</h3></div>
 </div>
 
 <div class="project">
 <img src="images/game2ss1.jpg">
 <div>
 <h3>Sniper Safari Wild Chase</h3>
-<a href="https://apps.apple.com/pk/app/sniper-safari-wild-chase/id6743483362" target="_blank">
-App Store →
-</a>
+<a href="https://apps.apple.com/pk/app/sniper-safari-wild-chase/id6743483362" target="_blank">App Store →</a>
 </div>
 </div>
 
 <div class="project">
 <img src="images/game2ss2.jpg">
-<div>
-<h3>Sniper Safari Wild Chase</h3>
-</div>
+<div><h3>Sniper Safari Wild Chase</h3></div>
 </div>
 
 </div>
@@ -270,9 +300,9 @@ App Store →
 <!-- CONTACT -->
 <section class="reveal">
 <h2>Contact</h2>
-<div class="card">
-<p>📞 0370-4103667</p>
-<p>📧 thatsmehammad@gmail.com</p>
+<div class="card contact">
+<a href="mailto:thatsmehammad@gmail.com">📧 thatsmehammad@gmail.com</a>
+<a href="https://wa.me/923704103667" target="_blank">📞 WhatsApp: 0370-4103667</a>
 <p>📍 Sheikhupura, Pakistan</p>
 </div>
 </section>
