@@ -8,181 +8,240 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
+
+/* ============ COLOR THEME ============ */
+:root{
+--bg:#04061a;
+--card:#0b1033;
+--cyan:#22d3ee;
+--purple:#a855f7;
+--text:#e5f0ff;
+}
+
 body{
-background:#010214;
-color:#fff;
+background:radial-gradient(circle at top,#080b2d,var(--bg));
+color:var(--text);
 overflow-x:hidden;
 cursor:none;
 }
 
-/* ===== GLOWING NEON CURSOR ===== */
+/* ============ LOADER ============ */
+#loader{
+position:fixed;
+inset:0;
+background:radial-gradient(circle,#0b1033,#04061a);
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+z-index:9999;
+transition:.6s ease;
+}
+
+#loader.hide{opacity:0;visibility:hidden}
+
+.loader-ring{
+width:120px;
+height:120px;
+border-radius:50%;
+border:3px solid transparent;
+border-top:3px solid var(--cyan);
+border-right:3px solid var(--purple);
+animation:spin 1.2s linear infinite;
+box-shadow:0 0 25px var(--cyan),0 0 45px var(--purple);
+}
+
+.loader-text{
+margin-top:25px;
+font-size:1.6rem;
+letter-spacing:2px;
+text-shadow:0 0 12px var(--cyan),0 0 25px var(--purple);
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============ CURSOR ============ */
 .cursor{
 position:fixed;
-width:20px;
-height:20px;
+width:18px;
+height:18px;
 border-radius:50%;
 pointer-events:none;
-background:transparent;
-border:2px solid #00ffff;
-box-shadow:0 0 10px #00ffff,0 0 20px #ff00ff,0 0 30px #00ffff;
+border:2px solid var(--cyan);
+box-shadow:0 0 12px var(--cyan),0 0 25px var(--purple);
 transform:translate(-50%,-50%);
-transition:width .1s,height .1s;
-z-index:9999;
+z-index:999;
 }
 
-/* ===== NEON PARTICLES ===== */
+/* ============ PARTICLES ============ */
 .particle{
 position:fixed;
-width:5px;
-height:5px;
-background:#00ffff;
+width:4px;
+height:4px;
+background:var(--cyan);
 border-radius:50%;
-opacity:.4;
-animation:float 20s linear infinite;
-box-shadow:0 0 10px #00ffff,0 0 20px #ff00ff;
+opacity:.35;
+animation:float 18s linear infinite;
+box-shadow:0 0 8px var(--cyan);
 }
 
-/* ===== HERO ===== */
+/* ============ HERO ============ */
 .hero{
 height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
 text-align:center;
-background:radial-gradient(circle at top,#0c0c3e,#010214);
 }
 
 .hero h1{
-font-size:3.5rem;
-text-shadow:0 0 10px #00ffff,0 0 20px #ff00ff;
+font-size:3.4rem;
+text-shadow:0 0 12px var(--cyan),0 0 28px var(--purple);
 }
 
-.hero span{color:#ff00ff;}
-
-.hero p{margin:15px 0;opacity:.9;text-shadow:0 0 8px #00ffff;}
+.hero span{color:var(--purple)}
+.hero p{margin:15px 0;color:#c7d2fe}
 
 .btn{
-padding:12px 35px;
+padding:12px 36px;
 border-radius:30px;
-background:#00ffff;
-color:#010214;
-text-decoration:none;
+background:linear-gradient(135deg,var(--cyan),var(--purple));
+color:#04061a;
 font-weight:600;
-transition:.3s;
-box-shadow:0 0 10px #00ffff,0 0 20px #ff00ff;
-margin:5px;
+text-decoration:none;
+margin:6px;
 display:inline-block;
+box-shadow:0 0 15px rgba(34,211,238,.6),0 0 30px rgba(168,85,247,.6);
+transition:.2s;
 }
 
-.btn:hover{
-transform:scale(1.1);
-box-shadow:0 0 25px #00ffff,0 0 40px #ff00ff;
-}
-
-/* ===== SECTION ===== */
-section{padding:100px 10%;}
+/* ============ SECTIONS ============ */
+section{padding:100px 10%}
 
 h2{
 font-size:2.2rem;
 margin-bottom:40px;
+text-shadow:0 0 6px var(--cyan);
 position:relative;
-text-shadow:0 0 6px #00ffff;
 }
-
 h2::after{
 content:'';
 width:70px;
 height:3px;
-background:#ff00ff;
+background:var(--purple);
 position:absolute;
 bottom:-12px;
 left:0;
-box-shadow:0 0 10px #ff00ff;
+box-shadow:0 0 10px var(--purple);
 }
 
-/* ===== SCROLL REVEAL ===== */
-.reveal{opacity:0;transform:translateY(60px);transition:1s;}
-.reveal.active{opacity:1;transform:translateY(0);}
+/* ============ REVEAL ============ */
+.reveal{opacity:0;transform:translateY(60px);transition:1s}
+.reveal.active{opacity:1;transform:none}
 
-/* ===== CARD ===== */
+/* ============ CARD ============ */
 .card{
-background:#0a0a25;
+background:linear-gradient(180deg,#0e1445,var(--card));
 padding:30px;
 border-radius:22px;
-box-shadow:0 0 20px #00ffff,0 0 40px #ff00ff;
+box-shadow:0 0 18px rgba(34,211,238,.25),0 0 35px rgba(168,85,247,.25);
 margin-bottom:20px;
-transition:.3s;
 }
-.card:hover{box-shadow:0 0 30px #00ffff,0 0 50px #ff00ff;}
 
-/* ===== SKILLS ===== */
-.skills{display:flex;flex-wrap:wrap;gap:15px;}
+/* ============ SKILLS ============ */
+.skills{display:flex;flex-wrap:wrap;gap:15px}
 .skill{
-background:#010214;
+background:#05082a;
 padding:10px 18px;
 border-radius:20px;
-font-size:.9rem;
-border:1px solid #00ffff;
-text-shadow:0 0 5px #00ffff;
+border:1px solid var(--cyan);
+text-shadow:0 0 6px var(--cyan);
 transition:.3s;
 }
-.skill:hover{box-shadow:0 0 15px #00ffff;transform:translateY(-3px);}
+.skill:hover{
+transform:translateY(-4px);
+box-shadow:0 0 15px var(--cyan),0 0 30px var(--purple);
+}
 
-/* ===== AUTO SLIDER ===== */
-.slider{display:flex;gap:20px;overflow:hidden;}
-.slider-track{
-display:flex;gap:20px;
-animation:slide 0s linear infinite;
-}
-.slider-track:hover{
-animation-play-state:paused;
-}
+/* ============ PROJECTS ============ */
+.slider{display:flex;gap:20px;overflow-x:auto}
 .project{
 min-width:300px;
-background:#010214;
+background:#05082a;
 border-radius:20px;
 overflow:hidden;
-border:1px solid #ff00ff;
-box-shadow:0 0 10px #ff00ff;
+border:1px solid var(--purple);
+box-shadow:0 0 10px rgba(168,85,247,.6);
 transition:.4s;
 }
-.project:hover{transform:scale(1.07);box-shadow:0 0 20px #00ffff,0 0 40px #ff00ff;}
-.project img{width:100%;height:180px;object-fit:cover;}
-.project div{padding:20px;}
-.project a{color:#00ffff;text-decoration:none;}
+.project:hover{
+transform:scale(1.07);
+box-shadow:0 0 20px var(--cyan),0 0 40px var(--purple);
+}
+.project img{width:100%;height:180px;object-fit:cover}
+.project div{padding:20px}
+.project a{color:var(--cyan);text-decoration:none}
 
-/* ===== CONTACT ===== */
-.contact a{display:block;color:#fff;text-decoration:none;margin-bottom:10px;transition:.3s;}
-.contact a:hover{color:#00ffff;transform:translateX(5px);}
+/* ============ CONTACT ============ */
+.contact a{
+display:block;
+color:var(--text);
+text-decoration:none;
+margin-bottom:10px;
+transition:.3s;
+}
+.contact a:hover{color:var(--cyan);transform:translateX(5px)}
 
-footer{text-align:center;padding:30px;background:#010214;opacity:.9;}
+footer{text-align:center;padding:30px;opacity:.85}
 
-/* ===== ANIMATIONS ===== */
-@keyframes float{from{transform:translateY(100vh);}to{transform:translateY(-100vh);}}
-@keyframes slide{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes float{from{transform:translateY(100vh)}to{transform:translateY(-100vh)}}
 </style>
 </head>
+
 <body>
 
-<!-- NEON CURSOR -->
+<!-- LOADER -->
+<div id="loader">
+<div class="loader-ring"></div>
+<div class="loader-text">LOADING</div>
+</div>
+
+<!-- SOUND -->
+<audio id="loadSound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-click-1114.mp3"></audio>
+
 <div class="cursor"></div>
 
-<!-- NEON PARTICLES -->
 <script>
-for(let i=0;i<50;i++){
+// Loader fast
+window.addEventListener("load",()=>{
+document.getElementById("loadSound").play().catch(()=>{});
+setTimeout(()=>document.getElementById("loader").classList.add("hide"),1600);
+});
+
+// Cursor
+const cursor=document.querySelector(".cursor");
+document.addEventListener("mousemove",e=>{
+cursor.style.left=e.clientX+"px";
+cursor.style.top=e.clientY+"px";
+});
+
+// Particles
+for(let i=0;i<35;i++){
 let p=document.createElement("div");
 p.className="particle";
 p.style.left=Math.random()*100+"%";
-p.style.animationDuration=10+Math.random()*20+"s";
+p.style.animationDuration=10+Math.random()*15+"s";
 document.body.appendChild(p);
 }
 
-// CURSOR FOLLOW
-const cursor=document.querySelector('.cursor');
-document.addEventListener('mousemove',e=>{
-cursor.style.left=e.clientX+'px';
-cursor.style.top=e.clientY+'px';
+// Reveal
+window.addEventListener("scroll",()=>{
+document.querySelectorAll(".reveal").forEach(el=>{
+if(el.getBoundingClientRect().top<window.innerHeight-100){
+el.classList.add("active");
+}
+});
 });
 </script>
 
@@ -196,7 +255,6 @@ cursor.style.top=e.clientY+'px';
 </div>
 </div>
 
-<!-- ABOUT -->
 <section class="reveal">
 <h2>About Me</h2>
 <div class="card">
@@ -205,7 +263,6 @@ and optimizing iOS games. Passionate about neon-style polished UI.
 </div>
 </section>
 
-<!-- EXPERIENCE -->
 <section class="reveal">
 <h2>Experience</h2>
 <div class="card">
@@ -220,7 +277,6 @@ and optimizing iOS games. Passionate about neon-style polished UI.
 </div>
 </section>
 
-<!-- SKILLS -->
 <section class="reveal">
 <h2>Skills</h2>
 <div class="card">
@@ -235,11 +291,9 @@ and optimizing iOS games. Passionate about neon-style polished UI.
 </div>
 </section>
 
-<!-- PROJECTS AUTO SLIDER -->
 <section id="projects" class="reveal">
 <h2>Projects</h2>
 <div class="slider">
-<div class="slider-track">
 
 <div class="project">
 <img src="images/game1ss1.jpg">
@@ -268,10 +322,8 @@ and optimizing iOS games. Passionate about neon-style polished UI.
 </div>
 
 </div>
-</div>
 </section>
 
-<!-- CONTACT -->
 <section class="reveal">
 <h2>Contact</h2>
 <div class="card contact">
@@ -284,16 +336,6 @@ and optimizing iOS games. Passionate about neon-style polished UI.
 <footer>
 © 2025 Ali Hammad Shehzad | Unity Game Developer
 </footer>
-
-<script>
-window.addEventListener("scroll",()=>{
-document.querySelectorAll(".reveal").forEach(el=>{
-if(el.getBoundingClientRect().top < window.innerHeight-100){
-el.classList.add("active");
-}
-});
-});
-</script>
 
 </body>
 </html>
