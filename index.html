@@ -7,12 +7,13 @@
 <title>Hammad | Unity Game Developer</title>
 <link rel="icon" type="image/png" href="images/profile.png">
 
+<meta name="description" content="Unity Game Developer specializing in iOS games, 2D & 3D development, optimization and App Store publishing.">
+<meta name="keywords" content="Unity Developer, Game Developer, iOS Games, Unity 3D, C#">
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
 *{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
 
-/* ===== COLOR THEME (CHANGED ONLY) ===== */
 :root{
 --bg:#020617;
 --card:#020b2d;
@@ -28,7 +29,7 @@ overflow-x:hidden;
 cursor:none;
 }
 
-/* ===== CURSOR ===== */
+/* CURSOR */
 .cursor{
 position:fixed;
 width:18px;
@@ -41,7 +42,7 @@ transform:translate(-50%,-50%);
 z-index:999;
 }
 
-/* ===== PARTICLES ===== */
+/* PARTICLES */
 .particle{
 position:fixed;
 width:4px;
@@ -53,13 +54,14 @@ animation:float 18s linear infinite;
 box-shadow:0 0 8px var(--cyan);
 }
 
-/* ===== HERO ===== */
+/* HERO */
 .hero{
 height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
 text-align:center;
+flex-direction:column;
 }
 
 .profile-pic{
@@ -70,6 +72,11 @@ border:4px solid var(--cyan);
 box-shadow:0 0 25px var(--cyan),0 0 50px var(--purple);
 object-fit:cover;
 margin-bottom:20px;
+transition:.4s;
+}
+.profile-pic:hover{
+transform:rotate(4deg) scale(1.05);
+box-shadow:0 0 40px var(--cyan),0 0 80px var(--purple);
 }
 
 .hero h1{
@@ -78,6 +85,12 @@ text-shadow:0 0 12px var(--cyan),0 0 28px var(--purple);
 }
 
 .hero p{margin:15px 0;color:#c7d2fe}
+
+.cta-line{
+margin-top:10px;
+font-size:.95rem;
+color:#a5b4fc;
+}
 
 .btn{
 padding:12px 36px;
@@ -92,7 +105,7 @@ box-shadow:0 0 15px rgba(56,189,248,.6),0 0 30px rgba(99,102,241,.6);
 transition:.2s;
 }
 
-/* ===== SECTIONS ===== */
+/* SECTIONS */
 section{padding:100px 10%}
 
 h2{
@@ -112,11 +125,10 @@ left:0;
 box-shadow:0 0 10px var(--purple);
 }
 
-/* ===== REVEAL ===== */
 .reveal{opacity:0;transform:translateY(60px);transition:1s}
 .reveal.active{opacity:1;transform:none}
 
-/* ===== CARD ===== */
+/* CARD */
 .card{
 background:linear-gradient(180deg,#020b3a,var(--card));
 padding:30px;
@@ -125,7 +137,7 @@ box-shadow:0 0 18px rgba(56,189,248,.25),0 0 35px rgba(99,102,241,.25);
 margin-bottom:20px;
 }
 
-/* ===== SKILLS ===== */
+/* SKILLS */
 .skills{display:flex;flex-wrap:wrap;gap:15px}
 .skill{
 background:#020617;
@@ -134,13 +146,14 @@ border-radius:20px;
 border:1px solid var(--cyan);
 text-shadow:0 0 6px var(--cyan);
 transition:.3s;
+cursor:default;
 }
 .skill:hover{
 transform:translateY(-4px);
 box-shadow:0 0 15px var(--cyan),0 0 30px var(--purple);
 }
 
-/* ===== PROJECTS ===== */
+/* PROJECTS */
 .slider{display:flex;gap:20px;overflow-x:auto}
 .project{
 min-width:300px;
@@ -158,8 +171,9 @@ box-shadow:0 0 20px var(--cyan),0 0 40px var(--purple);
 .project img{width:100%;height:180px;object-fit:cover}
 .project div{padding:20px}
 .project a{color:var(--cyan);text-decoration:none}
+.tech{font-size:.85rem;color:#a5b4fc;margin-top:6px}
 
-/* ===== CONTACT ===== */
+/* CONTACT */
 .contact a{
 display:block;
 color:var(--text);
@@ -170,6 +184,13 @@ transition:.3s;
 .contact a:hover{color:var(--cyan);transform:translateX(5px)}
 
 footer{text-align:center;padding:30px;opacity:.85}
+
+/* MOBILE FIX */
+@media(max-width:768px){
+.hero h1{font-size:2.4rem}
+.profile-pic{width:130px;height:130px}
+section{padding:80px 6%}
+}
 
 @keyframes float{
 from{transform:translateY(100vh)}
@@ -212,47 +233,74 @@ el.classList.add("active");
 <img src="images/profile.png" class="profile-pic">
 <h1>Ali Hammad Shehzad</h1>
 <p>Unity Game Developer</p>
+
 <a href="#projects" class="btn">View Games</a>
 <a href="Ali-Hammad-Shehzad-CV.pdf" class="btn" download>Download CV</a>
+
+<p class="cta-line">Open to full-time roles & freelance Unity projects.</p>
 </div>
 </div>
 
+<!-- MINI RESUME -->
 <section class="reveal">
-<h2>About Me</h2>
+<h2>Mini Resume</h2>
 <div class="card">
-Unity Game Developer with experience in developing, publishing,
-and optimizing iOS games.
+<p><strong>Professional Summary:</strong><br>
+Unity Game Developer with hands-on experience in developing, optimizing and publishing iOS games. Skilled in gameplay mechanics, performance optimization and App Store deployment.</p>
+<br>
+<p><strong>Key Skills:</strong><br>
+Unity 2D/3D, C#, Gameplay Systems, Bug Fixing, Optimization, AdMob, AppLovin, Firebase</p>
+<br>
+<p><strong>Platforms & Tools:</strong><br>
+iOS, App Store Connect, Unity Editor, Visual Studio</p>
 </div>
 </section>
 
+<!-- ABOUT ME -->
+<section class="reveal">
+<h2>About Me</h2>
+<div class="card">
+Unity Game Developer with experience in developing, publishing, and optimizing iOS games. Passionate about neon-style polished UI.
+</div>
+</section>
+
+<!-- EXPERIENCE -->
 <section class="reveal">
 <h2>Experience</h2>
 <div class="card">
 <h3>Unity Game Developer — Emerging Tech</h3>
 <p>June 2024 – Oct 2025</p>
 <ul>
-<li>Unity 3D game development</li>
-<li>iOS App Store publishing</li>
+<li>Unity 3D game development (2D/3D)</li>
+<li>iOS App Store publishing & management</li>
 <li>Bug fixing & optimization</li>
-<li>Gameplay improvement</li>
+<li>Gameplay improvement & UI polish</li>
+<li>Integrated AdMob & AppLovin MAX for monetization</li>
+<li>Implemented Firebase Analytics for user tracking</li>
 </ul>
+<p><strong>Skills Applied:</strong> Unity, C#, iOS Publishing, App Store, AdMob, AppLovin, Firebase, Optimization, Gameplay, UI Design</p>
 </div>
 </section>
 
+<!-- SKILLS -->
 <section class="reveal">
 <h2>Skills</h2>
 <div class="card">
 <div class="skills">
-<div class="skill">Unity 2D / 3D</div>
-<div class="skill">C#</div>
-<div class="skill">iOS Publishing</div>
-<div class="skill">App Store Management</div>
-<div class="skill">Debugging</div>
-<div class="skill">Optimization</div>
+<div class="skill" title="2D & 3D Game Development in Unity">Unity 2D / 3D</div>
+<div class="skill" title="C# programming for gameplay & tools">C#</div>
+<div class="skill" title="Publish apps on iOS App Store">iOS Publishing</div>
+<div class="skill" title="Manage apps on App Store Connect">App Store Management</div>
+<div class="skill" title="Debug & optimize games">Debugging & Optimization</div>
+<div class="skill" title="AdMob Banner, Interstitial, Rewarded">AdMob Integration</div>
+<div class="skill" title="AppLovin MAX Ads integration">AppLovin MAX Ads</div>
+<div class="skill" title="Firebase Analytics & backend tracking">Firebase Analytics / Backend</div>
+<div class="skill" title="Design gameplay & UI">Gameplay & UI Design</div>
 </div>
 </div>
 </section>
 
+<!-- PROJECTS -->
 <section id="projects" class="reveal">
 <h2>Projects</h2>
 <div class="slider">
@@ -261,34 +309,28 @@ and optimizing iOS games.
 <img src="images/game1ss1.jpg">
 <div>
 <h3>4x4 Offroad Jeep Driving 3D</h3>
+<p class="tech">Unity 3D • C# • iOS • AdMob & AppLovin Ads</p>
 <a href="https://apps.apple.com/pk/app/4x4-offroad-jeep-driving-3d/id6743621542" target="_blank">App Store →</a>
 </div>
-</div>
-
-<div class="project">
-<img src="images/game1ss2.jpg">
-<div><h3>4x4 Offroad Jeep Driving 3D</h3></div>
 </div>
 
 <div class="project">
 <img src="images/game2ss1.jpg">
 <div>
 <h3>Sniper Safari Wild Chase</h3>
+<p class="tech">Unity 3D • C# • iOS • Firebase Analytics</p>
 <a href="https://apps.apple.com/pk/app/sniper-safari-wild-chase/id6743483362" target="_blank">App Store →</a>
 </div>
-</div>
-
-<div class="project">
-<img src="images/game2ss2.jpg">
-<div><h3>Sniper Safari Wild Chase</h3></div>
 </div>
 
 </div>
 </section>
 
+<!-- CONTACT -->
 <section class="reveal">
 <h2>Contact</h2>
 <div class="card contact">
+<p><strong>Available for Unity game development & iOS publishing.</strong></p><br>
 <a href="mailto:thatsmehammad@gmail.com">📧 thatsmehammad@gmail.com</a>
 <a href="https://wa.me/923704103667" target="_blank">📞 WhatsApp: 0370-4103667</a>
 <p>📍 Sheikhupura, Pakistan</p>
