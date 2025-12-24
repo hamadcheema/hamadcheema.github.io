@@ -340,6 +340,11 @@ Unity Game Developer with experience in developing, publishing, and optimizing i
 <footer>
 © 2025 Ali Hammad Shehzad | Unity Game Developer
 </footer>
-
+<script>
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  if(e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's')) e.preventDefault();
+});
+</script>
 </body>
 </html>
