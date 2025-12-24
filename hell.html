@@ -61,6 +61,7 @@ display:flex;
 justify-content:center;
 align-items:center;
 text-align:center;
+flex-direction:column;
 }
 
 .profile-pic{
@@ -146,6 +147,10 @@ border:1px solid var(--cyan);
 text-shadow:0 0 6px var(--cyan);
 transition:.3s;
 }
+.skill:hover{
+transform:translateY(-4px);
+box-shadow:0 0 15px var(--cyan),0 0 30px var(--purple);
+}
 
 /* PROJECTS */
 .slider{display:flex;gap:20px;overflow-x:auto}
@@ -158,6 +163,10 @@ border:1px solid var(--purple);
 box-shadow:0 0 10px rgba(99,102,241,.6);
 transition:.4s;
 }
+.project:hover{
+transform:scale(1.07);
+box-shadow:0 0 20px var(--cyan),0 0 40px var(--purple);
+}
 .project img{width:100%;height:180px;object-fit:cover}
 .project div{padding:20px}
 .project a{color:var(--cyan);text-decoration:none}
@@ -169,10 +178,13 @@ display:block;
 color:var(--text);
 text-decoration:none;
 margin-bottom:10px;
+transition:.3s;
 }
+.contact a:hover{color:var(--cyan);transform:translateX(5px)}
 
 footer{text-align:center;padding:30px;opacity:.85}
 
+/* MOBILE FIX */
 @media(max-width:768px){
 .hero h1{font-size:2.4rem}
 .profile-pic{width:130px;height:130px}
@@ -228,6 +240,7 @@ el.classList.add("active");
 </div>
 </div>
 
+<!-- MINI RESUME -->
 <section class="reveal">
 <h2>Mini Resume</h2>
 <div class="card">
@@ -242,7 +255,81 @@ iOS, App Store Connect, Unity Editor, Visual Studio</p>
 </div>
 </section>
 
-<!-- REST SECTIONS SAME AS BEFORE -->
+<!-- ABOUT ME -->
+<section class="reveal">
+<h2>About Me</h2>
+<div class="card">
+Unity Game Developer with experience in developing, publishing, and optimizing iOS games. Passionate about neon-style polished UI.
+</div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="reveal">
+<h2>Experience</h2>
+<div class="card">
+<h3>Unity Game Developer — Emerging Tech</h3>
+<p>June 2024 – Oct 2025</p>
+<p><strong>Published multiple iOS games with live users and App Store presence.</strong></p>
+<ul>
+<li>Unity 3D game development</li>
+<li>iOS App Store publishing</li>
+<li>Bug fixing & optimization</li>
+<li>Gameplay improvement</li>
+</ul>
+</div>
+</section>
+
+<!-- SKILLS -->
+<section class="reveal">
+<h2>Skills</h2>
+<div class="card">
+<div class="skills">
+<div class="skill">Unity 2D / 3D</div>
+<div class="skill">C#</div>
+<div class="skill">iOS Publishing</div>
+<div class="skill">App Store Management</div>
+<div class="skill">Debugging</div>
+<div class="skill">Optimization</div>
+</div>
+</div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="reveal">
+<h2>Projects</h2>
+<div class="slider">
+
+<div class="project">
+<img src="images/game1ss1.jpg">
+<div>
+<h3>4x4 Offroad Jeep Driving 3D</h3>
+<p class="tech">Unity 3D • C# • iOS</p>
+<a href="https://apps.apple.com/pk/app/4x4-offroad-jeep-driving-3d/id6743621542" target="_blank">App Store →</a>
+</div>
+</div>
+
+<div class="project">
+<img src="images/game2ss1.jpg">
+<div>
+<h3>Sniper Safari Wild Chase</h3>
+<p class="tech">Unity 3D • C# • iOS</p>
+<a href="https://apps.apple.com/pk/app/sniper-safari-wild-chase/id6743483362" target="_blank">App Store →</a>
+</div>
+</div>
+
+</div>
+</section>
+
+<!-- CONTACT -->
+<section class="reveal">
+<h2>Contact</h2>
+<div class="card contact">
+<p><strong>Available for Unity game development & iOS publishing.</strong></p><br>
+<a href="mailto:thatsmehammad@gmail.com">📧 thatsmehammad@gmail.com</a>
+<a href="https://wa.me/923704103667" target="_blank">📞 WhatsApp: 0370-4103667</a>
+<p>📍 Sheikhupura, Pakistan</p>
+</div>
+</section>
 
 <footer>
 © 2025 Ali Hammad Shehzad | Unity Game Developer
