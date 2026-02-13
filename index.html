@@ -1,351 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Hammad | Unity Game Developer</title>
-<link rel="icon" type="image/png" href="images/profile.png">
-
-<meta name="description" content="Unity Game Developer specializing in iOS games, 2D & 3D development, optimization and App Store publishing.">
-<meta name="keywords" content="Unity Developer, Game Developer, iOS Games, Unity 3D, C#">
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
-
-:root{
---bg:#020617;
---card:#020b2d;
---cyan:#38bdf8;
---purple:#6366f1;
---text:#e0e7ff;
-}
-
-body{
-background:radial-gradient(circle at top,#020b2d,var(--bg));
-color:var(--text);
-overflow-x:hidden;
-cursor:none;
-}
-
-/* CURSOR */
-.cursor{
-position:fixed;
-width:18px;
-height:18px;
-border-radius:50%;
-pointer-events:none;
-border:2px solid var(--cyan);
-box-shadow:0 0 12px var(--cyan),0 0 25px var(--purple);
-transform:translate(-50%,-50%);
-z-index:999;
-}
-
-/* PARTICLES */
-.particle{
-position:fixed;
-width:4px;
-height:4px;
-background:var(--cyan);
-border-radius:50%;
-opacity:.35;
-animation:float 18s linear infinite;
-box-shadow:0 0 8px var(--cyan);
-}
-
-/* HERO */
-.hero{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-text-align:center;
-flex-direction:column;
-}
-
-.profile-pic{
-width:160px;
-height:160px;
-border-radius:50%;
-border:4px solid var(--cyan);
-box-shadow:0 0 25px var(--cyan),0 0 50px var(--purple);
-object-fit:cover;
-margin-bottom:20px;
-transition:.4s;
-}
-.profile-pic:hover{
-transform:rotate(4deg) scale(1.05);
-box-shadow:0 0 40px var(--cyan),0 0 80px var(--purple);
-}
-
-.hero h1{
-font-size:3.4rem;
-text-shadow:0 0 12px var(--cyan),0 0 28px var(--purple);
-}
-
-.hero p{margin:15px 0;color:#c7d2fe}
-
-.cta-line{
-margin-top:10px;
-font-size:.95rem;
-color:#a5b4fc;
-}
-
-.btn{
-padding:12px 36px;
-border-radius:30px;
-background:linear-gradient(135deg,var(--cyan),var(--purple));
-color:#020617;
-font-weight:600;
-text-decoration:none;
-margin:6px;
-display:inline-block;
-box-shadow:0 0 15px rgba(56,189,248,.6),0 0 30px rgba(99,102,241,.6);
-transition:.2s;
-}
-
-/* SECTIONS */
-section{padding:100px 10%}
-
-h2{
-font-size:2.2rem;
-margin-bottom:40px;
-text-shadow:0 0 6px var(--cyan);
-position:relative;
-}
-h2::after{
-content:'';
-width:70px;
-height:3px;
-background:var(--purple);
-position:absolute;
-bottom:-12px;
-left:0;
-box-shadow:0 0 10px var(--purple);
-}
-
-.reveal{opacity:0;transform:translateY(60px);transition:1s}
-.reveal.active{opacity:1;transform:none}
-
-/* CARD */
-.card{
-background:linear-gradient(180deg,#020b3a,var(--card));
-padding:30px;
-border-radius:22px;
-box-shadow:0 0 18px rgba(56,189,248,.25),0 0 35px rgba(99,102,241,.25);
-margin-bottom:20px;
-}
-
-/* SKILLS */
-.skills{display:flex;flex-wrap:wrap;gap:15px}
-.skill{
-background:#020617;
-padding:10px 18px;
-border-radius:20px;
-border:1px solid var(--cyan);
-text-shadow:0 0 6px var(--cyan);
-transition:.3s;
-cursor:default;
-}
-.skill:hover{
-transform:translateY(-4px);
-box-shadow:0 0 15px var(--cyan),0 0 30px var(--purple);
-}
-
-/* PROJECTS */
-.slider{display:flex;gap:20px;overflow-x:auto}
-.project{
-min-width:300px;
-background:#020617;
-border-radius:20px;
-overflow:hidden;
-border:1px solid var(--purple);
-box-shadow:0 0 10px rgba(99,102,241,.6);
-transition:.4s;
-}
-.project:hover{
-transform:scale(1.07);
-box-shadow:0 0 20px var(--cyan),0 0 40px var(--purple);
-}
-.project img{width:100%;height:180px;object-fit:cover}
-.project div{padding:20px}
-.project a{color:var(--cyan);text-decoration:none}
-.tech{font-size:.85rem;color:#a5b4fc;margin-top:6px}
-
-/* CONTACT */
-.contact a{
-display:block;
-color:var(--text);
-text-decoration:none;
-margin-bottom:10px;
-transition:.3s;
-}
-.contact a:hover{color:var(--cyan);transform:translateX(5px)}
-
-footer{text-align:center;padding:30px;opacity:.85}
-
-/* MOBILE FIX */
-@media(max-width:768px){
-.hero h1{font-size:2.4rem}
-.profile-pic{width:130px;height:130px}
-section{padding:80px 6%}
-}
-
-@keyframes float{
-from{transform:translateY(100vh)}
-to{transform:translateY(-100vh)}
-}
-</style>
+    <title>Happy Birthday</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <div class="container">
+        <div class="row">
+            <div class="loader">
+                <button id="play">Start</button>
+            </div>
+        </div>
+    </div>
+    <audio class="song" controls loop>
+        <source src="music.mp3">
+        </source>
+        Your browser isn't invited for super fun audio time.
+    </audio>
+    <canvas id="confetti"></canvas>
+    <div class="main">
+        <div class="container pt-5">
+            <div class="row">
 
-<div class="cursor"></div>
+                <div class="col-12 col-xl-6 mx-auto">
+                    <img src="img/banner.png" alt="">
+                </div>
 
-<script>
-const cursor=document.querySelector(".cursor");
-document.addEventListener("mousemove",e=>{
-cursor.style.left=e.clientX+"px";
-cursor.style.top=e.clientY+"px";
-});
+                <div class="col-12  text-center">
+                    <div id="name" class="area">Gaurav</div>
+                </div>
 
-for(let i=0;i<35;i++){
-let p=document.createElement("div");
-p.className="particle";
-p.style.left=Math.random()*100+"%";
-p.style.animationDuration=10+Math.random()*15+"s";
-document.body.appendChild(p);
-}
+                <div class="col-12 text-center">
+                    <div class="type-wrap">
+                        <div id="typed-strings" class="typing">
+                            <h2>Happy Birthday <i id="nae">Gaurav</i></h2>
+                            <h2>Have a wonderful day</h2>
+                            <h2>Filled with joy and happiness.</h2>
+                        </div>
+                        <span id="typed" style="white-space:pre;"></span>
+                    </div>
+                </div>
 
-window.addEventListener("scroll",()=>{
-document.querySelectorAll(".reveal").forEach(el=>{
-if(el.getBoundingClientRect().top<window.innerHeight-100){
-el.classList.add("active");
-}
-});
-});
-</script>
-
-<!-- HERO -->
-<div class="hero">
-<div>
-<img src="images/profile.png" class="profile-pic">
-<h1>Ali Hammad Shehzad</h1>
-<p>Unity Game Developer</p>
-
-<a href="#projects" class="btn">View Games</a>
-<a href="Ali-Hammad-Shehzad-CV.pdf" class="btn" download>Download CV</a>
-
-<p class="cta-line">Open to full-time roles & freelance Unity projects.</p>
-</div>
-</div>
-
-<!-- MINI RESUME -->
-<section class="reveal">
-<h2>Mini Resume</h2>
-<div class="card">
-<p><strong>Professional Summary:</strong><br>
-Unity Game Developer with expertise in 2D/3D mobile games, bug fixing, and performance optimization. Skilled in integrating AdMob and AppLovin MAX for monetization, 
-implementing Firebase Analytics for user tracking, and enhancing gameplay and UI for engaging player experiences.</p>
-<br>
-<p><strong>Key Skills:</strong><br>
-Unity 2D/3D, C#, Gameplay Systems, Bug Fixing, Optimization, AdMob, AppLovin, Firebase</p>
-<br>
-<p><strong>Platforms & Tools:</strong><br>
-iOS, App Store Connect, Unity Editor, Visual Studio</p>
-</div>
-</section>
-
-<!-- ABOUT ME -->
-<section class="reveal">
-<h2>About Me</h2>
-<div class="card">
-Unity Game Developer skilled in 2D/3D mobile games, gameplay optimization, UI design, and monetization with AdMob & AppLovin, using Firebase for analytics-driven improvements.
-</div>
-</section>
-
-<!-- EXPERIENCE -->
-<section class="reveal">
-<h2>Experience</h2>
-<div class="card">
-<h3>Unity Game Developer — Emerging Tech</h3>
-<p>June 2024 – Oct 2025</p>
-<ul>
-<li>Unity 3D game development (2D/3D)</li>
-<li>iOS App Store publishing & management</li>
-<li>Bug fixing & optimization</li>
-<li>Gameplay improvement & UI polish</li>
-<li>Integrated AdMob & AppLovin MAX for monetization</li>
-<li>Implemented Firebase Analytics for user tracking</li>
-</ul>
-<p><strong>Skills Applied:</strong> Unity, C#, iOS Publishing, App Store, AdMob, AppLovin, Firebase, Optimization, Gameplay, UI Design</p>
-</div>
-</section>
-
-<!-- SKILLS -->
-<section class="reveal">
-<h2>Skills</h2>
-<div class="card">
-<div class="skills">
-<div class="skill" title="2D & 3D Game Development in Unity">Unity 2D / 3D</div>
-<div class="skill" title="C# programming for gameplay & tools">C#</div>
-<div class="skill" title="Publish apps on iOS App Store">iOS Publishing</div>
-<div class="skill" title="Manage apps on App Store Connect">App Store Management</div>
-<div class="skill" title="Debug & optimize games">Debugging & Optimization</div>
-<div class="skill" title="AdMob Banner, Interstitial, Rewarded">AdMob Integration</div>
-<div class="skill" title="AppLovin MAX Ads integration">AppLovin MAX Ads</div>
-<div class="skill" title="Firebase Analytics & backend tracking">Firebase Analytics / Backend</div>
-<div class="skill" title="Design gameplay & UI">Gameplay & UI Design</div>
-</div>
-</div>
-</section>
-
-<!-- PROJECTS -->
-<section id="projects" class="reveal">
-<h2>Projects</h2>
-<div class="slider">
-
-<div class="project">
-<img src="images/game1ss1.jpg">
-<div>
-<h3>4x4 Offroad Jeep Driving 3D</h3>
-<p class="tech">Unity 3D • C# • iOS • AdMob & AppLovin Ads</p>
-<a href="https://apps.apple.com/pk/app/4x4-offroad-jeep-driving-3d/id6743621542" target="_blank">App Store →</a>
-</div>
-</div>
-
-<div class="project">
-<img src="images/game2ss1.jpg">
-<div>
-<h3>Sniper Safari Wild Chase</h3>
-<p class="tech">Unity 3D • C# • iOS • Firebase Analytics</p>
-<a href="https://apps.apple.com/pk/app/sniper-safari-wild-chase/id6743483362" target="_blank">App Store →</a>
-</div>
-</div>
-
-</div>
-</section>
-
-<!-- CONTACT -->
-<section class="reveal">
-<h2>Contact</h2>
-<div class="card contact">
-<p><strong>Available for Unity game development & iOS publishing.</strong></p><br>
-<a href="mailto:thatsmehammad@gmail.com">📧 thatsmehammad@gmail.com</a>
-<a href="https://wa.me/923704103667" target="_blank">📞 WhatsApp: 0370-4103667</a>
-<p>📍 Sheikhupura, Pakistan</p>
-</div>
-</section>
-
-<footer>
-© 2025 Ali Hammad Shehzad | Unity Game Developer
-</footer>
-<script>
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', e => {
-  if(e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's')) e.preventDefault();
-});
-</script>
+                <div class="col-12 col-xl-3 cake">
+                    <img src="img/cake.gif" alt="">
+                </div>
+            </div>
+        </div>
+        <img src="img/Balloon-Border.png" width="100%" class="balloon-border">
+    </div>
 </body>
+<script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>
+<script src="js/jquery.js"></script>
+<script src="js/typed.min.js"></script>
+<script src="js/script.js"></script>
+
 </html>
