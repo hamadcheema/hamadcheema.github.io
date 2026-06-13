@@ -1,0 +1,152 @@
+:root {
+  --primary: #ff4d6d;
+  --primary-light: #ff8fa3;
+  --primary-dark: #c9184a;
+  --bg-gradient: linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%);
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg-gradient);
+  color: #590d22;
+  font-family: 'Outfit', sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#start-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.8s ease-out;
+}
+
+.start-card {
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(255, 77, 109, 0.15);
+  animation: cardFadeIn 1s ease-out;
+}
+
+.start-card h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 3rem;
+  color: var(--primary-dark);
+  margin-bottom: 2rem;
+}
+
+#start-btn {
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+}
+
+#start-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 77, 109, 0.4);
+}
+
+#main {
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+#wrap {
+  position: relative;
+  margin: 0 auto;
+  width: 1100px;
+  height: 680px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#text {
+  width: 350px;
+  height: 560px;
+  left: 100px;
+  top: 50px;
+  position: absolute;
+  z-index: 10;
+}
+
+#code {
+  display: none;
+  font-family: 'Dancing Script', cursive;
+  font-size: 24px;
+  color: var(--primary-dark);
+  line-height: 1.6;
+}
+
+#canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.hand {
+  cursor: pointer;
+}
+
+.say {
+  display: block;
+  margin-bottom: 10px;
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+#error {
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  text-align: center;
+  color: var(--primary-dark);
+  display: none;
+}
+
+/* Floating Hearts Animation */
+.heart {
+  position: fixed;
+  font-size: 1.5rem;
+  color: var(--primary-light);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: float 6s linear infinite;
+  z-index: -1;
+}
+
+@keyframes float {
+  0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
