@@ -1,0 +1,325 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+#root-wrap{position:relative;width:100%;height:600px;background:linear-gradient(160deg,#fff0f3 0%,#ffe0e9 50%,#ffd6e0 100%);overflow:hidden;border-radius:12px}
+#start-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:rgba(255,240,243,0.95);backdrop-filter:blur(8px);transition:opacity .8s}
+.start-card{text-align:center;padding:2.5rem 3rem;background:white;border-radius:20px;box-shadow:0 10px 40px rgba(255,77,109,0.15);animation:fadeIn .8s ease}
+.start-card h1{font-family:'Dancing Script',cursive;font-size:2.6rem;color:#c9184a;margin-bottom:1.5rem}
+#start-btn{padding:.9rem 2.2rem;font-size:1.1rem;background:linear-gradient(135deg,#ff4d6d,#c9184a);color:white;border:none;border-radius:50px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:600;box-shadow:0 5px 18px rgba(255,77,109,0.35);transition:all .3s}
+#start-btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(255,77,109,0.5)}
+#main{position:absolute;inset:0;display:none}
+canvas#c{position:absolute;left:0;top:0;width:100%;height:100%}
+#text-panel{position:absolute;left:60px;top:60px;z-index:10;pointer-events:none;opacity:0;transition:opacity 1.5s}
+#text-panel.visible{opacity:1}
+.say{font-family:'Dancing Script',cursive;font-size:1.5rem;color:#800f2f;display:block;margin-bottom:8px;opacity:0;transform:translateY(8px);transition:opacity .8s,transform .8s}
+.say.show{opacity:1;transform:none}
+.heart-float{position:absolute;pointer-events:none;animation:floatUp 5s ease-in forwards;font-size:1.1rem}
+@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:.7}100%{transform:translateY(-620px) scale(.4);opacity:0}}
+@keyframes fadeIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+</style>
+
+<div id="root-wrap">
+  <div id="start-overlay">
+    <div class="start-card">
+      <h1>Ready for your surprise?</h1>
+      <button id="start-btn">Open Surprise ❤️</button>
+    </div>
+  </div>
+  <div id="main">
+    <canvas id="c"></canvas>
+    <div id="text-panel">
+      <span class="say">Hey you 💞</span>
+      <span class="say">Happy Birthday 🎈</span>
+      <span class="say">May God bless you 🍀</span>
+      <span class="say">And give you many happiness 💕</span>
+      <span class="say">Just saying... you're pretty awesome ❤️</span>
+      <span class="say">Hope you have a great day today ❤️😘</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+// ---- Math helpers ----
+function rnd(min,max){return min+Math.floor(Math.random()*(max-min+1))}
+function rndF(min,max){return min+Math.random()*(max-min)}
+
+// ---- Point class ----
+function Point(x,y){this.x=x||0;this.y=y||0}
+Point.prototype={
+  clone:function(){return new Point(this.x,this.y)},
+  add:function(o){var p=this.clone();p.x+=o.x;p.y+=o.y;return p},
+  sub:function(o){var p=this.clone();p.x-=o.x;p.y-=o.y;return p},
+  mul:function(n){var p=this.clone();p.x*=n;p.y*=n;return p},
+  div:function(n){var p=this.clone();p.x/=n;p.y/=n;return p}
+};
+
+// ---- Bezier ----
+function bezier(cp,t){
+  return cp[0].mul((1-t)*(1-t)).add(cp[1].mul(2*t*(1-t))).add(cp[2].mul(t*t));
+}
+
+// ---- Heart figure ----
+function Heart(){
+  var pts=[],x,y,t;
+  for(var i=10;i<30;i+=0.2){
+    t=i/Math.PI;
+    x=16*Math.pow(Math.sin(t),3);
+    y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);
+    pts.push(new Point(x,y));
+  }
+  this.points=pts;this.length=pts.length;
+}
+Heart.prototype={get:function(i,s){return this.points[i].mul(s||1)}};
+
+// ---- inheart check ----
+function inheart(x,y,r){
+  var a=x/r,b=y/r;
+  var z=(a*a+b*b-1)*(a*a+b*b-1)*(a*a+b*b-1)-a*a*b*b*b;
+  return z<0;
+}
+
+// ---- Canvas setup ----
+var wrap=document.getElementById('root-wrap');
+var W=wrap.offsetWidth||700,H=600;
+var canvas=document.getElementById('c');
+canvas.width=W;canvas.height=H;
+var ctx=canvas.getContext('2d');
+
+// ---- State ----
+var heartFig=new Heart();
+var branches=[];
+var blooms=[];
+var bloomCache=[];
+var growStep=0;
+var phase=0; // 0=idle, 1=grow, 2=bloom, 3=text
+
+// ---- Branch definition (scaled from 1100x680 original) ----
+var sx=W/1100,sy=H/680;
+function sp(x,y){return new Point(x*sx,y*sy)}
+function sr(r){return r*Math.min(sx,sy)}
+
+// ---- Branch class ----
+function Branch(p1,p2,p3,radius,length,children){
+  this.p1=p1;this.p2=p2;this.p3=p3;
+  this.radius=radius;
+  this.length=length||100;
+  this.len=0;
+  this.t=1/(this.length-1);
+  this.children=children||[];
+}
+Branch.prototype={
+  grow:function(){
+    if(this.len<=this.length){
+      var p=bezier([this.p1,this.p2,this.p3],this.len*this.t);
+      this.draw(p);
+      this.len++;
+      this.radius*=0.97;
+    } else {
+      this.done=true;
+      for(var i=0;i<this.children.length;i++) branches.push(this.children[i]);
+    }
+  },
+  draw:function(p){
+    ctx.save();
+    ctx.beginPath();
+    ctx.fillStyle='#ffb3c6';
+    ctx.shadowBlur=2;
+    ctx.arc(p.x,p.y,this.radius,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+};
+
+// ---- Build tree branches from original opts (scaled) ----
+function makeBranch(arr){
+  var p1=sp(arr[0],arr[1]),p2=sp(arr[2],arr[3]),p3=sp(arr[4],arr[5]);
+  var r=sr(arr[6]),l=arr[7];
+  var children=[];
+  if(arr[8]){
+    for(var i=0;i<arr[8].length;i++) children.push(makeBranch(arr[8][i]));
+  }
+  return new Branch(p1,p2,p3,r,l,children);
+}
+
+var branchDefs=[
+  [535,680,570,250,500,200,30,100,[
+    [540,500,455,417,340,400,13,100,[
+      [450,435,434,430,394,395,2,40]
+    ]],
+    [550,445,600,356,680,345,12,100,[
+      [578,400,648,409,661,426,3,80]
+    ]],
+    [539,281,537,248,534,217,3,40],
+    [546,397,413,247,328,244,9,80,[
+      [427,286,383,253,371,205,2,40],
+      [498,345,435,315,395,330,4,60]
+    ]],
+    [546,357,608,252,678,221,6,100,[
+      [590,293,646,277,648,271,2,80]
+    ]]
+  ]]
+];
+
+for(var i=0;i<branchDefs.length;i++) branches.push(makeBranch(branchDefs[i]));
+
+// ---- Bloom class ----
+function Bloom(point,color,alpha,angle,scale){
+  this.point=point;
+  this.color=color||'rgb(255,'+rnd(80,200)+','+rnd(100,200)+')';
+  this.alpha=alpha||rndF(0.3,0.9);
+  this.angle=angle||rndF(0,Math.PI*2);
+  this.scale=scale||0.05;
+}
+Bloom.prototype={
+  flower:function(){
+    this.draw();
+    this.scale+=0.08;
+    return this.scale>1;
+  },
+  draw:function(){
+    ctx.save();
+    ctx.fillStyle=this.color;
+    ctx.globalAlpha=this.alpha;
+    ctx.translate(this.point.x,this.point.y);
+    ctx.scale(this.scale,this.scale);
+    ctx.rotate(this.angle);
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    for(var i=0;i<heartFig.length;i++){
+      var p=heartFig.get(i);
+      ctx.lineTo(p.x,-p.y);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+};
+
+// ---- Build bloom cache (heart-shaped placement) ----
+var bW=W*0.9,bH=H*0.85,bR=Math.min(W,H)*0.35;
+for(var i=0;i<600;i++){
+  var attempt=0,placed=false;
+  while(attempt<200){
+    var bx=rnd(20,bW-20),by=rnd(20,bH-20);
+    if(inheart(bx-bW/2,bH-(bH-40)/2-by,bR)){
+      bloomCache.push(new Bloom(new Point(bx,by)));
+      placed=true;break;
+    }
+    attempt++;
+  }
+}
+
+// ---- Seed/heart at top ----
+var seedPt=sp(535,200);
+var seedScale=2;
+var seedShrinking=false;
+
+function drawSeed(){
+  ctx.save();
+  ctx.fillStyle='#ff4d6d';
+  ctx.translate(seedPt.x,seedPt.y);
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  for(var i=0;i<heartFig.length;i++){
+    var p=heartFig.get(i,seedScale*0.8);
+    ctx.lineTo(p.x,-p.y);
+  }
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+// ---- Ground line ----
+function drawGround(){
+  ctx.save();
+  ctx.strokeStyle='rgba(200,100,120,0.3)';
+  ctx.lineWidth=4;
+  ctx.lineCap='round';
+  ctx.beginPath();
+  ctx.moveTo(W/2-100,H-10);
+  ctx.lineTo(W/2+100,H-10);
+  ctx.stroke();
+  ctx.restore();
+}
+
+// ---- Animation ----
+var lastBloom=0;
+function animate(ts){
+  requestAnimationFrame(animate);
+
+  if(phase===1){
+    // Grow branches
+    var allDone=true;
+    for(var i=branches.length-1;i>=0;i--){
+      if(!branches[i].done){branches[i].grow();allDone=false;}
+      else branches.splice(i,1);
+    }
+    drawGround();
+    drawSeed();
+    if(allDone&&branches.length===0){
+      phase=2;
+      lastBloom=ts;
+    }
+  } else if(phase===2){
+    // Bloom hearts
+    drawGround();
+    if(ts-lastBloom>16&&bloomCache.length>0){
+      var batch=bloomCache.splice(0,3);
+      for(var b=0;b<batch.length;b++) blooms.push(batch[b]);
+      lastBloom=ts;
+    }
+    for(var j=blooms.length-1;j>=0;j--){
+      if(blooms[j].flower()) blooms.splice(j,1);
+    }
+    if(bloomCache.length===0&&blooms.length===0){
+      phase=3;
+      showText();
+      startHearts();
+    }
+  }
+}
+
+// ---- Text reveal ----
+function showText(){
+  var panel=document.getElementById('text-panel');
+  panel.classList.add('visible');
+  var lines=panel.querySelectorAll('.say');
+  for(var i=0;i<lines.length;i++){
+    (function(line,delay){
+      setTimeout(function(){line.classList.add('show')},delay);
+    })(lines[i],i*600+200);
+  }
+}
+
+// ---- Floating hearts ----
+var heartInterval;
+function startHearts(){
+  heartInterval=setInterval(function(){
+    var h=document.createElement('div');
+    h.className='heart-float';
+    h.textContent=['❤️','💕','💖','🌸','✨'][Math.floor(Math.random()*5)];
+    h.style.left=Math.random()*90+'%';
+    h.style.bottom='0';
+    h.style.animationDuration=(3+Math.random()*3)+'s';
+    document.getElementById('main').appendChild(h);
+    setTimeout(function(){h.remove()},6000);
+  },350);
+}
+
+// ---- Start button ----
+document.getElementById('start-btn').addEventListener('click',function(){
+  var ov=document.getElementById('start-overlay');
+  ov.style.opacity='0';
+  setTimeout(function(){ov.style.display='none'},800);
+  var main=document.getElementById('main');
+  main.style.display='block';
+  phase=1;
+  drawSeed();
+  drawGround();
+  requestAnimationFrame(animate);
+});
+
+})();
+</script>
