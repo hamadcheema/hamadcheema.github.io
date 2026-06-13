@@ -49,7 +49,7 @@ html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#
 canvas{display:block;width:100%;height:100%}
 #msg{
   position:absolute;
-  bottom:25px;left:0;right:0;
+  bottom:120px;left:0;right:0;
   padding:14px 20px 20px;
   background:linear-gradient(to top,#fff0f3 55%,transparent);
   text-align:center;
@@ -148,7 +148,7 @@ canvas{display:block;width:100%;height:100%}
   }
 
   var sx=W/1100;
-  var treeH=H*0.72;
+  var treeH=H*0.55;
   var sy=treeH/680;
 
   function sp(x,y){return new Pt(x*sx,y*sy)}
@@ -237,7 +237,7 @@ canvas{display:block;width:100%;height:100%}
 
   var blooms=[];
   var phase=0,lastT=0;
-  var seedPt=sp(535,200);
+  var seedPt=sp(535,260);
 
   function drawSeed(){
     ctx.save();
