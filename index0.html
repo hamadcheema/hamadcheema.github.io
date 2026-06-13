@@ -3,23 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Kinza 💖</title>
+<title>Happy Birthday 💖</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Poppins,sans-serif;background:#fff5f7;overflow:hidden;height:100svh}
-.page{position:fixed;inset:0;display:none;opacity:0;transition:opacity 0.6s ease}
+body{
+  font-family:Poppins,sans-serif;
+  background:#fff5f7;
+  overflow:hidden;
+  height:100svh;
+}
+
+/* ════════════════════════════
+   PAGE SYSTEM
+════════════════════════════ */
+.page{
+  position:fixed;inset:0;
+  display:none;
+  opacity:0;
+  transition:opacity 0.6s ease;
+}
 .page.active{display:flex;opacity:0}
 .page.show{opacity:1}
 
-/* LOGIN */
-#page-login{background:linear-gradient(160deg,#fff0f5,#ffd6e7);align-items:center;justify-content:center}
+/* ════════════════════════════
+   LOGIN PAGE
+════════════════════════════ */
+#page-login{
+  background:linear-gradient(160deg,#fff0f5,#ffd6e7);
+  align-items:center;justify-content:center;
+}
 .login-card{
   width:min(340px,88vw);
   background:rgba(255,255,255,0.82);
   border:1px solid rgba(255,182,193,0.55);
-  border-radius:24px;padding:2rem 1.75rem;
-  backdrop-filter:blur(14px);text-align:center;
+  border-radius:24px;
+  padding:2rem 1.75rem;
+  backdrop-filter:blur(14px);
+  text-align:center;
   animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;
 }
 @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
@@ -31,8 +52,10 @@ body{font-family:Poppins,sans-serif;background:#fff5f7;overflow:hidden;height:10
 .input-wrap{position:relative}
 .input-wrap input{
   width:100%;padding:10px 12px 10px 36px;
-  border:1.5px solid rgba(201,24,74,0.2);border-radius:12px;
-  background:rgba(255,255,255,0.9);font-size:.88rem;color:#590d22;
+  border:1.5px solid rgba(201,24,74,0.2);
+  border-radius:12px;
+  background:rgba(255,255,255,0.9);
+  font-size:.88rem;color:#590d22;
   font-family:Poppins,sans-serif;outline:none;
   transition:border-color .2s,box-shadow .2s;
 }
@@ -54,99 +77,154 @@ body{font-family:Poppins,sans-serif;background:#fff5f7;overflow:hidden;height:10
 #error-msg{font-size:.73rem;color:#e63946;margin-top:.6rem;min-height:.9rem;display:none}
 .footer-note{font-size:.67rem;color:#b5485e;margin-top:.85rem}
 
-/* LETTER */
-#page-letter{overflow:hidden;flex-direction:column}
+/* ════════════════════════════
+   LETTER PAGE
+════════════════════════════ */
+#page-letter{
+  overflow:hidden;
+  flex-direction:column;
+}
 #letter-bg{
   position:absolute;inset:0;
   background-image:url('1.png');
-  background-size:cover;background-position:center;
-  opacity:0.13;z-index:0;
+  background-size:cover;
+  background-position:center;
+  opacity:0.13;
+  z-index:0;
 }
 #letter-overlay{
   position:absolute;inset:0;
   background:linear-gradient(160deg,rgba(255,240,245,0.72),rgba(255,210,230,0.65));
   z-index:1;
 }
+/* floating petals */
 .petal{
-  position:absolute;font-size:1.1rem;pointer-events:none;z-index:2;
-  animation:petalFall linear infinite;opacity:0;
+  position:absolute;
+  font-size:1.1rem;
+  pointer-events:none;
+  z-index:2;
+  animation:petalFall linear infinite;
+  opacity:0;
 }
 @keyframes petalFall{
   0%{transform:translateY(-30px) rotate(0deg);opacity:0}
-  10%{opacity:.55}90%{opacity:.45}
+  10%{opacity:.55}
+  90%{opacity:.45}
   100%{transform:translateY(105vh) rotate(540deg);opacity:0}
 }
+/* scroll container */
 #letter-scroll{
-  position:relative;z-index:3;flex:1;overflow-y:auto;
-  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
+  position:relative;z-index:3;
+  flex:1;overflow-y:auto;
+  padding:0;
+  scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
 }
 #letter-scroll::-webkit-scrollbar{width:4px}
 #letter-scroll::-webkit-scrollbar-track{background:transparent}
 #letter-scroll::-webkit-scrollbar-thumb{background:rgba(201,24,74,.25);border-radius:4px}
-.letter-inner{max-width:600px;margin:0 auto;padding:2.5rem 1.5rem 2rem}
-.letter-header{text-align:center;margin-bottom:2rem;animation:fadeUp .8s ease both}
+
+.letter-inner{
+  max-width:600px;
+  margin:0 auto;
+  padding:2.5rem 1.5rem 2rem;
+}
+.letter-header{
+  text-align:center;
+  margin-bottom:2rem;
+  animation:fadeUp .8s ease both;
+}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 .letter-header .big-emoji{
-  font-size:3rem;display:block;margin-bottom:.5rem;
+  font-size:3rem;
+  display:block;
+  margin-bottom:.5rem;
   animation:heartbeat 1.6s ease-in-out infinite;
 }
 @keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-.letter-header h1{font-family:'Dancing Script',cursive;font-size:clamp(1.9rem,6vw,2.8rem);color:#c9184a;margin-bottom:.3rem}
-.letter-header .date-line{font-size:.78rem;color:#9b3a5a;letter-spacing:.5px}
-.divider{text-align:center;font-size:1.2rem;margin:1.2rem 0;letter-spacing:6px;animation:fadeUp .8s .2s ease both}
-.letter-body{animation:fadeUp .8s .35s ease both}
+.letter-header h1{
+  font-family:'Dancing Script',cursive;
+  font-size:clamp(1.9rem,6vw,2.8rem);
+  color:#c9184a;
+  margin-bottom:.3rem;
+}
+.letter-header .date-line{
+  font-size:.78rem;color:#9b3a5a;letter-spacing:.5px;
+}
+.divider{
+  text-align:center;font-size:1.2rem;
+  margin:1.2rem 0;letter-spacing:6px;
+  animation:fadeUp .8s .2s ease both;
+}
+.letter-body{
+  animation:fadeUp .8s .35s ease both;
+}
 .letter-body p{
   font-size:clamp(.88rem,2.5vw,.98rem);
-  line-height:1.9;color:#5a0d20;
+  line-height:1.9;
+  color:#5a0d20;
   margin-bottom:1.3rem;
+  text-align:justify;
 }
 .letter-body p:first-child::first-letter{
   font-family:'Dancing Script',cursive;
-  font-size:3.2rem;float:left;line-height:.8;margin-right:6px;color:#c9184a;
+  font-size:3.2rem;
+  float:left;
+  line-height:.8;
+  margin-right:6px;
+  color:#c9184a;
 }
 .highlight{
   background:linear-gradient(120deg,rgba(255,77,109,.15),rgba(255,143,171,.15));
-  border-radius:4px;padding:0 3px;color:#a3002e;font-weight:600;
+  border-radius:4px;
+  padding:0 3px;
+  color:#a3002e;
+  font-weight:600;
 }
 .quote-box{
-  border-left:3px solid #ff8fab;padding:1rem 1.2rem;margin:1.5rem 0;
-  background:rgba(255,255,255,.5);border-radius:0 12px 12px 0;
-  backdrop-filter:blur(8px);color:#7a1530;font-size:.92rem;line-height:1.8;
-}
-.love-line{
-  text-align:center;
-  font-family:'Dancing Script',cursive;
-  font-size:clamp(1.4rem,5vw,1.9rem);
-  color:#c9184a;
-  margin:1.8rem 0;
-  line-height:1.6;
-}
-.thank-block{
-  background:rgba(255,255,255,.4);
-  border-radius:16px;padding:1.2rem 1.4rem;
+  border-left:3px solid #ff8fab;
+  padding:1rem 1.2rem;
   margin:1.5rem 0;
+  background:rgba(255,255,255,.45);
+  border-radius:0 12px 12px 0;
   backdrop-filter:blur(8px);
-  border:1px solid rgba(255,182,193,.35);
+  font-style:italic;
+  color:#7a1530;
+  font-size:.9rem;
+  line-height:1.7;
 }
-.thank-block p{
-  margin-bottom:.6rem !important;
-  font-size:.9rem !important;
-  color:#6d1632 !important;
+.letter-footer{
+  text-align:center;
+  margin-top:2rem;
+  animation:fadeUp .8s .5s ease both;
 }
-.thank-block p:last-child{margin-bottom:0 !important}
-.letter-footer{text-align:center;margin-top:2rem;animation:fadeUp .8s .5s ease both}
-.letter-footer .sign{font-family:'Dancing Script',cursive;font-size:1.6rem;color:#c9184a}
+.letter-footer .sign{
+  font-family:'Dancing Script',cursive;
+  font-size:1.6rem;
+  color:#c9184a;
+}
 .letter-footer .hearts{font-size:1.4rem;letter-spacing:4px;margin-top:.3rem}
-.next-area{text-align:center;padding:1.2rem 1rem 2.2rem;position:relative;z-index:3}
-.scroll-hint{font-size:.72rem;color:#b5485e;margin-bottom:.8rem;animation:bounce 1.5s ease-in-out infinite}
+
+/* Next button area */
+.next-area{
+  text-align:center;
+  padding:1.5rem 1rem 2.5rem;
+  position:relative;z-index:3;
+}
+.scroll-hint{
+  font-size:.72rem;color:#b5485e;
+  margin-bottom:.8rem;
+  animation:bounce 1.5s ease-in-out infinite;
+}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 #next-btn{
   padding:13px 2.5rem;
   background:linear-gradient(135deg,#ff4d6d,#c9184a);
   color:white;border:none;border-radius:50px;
-  font-size:.95rem;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;
+  font-size:.95rem;font-weight:700;
+  font-family:Poppins,sans-serif;cursor:pointer;
   box-shadow:0 5px 20px rgba(201,24,74,.35);
-  transition:transform .15s;
+  transition:transform .15s,box-shadow .15s;
   animation:glowPulse 2s ease-in-out infinite;
 }
 @keyframes glowPulse{
@@ -156,8 +234,12 @@ body{font-family:Poppins,sans-serif;background:#fff5f7;overflow:hidden;height:10
 #next-btn:hover{transform:translateY(-2px)}
 #next-btn:active{transform:scale(.96)}
 
-/* LAST PAGE */
-#page-birthday{flex-direction:column}
+/* ════════════════════════════
+   BIRTHDAY (MAIN) PAGE
+════════════════════════════ */
+#page-birthday{
+  flex-direction:column;
+}
 #scene{height:100svh;position:relative;width:100%}
 #scene::before{
   content:'';position:absolute;inset:0;
@@ -174,7 +256,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2}
 .message{
   position:absolute;left:50%;bottom:2svh;
   transform:translateX(-50%);
-  width:min(88vw,520px);padding:14px 18px;
+  width:min(88vw,520px);
+  padding:14px 18px;
   background:rgba(255,255,255,.30);
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
   border:1px solid rgba(255,255,255,.50);
@@ -183,22 +266,18 @@ canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2}
   animation:msgFade .9s ease both;z-index:3;
 }
 @keyframes msgFade{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
-.msg-title{
-  font-family:'Dancing Script',cursive;
-  font-size:clamp(1.6rem,5vw,2.4rem);
-  font-weight:700;color:#c9184a;margin-bottom:10px;
-}
-.msg-text{font-size:clamp(.82rem,2.4vw,.95rem);line-height:1.7;color:#6d1632}
+.title{font-size:clamp(1.5rem,5vw,2.2rem);font-weight:700;color:#c9184a;margin-bottom:10px}
+.text{font-size:clamp(.82rem,2.4vw,.95rem);line-height:1.6;color:#6d1632}
 </style>
 </head>
 <body>
 
-<!-- PAGE 1: LOGIN -->
+<!-- ══ PAGE 1: LOGIN ══ -->
 <div class="page" id="page-login">
   <div class="login-card">
     <div class="emoji">💖</div>
     <h2>Welcome</h2>
-    <p class="sub">Sirf tumhare liye hai yeh ✨</p>
+    <p class="sub">Sirf tumhare liye hai yeh surprise ✨</p>
     <div class="field">
       <label>Tumhara naam</label>
       <div class="input-wrap">
@@ -213,15 +292,15 @@ canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2}
         <input type="password" id="inp-pass" placeholder="••••••" autocomplete="off"/>
         <button class="eye-btn" onclick="togglePass()" type="button">👁</button>
       </div>
-      <div class="hint">Sirf tum jaanti ho 🌸</div>
+      <div class="hint">Hint: tumhari birthday date 🎂</div>
     </div>
-    <button id="login-btn" onclick="doLogin()">Enter 💌</button>
-    <div id="error-msg">❌ Naam ya password sahi nahi 💔</div>
+    <button id="login-btn" onclick="doLogin()">Open Surprise 💌</button>
+    <div id="error-msg">❌ Naam ya password sahi nahi hai 💔</div>
     <p class="footer-note">Only for you, always 🌸</p>
   </div>
 </div>
 
-<!-- PAGE 2: LETTER -->
+<!-- ══ PAGE 2: LETTER ══ -->
 <div class="page" id="page-letter">
   <div id="letter-bg"></div>
   <div id="letter-overlay"></div>
@@ -231,49 +310,38 @@ canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2}
 
       <div class="letter-header">
         <span class="big-emoji">💌</span>
-        <h1>For You, Kinza</h1>
-        <div class="date-line">31 January 2026 — 2:31 pm &nbsp;❤️</div>
+        <h1>A Letter Just For You</h1>
+        <div class="date-line">Written from the heart, with love 🌸</div>
       </div>
 
       <div class="divider">🌸 ✨ 🌸</div>
 
       <div class="letter-body">
 
-        <p>You know what's still crazy to me? We were in the same class for years, saw each other almost every day, and somehow managed to spend all that time acting like two NPCs who never unlocked the "talk" option. 😂</p>
+        <p>Tumhare liye yeh kuch alfaaz hain jo shayad main kabhi seedha nahi keh paya — lekin aaj, iss khaas din par, chahta hoon ke tum sab kuch jaano. Tum mere liye kitni special ho, yeh batana bohot mushkil hai kyun ke alfaaz waqai mein kam pad jaate hain.</p>
 
-        <p>And then after all those years, on <span class="highlight">31 January 2026 at exactly 2:31 pm</span>, our story finally decided to start. Honestly, if this was a movie, nobody would believe it. 😭❤️</p>
+        <p>Jab bhi tum muskurati ho, toh lagta hai <span class="highlight">duniya thodi zyada roshan ho gayi</span>. Tumhari hansi sunna meri sabse pasandida cheez hai. Tum nahi jaanti ke tumhara sirf wahan rehna meri zindagi ko kitna better bana deta hai.</p>
 
         <div class="quote-box">
-          When you told me that you liked me for 6 years — I just sat there thinking... HOW? 😭 All this time? Seriously? And neither of us said anything? We really wasted years on the longest slow-burn storyline ever. 😂
+          "Kuch log zindagi mein aate hain aur sirf ek jagah ghoom kar chale jaate hain — lekin tum woh ho jisne meri poori duniya badal di."
         </div>
 
-        <p>But at the same time, it made me realize something beautiful — <span class="highlight">maybe some people are just meant to find each other, even if they're a little late.</span></p>
+        <p>Tumhare saath har ek pal yaadgar raha hai. Chhoti chhoti baatein, hassi-mazaak, aur woh lamhe jab hum bilkul chup the — sab kuch mere dil mein mahfooz hai. Main chahta hoon ke tum jaano ke tum jis tarah ho, bilkul usi tarah — <span class="highlight">perfect ho</span>.</p>
 
-        <p>The truth is, when we started talking, I expected a friendship. A really good one. What I didn't expect was that you would become <span class="highlight">the person I look forward to talking to every day.</span> The person who can make me smile with a single message. The person who randomly appears in my thoughts during the day for absolutely no reason. 😌❤️</p>
+        <p>Iss duniya mein itna shor hai, itni bhaagatoti hai — lekin jab tumse baat hoti hai toh sab kuch theek lagta hai. Tum meri shanti ho, meri khushi ho. Aur yeh soch kar dil bhar aata hai ke tumhare janam din par main tumhare liye kuch toh keh sakta hoon jo tumhare dil tak pahunche.</p>
 
-        <p>You became important to me so naturally that I didn't even notice when friendship started turning into something deeper. And now, whenever I think about the future — somehow you're there too.</p>
+        <p>Tum deserve karti ho duniya ki har khushi, har dua, har roshan subah. <span class="highlight">Happy Birthday Kinza</span> — aaj aur hamesha, tum meri duaon mein sabse pehle ho.</p>
 
-        <div class="love-line">
-          So I guess it's my turn to be honest...<br>
-          I don't just like you.<br>
-          I love you. ❤️
+        <div class="quote-box">
+          "Tumhari smile meri favorite cheez hai — aur tumhara wajood meri zindagi ki sabse badi naimat." 💖
         </div>
 
-        <p>I love your presence, your personality, your stupidly adorable timing — and the fact that after all these years, you still managed to <span class="highlight">surprise me in the best possible way.</span> 🥹❤️</p>
-
-        <div class="thank-block">
-          <p>Thank you for being patient with our ridiculously delayed story. 🌸</p>
-          <p>Thank you for that birthday message. 💌</p>
-          <p>Thank you for staying. 🤍</p>
-          <p>And thank you for making me feel lucky enough to be loved by someone who <span class="highlight">kept a place for me in her heart for 6 whole years.</span> ❤️</p>
-        </div>
-
-        <p>No matter how many years we spent not talking — I think every moment was worth it, because somehow, in the end, it led me to you.</p>
+        <p>Yeh sirf ek birthday message nahi — yeh woh sab hai jo main kehna chahta tha aur samajh nahi aata tha ke kaise kahoon. Aaj ka din tumhara hai. Aaj poori duniya tumhare liye khushi manaye — kyun ke tum waqai mein bohot khaas ho.</p>
 
       </div>
 
       <div class="letter-footer">
-        <div class="sign">You're my favorite plot twist ❤️🥹</div>
+        <div class="sign">Tumhara apna 💕</div>
         <div class="hearts">🌸 💖 🌸</div>
       </div>
 
@@ -282,36 +350,39 @@ canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2}
 
   <div class="next-area">
     <div class="scroll-hint">⬇ Scroll kar ke poora parho ⬇</div>
-    <button id="next-btn" onclick="goToLast()">Next &nbsp;💫</button>
+    <button id="next-btn" onclick="goToBirthday()">Next &nbsp;💫</button>
   </div>
 </div>
 
-<!-- PAGE 3: LAST -->
+<!-- ══ PAGE 3: BIRTHDAY ══ -->
 <div class="page" id="page-birthday">
   <div id="scene">
     <canvas id="c"></canvas>
     <div class="message">
-      <div class="msg-title">Kinza 💖</div>
-      <div class="msg-text">
-        6 years of waiting, and you were worth every single second. 🥹<br><br>
-        31st January changed everything — and I'd choose that day a thousand times over. ❤️<br><br>
-        You're not just my favorite person. You're my favorite story. 🌸
+      <div class="title">Happy Birthday Kinza! 🎉</div>
+      <div class="text">
+        May your day be filled with love, laughter &amp; beautiful memories. 💖<br><br>
+        May all your dreams come true and happiness follow you everywhere. ✨<br><br>
+        Wishing you endless joy, success &amp; blessings today and always. 🌸
       </div>
     </div>
   </div>
 </div>
 
 <script>
+// ── UTILS ──
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>{
     p.classList.remove('active','show');
     p.style.display='none';
   });
-  const el=document.getElementById(id);
+  const el = document.getElementById(id);
   el.style.display='flex';
   el.classList.add('active');
   requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('show')));
 }
+
+// ── LOGIN ──
 function togglePass(){
   const inp=document.getElementById('inp-pass');
   inp.type=inp.type==='password'?'text':'password';
@@ -327,13 +398,16 @@ function doLogin(){
   } else {
     err.style.display='block';
     const card=document.querySelector('.login-card');
-    [6,-6,4,-4,0].forEach((v,i)=>setTimeout(()=>card.style.transform=`translateX(${v}px)`,i*70));
+    let s=[6,-6,4,-4,0];
+    s.forEach((v,i)=>setTimeout(()=>card.style.transform=`translateX(${v}px)`,i*70));
   }
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+// ── PETALS ──
 function spawnPetals(){
   const pg=document.getElementById('page-letter');
-  const items=['🌸','🌺','💮','✨','💕','🎀'];
+  const items=['🌸','🌺','💮','🏵️','✨','💕'];
   for(let i=0;i<18;i++){
     const el=document.createElement('div');
     el.className='petal';
@@ -345,11 +419,15 @@ function spawnPetals(){
     pg.appendChild(el);
   }
 }
-function goToLast(){
+
+// ── NEXT BUTTON ──
+function goToBirthday(){
   showPage('page-birthday');
-  startCanvas();
+  startBirthday();
 }
-function startCanvas(){
+
+// ── BIRTHDAY CANVAS ──
+function startBirthday(){
   const canvas=document.getElementById('c');
   const ctx=canvas.getContext('2d');
   let W,H;
@@ -390,6 +468,8 @@ function startCanvas(){
   }
   draw();
 }
+
+// ── START ──
 showPage('page-login');
 </script>
 </body>
