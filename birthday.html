@@ -1,14 +1,15 @@
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#fff0f3}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 #wrap{
   width:100%;
-  height:520px;
+  height:100vh;
   background:#fff0f3;
   position:relative;
   overflow:hidden;
-  border-radius:12px;
+  border-radius:0;
 }
 #ov{
   position:absolute;inset:0;
@@ -48,7 +49,7 @@
 canvas{display:block;width:100%;height:100%}
 #msg{
   position:absolute;
-  bottom:0;left:0;right:0;
+  bottom:25px;left:0;right:0;
   padding:14px 20px 20px;
   background:linear-gradient(to top,#fff0f3 55%,transparent);
   text-align:center;
@@ -107,7 +108,7 @@ canvas{display:block;width:100%;height:100%}
 (function(){
   var wrap = document.getElementById('wrap');
   var W = wrap.offsetWidth || 360;
-  var H = 520;
+  var H = window.innerHeight;
   var cv = document.getElementById('cv');
   cv.width = W; cv.height = H;
   var ctx = cv.getContext('2d');
@@ -147,7 +148,7 @@ canvas{display:block;width:100%;height:100%}
   }
 
   var sx=W/1100;
-  var treeH=H*0.62;
+  var treeH=H*0.72;
   var sy=treeH/680;
 
   function sp(x,y){return new Pt(x*sx,y*sy)}
