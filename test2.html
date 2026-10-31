@@ -244,10 +244,10 @@ document.getElementById("yr").textContent = new Date().getFullYear();
 const themeToggle=document.getElementById("theme-toggle");
 function safeGet(key){try{return window.localStorage.getItem(key)}catch(error){return null}}
 function safeSet(key,value){try{window.localStorage.setItem(key,value);return true}catch(error){return false}}
-if(safeGet("portfolio-theme")==="light-mode")document.body.classList.add("light-mode");
+if(safeGet("portfolio-theme-test2")==="light-mode")document.body.classList.add("light-mode");
 function paintTheme(){const light=document.body.classList.contains("light-mode");themeToggle.textContent=light?"☾":"☼";themeToggle.setAttribute("aria-label",light?"Switch to dark theme":"Switch to light theme");}
 paintTheme();
-themeToggle.addEventListener("click",()=>{document.body.classList.toggle("light-mode");paintTheme();safeSet("portfolio-theme",document.body.classList.contains("light-mode")?"light-mode":"dark-mode");});
+themeToggle.addEventListener("click",()=>{document.body.classList.toggle("light-mode");paintTheme();safeSet("portfolio-theme-test2",document.body.classList.contains("light-mode")?"light-mode":"dark-mode");});
 const utmParams=new URLSearchParams(window.location.search),utmData={};["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(key=>{if(utmParams.has(key))utmData[key]=utmParams.get(key)});if(Object.keys(utmData).length){try{window.sessionStorage.setItem("portfolio-utm",JSON.stringify(utmData))}catch(error){/* Optional campaign context. */}}
 
 const btn = document.querySelector(".menu"), links = document.getElementById("links");
