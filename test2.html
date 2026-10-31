@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:dark;--bg:#11110f;--surface:#1b1b18;--surface2:#24241f;--text:#f2f0e8;--muted:#aaa99e;--line:#3a3a32;--acid:#d7ff3f;--violet:#a99bff;--shadow:rgba(0,0,0,.3)}
-body.light{color-scheme:light;--bg:#f4f2e9;--surface:#fffdf5;--surface2:#ebe9df;--text:#171812;--muted:#626257;--line:#d8d6c9;--acid:#526d00;--violet:#6250c5;--shadow:rgba(36,35,20,.1)}
+body.light-mode{color-scheme:light;--bg:#f4f2e9;--surface:#fffdf5;--surface2:#ebe9df;--text:#171812;--muted:#626257;--line:#d8d6c9;--acid:#526d00;--violet:#6250c5;--shadow:rgba(36,35,20,.1)}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 "Space Grotesk",sans-serif}a{color:inherit;text-decoration:none}button{font:inherit}.wrap{width:min(1120px,calc(100% - 40px));margin:auto}
 .skip{position:absolute;left:-999px;top:8px;background:var(--acid);color:#111;padding:10px 14px;z-index:100}.skip:focus{left:12px}
 header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-weight:700;letter-spacing:-.06em;font-size:1.2rem}.brand span{color:var(--acid)}.navlinks{display:flex;align-items:center;gap:25px;color:var(--muted);font-size:.9rem}.navlinks a:hover{color:var(--acid)}.controls{display:flex;gap:9px}.control{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:999px;min-height:40px;padding:8px 14px;cursor:pointer;font-size:.85rem}.control:hover{border-color:var(--acid)}.menu{display:none}
@@ -86,6 +86,29 @@ nav{justify-content:initial}.logo{flex:0 0 auto}.links{margin-left:auto}
 .skill-card.reveal-ready:nth-child(2){transition-delay:.08s}.skill-card.reveal-ready:nth-child(3){transition-delay:.16s}.skill-card.reveal-ready:nth-child(4){transition-delay:.24s}.skill-card.reveal-ready:nth-child(5){transition-delay:.32s}
 @media(max-width:760px){nav{justify-content:space-between}.links{margin-left:0}.nav-actions{margin-left:auto}.menu{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 13px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);font:500 .82rem "DM Mono",monospace}.skill-grid{grid-template-columns:1fr;gap:12px}.skill-card{min-height:0;padding:20px}.skill-top{margin-bottom:18px}}
 @media(prefers-reduced-motion:reduce){.skill-card,.skill-card:before{transition:none!important}.skill-card:hover{transform:none}}
+
+/* Desktop and laptop layout refinements */
+@media (min-width:761px) and (max-width:1050px){
+  nav{gap:12px}
+  .logo{font-size:1.05rem}
+  .links{gap:clamp(10px,1.35vw,15px);font-size:.82rem}
+  .nav-actions{gap:7px}
+  .theme-toggle{width:39px;height:39px;min-width:39px;min-height:39px}
+  .menu{display:none}
+  .hero-grid{grid-template-columns:minmax(0,1.1fr) minmax(270px,.9fr);gap:24px}
+  .inspector{min-width:0;padding:20px}
+  .inspector .row{grid-template-columns:88px minmax(0,1fr)}
+  .inspector dd{overflow-wrap:anywhere}
+  .wrap{width:calc(100% - 48px)}
+  section{padding:68px 0}
+  .skill-grid{gap:12px}
+  .skill-card{padding:19px}
+}
+@media (min-width:1051px){
+  .hero-grid{grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);gap:clamp(35px,5vw,70px)}
+  .inspector{min-width:0}
+  .skill-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+}
 
 </style>
 </head>
