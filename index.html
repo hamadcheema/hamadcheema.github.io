@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ali Hammad Shehzad | Unity Game Developer & Aspiring Computer Science Student</title>
 <meta name="description" content="Portfolio of Ali Hammad Shehzad, a Unity game developer intern from Pakistan and aspiring Computer Science student interested in game development, software engineering and AI.">
+<link rel="canonical" href="https://hamadcheema.github.io/">
+<meta name="robots" content="index, follow">
 <meta name="author" content="Ali Hammad Shehzad">
 <meta name="theme-color" content="#12142a">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Ali Hammad Shehzad | Unity Game Developer">
 <meta property="og:description" content="Unity game developer intern and aspiring Computer Science student. Game development, software engineering and AI.">
-<!-- TODO: add og:image (1200x630) and og:url once you have a final public URL -->
+<meta property="og:url" content="https://hamadcheema.github.io/">
 <meta name="twitter:card" content="summary">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎮%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -119,7 +121,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
 <header>
   <nav class="wrap" aria-label="Main">
     <a class="logo" href="#home">Hammad</a>
-    <button class="menu" aria-expanded="false" aria-controls="links">Menu</button>
+    <button class="menu" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="links">Menu</button>
     <ul class="links" id="links">
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
@@ -199,7 +201,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
 <section id="projects">
   <div class="wrap">
     <h2>Projects</h2>
-    <p class="muted">Placeholders below. Replace each one with a real Unity project from my internship by editing the list at the bottom of this file.</p>
+    <p class="muted">Selected project case studies are being prepared. I’ll add project titles, screenshots and links once each project is approved for public sharing.</p>
     <div class="grid" id="project-grid"></div>
   </div>
 </section>
@@ -251,9 +253,8 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
 <script>
 /* ===== EDIT HERE: add real projects. Leave image/links empty to hide them. ===== */
 const PROJECTS = [
-  { title:"[Project title 1]", description:"[One or two sentences: what the game is and what you built.]", tech:["Unity","C#"], image:"", links:[] },
-  { title:"[Project title 2]", description:"[Describe your role, for example integrating assets with the designer.]", tech:["Unity","C#"], image:"", links:[] }
-  // Link example: links:[{label:"Play", url:"https://..."},{label:"Code", url:"https://github.com/hamadcheema/..."}]
+  // Add only projects you can publicly share. Example:
+  // { title:"Game title", description:"What the game is and what you contributed.", tech:["Unity","C#"], image:"images/game.jpg", links:[{label:"Gameplay", url:"https://..."}] }
 ];
 
 const grid = document.getElementById("project-grid");
@@ -284,13 +285,10 @@ btn.addEventListener("click", () => { const o = links.classList.toggle("open"); 
 links.addEventListener("click", e => { if (e.target.tagName === "A") { links.classList.remove("open"); btn.setAttribute("aria-expanded", false); } });
 
 const secs = [...document.querySelectorAll("main section[id]")], navA = [...links.querySelectorAll("a")];
-new IntersectionObserver(es => es.forEach(e => {
-  if (e.isIntersecting) navA.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
-}), { rootMargin: "-45% 0px -50% 0px" }).observe && secs.forEach(s => {
-  new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) navA.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
-  }), { rootMargin: "-45% 0px -50% 0px" }).observe(s);
-});
+const sectionObserver = new IntersectionObserver(entries => entries.forEach(entry => {
+  if (entry.isIntersecting) navA.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + entry.target.id));
+}), { rootMargin: "-45% 0px -50% 0px" });
+secs.forEach(section => sectionObserver.observe(section));
 </script>
 </body>
 </html>
