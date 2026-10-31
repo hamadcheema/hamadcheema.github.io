@@ -29,6 +29,18 @@
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
+body.light-mode{color-scheme:light;--bg:#f6f7fc;--surface:#fff;--surface-2:#eceefa;--line:#dfe2f0;--text:#171a2d;--muted:#626984;--on-accent:#fff}
+.utility{display:flex;align-items:center;gap:.5rem}.utility button,.utility input{font:500 .85rem var(--body);border:1px solid var(--line);border-radius:8px;padding:.45rem .65rem;background:var(--surface);color:var(--text);min-width:0}
+#site-search{width:130px}.scroll-progress{position:fixed;z-index:99;top:0;left:0;height:3px;width:0;background:var(--accent)}
+.back-top,.floating-contact{position:fixed;right:18px;z-index:30;border:0;border-radius:99px;padding:.75rem 1rem;background:var(--accent);color:white;text-decoration:none;box-shadow:0 5px 22px #0004;cursor:pointer}
+.back-top{bottom:18px;display:none}.back-top.visible{display:block}.floating-contact{bottom:72px}
+.cookie-banner{position:fixed;z-index:60;left:16px;bottom:16px;max-width:390px;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--text);box-shadow:0 8px 35px #0005}
+.cookie-banner p{font-size:.85rem;color:var(--muted);margin:.5rem 0}.cookie-banner button,.confirm-box button{margin:.25rem .4rem .1rem 0;padding:.55rem .9rem;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--text);cursor:pointer}
+.cookie-banner[hidden],.confirm-modal[hidden]{display:none}.confirm-modal{position:fixed;inset:0;z-index:80;background:#0009;display:grid;place-items:center;padding:20px}
+.confirm-box{max-width:380px;padding:24px;border-radius:14px;background:var(--surface);color:var(--text)}
+.faq-item{padding:1rem 0;border-bottom:1px solid var(--line)}.faq-item summary{font-weight:600;cursor:pointer}.faq-item p{margin:.7rem 0 0;color:var(--muted)}
+@media print{header,.utility,.scroll-progress,.back-top,.floating-contact,.cookie-banner,.confirm-modal,footer{display:none!important}body{background:white!important;color:black!important}section{padding:1.2rem 0;break-inside:avoid}}
+@media(max-width:760px){.utility{gap:.3rem}#site-search{width:95px}.utility button{padding:.4rem}}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--text);font:400 1.0625rem/1.65 var(--body);-webkit-font-smoothing:antialiased}
 a{color:inherit}
@@ -131,6 +143,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
 <header>
   <nav class="wrap" aria-label="Main">
     <a class="logo" href="#home">Hammad</a>
+    <div class="utility"><input id="site-search" type="search" placeholder="Search…" aria-label="Search this site"><button id="theme-toggle" type="button" aria-label="Toggle colour theme">☼</button></div>
     <button class="menu" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="links">Menu</button>
     <ul class="links" id="links">
       <li><a href="#about">About</a></li>
@@ -242,6 +255,16 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
   </div>
 </section>
 
+<section id="faq">
+  <div class="wrap">
+    <h2>Frequently asked questions</h2>
+    <details class="faq-item"><summary>Which game engine have you used?</summary><p>Unity, through practical internship projects.</p></details>
+    <details class="faq-item"><summary>What are your academic plans?</summary><p>I aim to study an English-taught Bachelor's degree in Computer Science.</p></details>
+    <details class="faq-item"><summary>How can I contact you?</summary><p>Use the email, phone or WhatsApp details on this page.</p></details>
+    <p class="muted">Last updated: <time datetime="2026-10-31">31 October 2026</time></p>
+  </div>
+</section>
+
 <section id="contact" class="contact">
   <div class="wrap">
     <h2>Contact</h2>
@@ -267,6 +290,10 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
     <span class="footer-links"><a href="https://github.com/hamadcheema" target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="mailto:thatsmehammad@gmail.com">Email</a> · <a href="https://wa.me/923704103667" target="_blank" rel="noopener noreferrer">WhatsApp</a></span>
   </div>
 </footer>
+<button class="back-top" id="back-top" type="button" aria-label="Back to top">↑ Top</button>
+<a class="floating-contact" href="mailto:thatsmehammad@gmail.com">Contact ↗</a>
+<aside class="cookie-banner" id="cookie-banner" hidden aria-label="Cookie preferences"><strong>Cookie preferences</strong><p>This site stores your theme and cookie choice in this browser. It does not use advertising cookies.</p><button id="cookie-accept" type="button">Accept</button><button id="cookie-reject" type="button">Reject optional</button></aside>
+<div class="confirm-modal" id="confirm-modal" hidden role="dialog" aria-modal="true" aria-labelledby="confirm-title"><div class="confirm-box"><h3 id="confirm-title">Open your email app?</h3><p>This will open a new email to contact Hammad.</p><button id="confirm-continue" type="button">Continue</button><button id="confirm-cancel" type="button">Cancel</button></div></div>
 
 <script>
 /* ===== EDIT HERE: add real projects. Leave image/links empty to hide them. ===== */
@@ -297,6 +324,22 @@ PROJECTS.forEach(p => {
 });
 
 document.getElementById("yr").textContent = new Date().getFullYear();
+const themeToggle=document.getElementById("theme-toggle"),storedTheme=localStorage.getItem("portfolio-theme");
+if(storedTheme==="light-mode")document.body.classList.add("light-mode");
+themeToggle.textContent=document.body.classList.contains("light-mode")?"☾":"☼";
+themeToggle.addEventListener("click",()=>{const light=!document.body.classList.contains("light-mode");document.body.classList.toggle("light-mode",light);document.body.classList.toggle("dark-mode",!light);localStorage.setItem("portfolio-theme",light?"light-mode":"dark-mode");themeToggle.textContent=light?"☾":"☼";});
+const cookieBanner=document.getElementById("cookie-banner");if(!localStorage.getItem("portfolio-cookie-choice"))cookieBanner.hidden=false;
+["cookie-accept","cookie-reject"].forEach(id=>document.getElementById(id).addEventListener("click",()=>{localStorage.setItem("portfolio-cookie-choice",id==="cookie-accept"?"accepted":"rejected");cookieBanner.hidden=true;}));
+const searchInput=document.getElementById("site-search"),searchStatus=document.createElement("p");searchStatus.className="muted";searchStatus.setAttribute("aria-live","polite");searchInput.closest("nav").after(searchStatus);
+searchInput.addEventListener("input",()=>{const q=searchInput.value.trim().toLowerCase();let matches=0;document.querySelectorAll("main section").forEach(section=>{const show=!q||section.innerText.toLowerCase().includes(q);section.hidden=!show;if(show)matches++;});searchStatus.textContent=q?matches+" matching section(s)":"";});
+const progress=document.createElement("div");progress.className="scroll-progress";progress.setAttribute("aria-hidden","true");document.body.prepend(progress);const backTop=document.getElementById("back-top");
+window.addEventListener("scroll",()=>{const max=document.documentElement.scrollHeight-innerHeight;progress.style.width=(max>0?scrollY/max*100:0)+"%";backTop.classList.toggle("visible",scrollY>350);});
+backTop.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+const contactFloat=document.querySelector(".floating-contact"),confirmModal=document.getElementById("confirm-modal");contactFloat.addEventListener("click",event=>{event.preventDefault();confirmModal.hidden=false;});
+document.getElementById("confirm-cancel").addEventListener("click",()=>confirmModal.hidden=true);
+document.getElementById("confirm-continue").addEventListener("click",()=>{confirmModal.hidden=true;window.location.href="mailto:thatsmehammad@gmail.com";});
+document.addEventListener("keydown",event=>{if(event.key==="Escape")confirmModal.hidden=true;});
+const utmParams=new URLSearchParams(location.search),utmData={};["utm_source","utm_medium","utm_campaign","utm_term","utm_content"].forEach(key=>{if(utmParams.has(key))utmData[key]=utmParams.get(key);});if(Object.keys(utmData).length)sessionStorage.setItem("portfolio-utm",JSON.stringify(utmData));
 
 const btn = document.querySelector(".menu"), links = document.getElementById("links");
 btn.addEventListener("click", () => { const o = links.classList.toggle("open"); btn.setAttribute("aria-expanded", String(o)); btn.textContent = o ? "Close" : "Menu"; });
