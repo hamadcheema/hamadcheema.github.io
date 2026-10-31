@@ -66,6 +66,27 @@ section{padding:78px 0}h2{font-size:clamp(2rem,5vw,3.6rem);letter-spacing:-.07em
 @media(max-width:420px){.wrap{width:calc(100% - 28px)}.inspector .row{grid-template-columns:90px 1fr}.skill{display:block}.level{display:block;max-width:none;text-align:left;margin-top:8px}}
 @media(prefers-reduced-motion:reduce){.reveal-ready,.hero .wrap>*{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}}
 
+
+/* Skills layout and navigation alignment */
+nav{justify-content:initial}.logo{flex:0 0 auto}.links{margin-left:auto}
+.nav-actions{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+.theme-toggle{display:inline-grid;place-items:center;width:42px;height:42px;padding:0;font-size:1.15rem}
+.menu{display:none}
+.skill-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.skill-card{position:relative;overflow:hidden;min-height:205px;padding:22px 24px;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.skill-card:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--acid);transform:scaleY(0);transform-origin:bottom;transition:transform .3s ease}
+.skill-card:hover{transform:translateY(-5px);border-color:var(--acid);box-shadow:0 22px 48px var(--shadow)}
+.skill-card:hover:before{transform:scaleY(1)}
+.skill-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px}
+.skill-number{font:500 .68rem "DM Mono",monospace;letter-spacing:.1em;color:var(--muted)}
+.skill-card .level{display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:6px 10px;font:500 .67rem "DM Mono",monospace;color:var(--acid);text-align:center}
+.skill-card h3{font-size:1.25rem;line-height:1.2;letter-spacing:-.035em;margin:0 0 9px}
+.skill-card p{margin:0;color:var(--muted);font-size:.93rem;line-height:1.65;max-width:58ch}
+.skill-card.reveal-ready{transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.2,1),border-color .25s ease,box-shadow .25s ease}
+.skill-card.reveal-ready:nth-child(2){transition-delay:.08s}.skill-card.reveal-ready:nth-child(3){transition-delay:.16s}.skill-card.reveal-ready:nth-child(4){transition-delay:.24s}.skill-card.reveal-ready:nth-child(5){transition-delay:.32s}
+@media(max-width:760px){nav{justify-content:space-between}.links{margin-left:0}.nav-actions{margin-left:auto}.menu{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 13px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);font:500 .82rem "DM Mono",monospace}.skill-grid{grid-template-columns:1fr;gap:12px}.skill-card{min-height:0;padding:20px}.skill-top{margin-bottom:18px}}
+@media(prefers-reduced-motion:reduce){.skill-card,.skill-card:before{transition:none!important}.skill-card:hover{transform:none}}
+
 </style>
 </head>
 <body>
@@ -73,8 +94,6 @@ section{padding:78px 0}h2{font-size:clamp(2rem,5vw,3.6rem);letter-spacing:-.07em
 <header>
   <nav class="wrap" aria-label="Main">
     <a class="logo" href="#home">Hammad</a>
-    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme">☼</button>
-    <button class="menu" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="links">Menu</button>
     <ul class="links" id="links">
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
@@ -83,6 +102,10 @@ section{padding:78px 0}h2{font-size:clamp(2rem,5vw,3.6rem);letter-spacing:-.07em
       <li><a href="#education">Education</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme">☼</button>
+      <button class="menu" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="links">Menu</button>
+    </div>
   </nav>
 </header>
 
@@ -158,13 +181,13 @@ section{padding:78px 0}h2{font-size:clamp(2rem,5vw,3.6rem);letter-spacing:-.07em
 
 <section id="skills">
   <div class="wrap">
-    <h2>Skills</h2>
-    <div class="card">
-      <div class="skill"><div><strong>Unity</strong><div class="muted">Used across multiple internship projects.</div></div><span class="level">Hands-on project experience</span></div>
-      <div class="skill"><div><strong>C#</strong><div class="muted">I can read and work with scripts to some extent. Much of my scripting was AI-assisted.</div></div><span class="level">Basic</span></div>
-      <div class="skill"><div><strong>AI-assisted development tools</strong><div class="muted">Used to speed up C# scripting.</div></div><span class="level">Practical use</span></div>
-      <div class="skill"><div><strong>Game asset integration</strong><div class="muted">Bringing designer-made UI, 3D models and animations into Unity.</div></div><span class="level">Project experience</span></div>
-      <div class="skill"><div><strong>Game development workflow</strong><div class="muted">Working with a designer on a shared project.</div></div><span class="level">Practical exposure</span></div>
+    <div class="section-heading"><p class="eyebrow">THE TOOLKIT</p><h2>Skills I’m building.</h2><p class="muted">A straightforward snapshot of what I’ve worked with so far.</p></div>
+    <div class="skill-grid">
+      <article class="card skill-card"><div class="skill-top"><span class="skill-number">01 / ENGINE</span><span class="level">Hands-on experience</span></div><h3>Unity</h3><p>Used across multiple internship projects to build interactive game experiences.</p></article>
+      <article class="card skill-card"><div class="skill-top"><span class="skill-number">02 / CODE</span><span class="level">Basic</span></div><h3>C#</h3><p>I can read and work with scripts to some extent. Much of my scripting has been AI-assisted.</p></article>
+      <article class="card skill-card"><div class="skill-top"><span class="skill-number">03 / WORKFLOW</span><span class="level">Practical use</span></div><h3>AI-assisted development tools</h3><p>Used to support my scripting workflow and help move project tasks forward.</p></article>
+      <article class="card skill-card"><div class="skill-top"><span class="skill-number">04 / ASSETS</span><span class="level">Project experience</span></div><h3>Game asset integration</h3><p>Bringing UI, 3D models and animated characters into Unity projects.</p></article>
+      <article class="card skill-card"><div class="skill-top"><span class="skill-number">05 / TEAM</span><span class="level">Practical exposure</span></div><h3>Game development workflow</h3><p>Working alongside a graphic designer during game development projects.</p></article>
     </div>
   </div>
 </section>
