@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ali Hammad Shehzad | Unity Game Developer & Aspiring Computer Science Student</title>
+<meta name="description" content="Portfolio of Ali Hammad Shehzad, a Unity game developer intern from Pakistan and aspiring Computer Science student interested in game development, software engineering and AI.">
+<meta name="author" content="Ali Hammad Shehzad">
+<meta name="theme-color" content="#12142a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ali Hammad Shehzad | Unity Game Developer">
+<meta property="og:description" content="Unity game developer intern and aspiring Computer Science student. Game development, software engineering and AI.">
+<!-- TODO: add og:image (1200x630) and og:url once you have a final public URL -->
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎮%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#12142a; --surface:#1a1d38; --surface-2:#222647; --line:#2f3460;
+  --text:#eceefb; --muted:#a3a8cf; --accent:#8b7cff; --accent-2:#5aa2ff; --on-accent:#10112a;
+  --head:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Figtree","Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:dark;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font:400 1.0625rem/1.65 var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent-2);outline-offset:3px;border-radius:6px}
+.wrap{width:min(1080px,100% - 2.5rem);margin-inline:auto}
+section{padding:5.5rem 0}
+h1,h2,h3{font-family:var(--head);line-height:1.12;margin:0;letter-spacing:-.01em}
+h2{font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:1.5rem}
+h3{font-size:1.25rem}
+p{margin:0 0 1rem;max-width:68ch}
+.muted{color:var(--muted)}
+.skip{position:absolute;left:-999px;top:0;background:var(--accent);color:var(--on-accent);padding:.6rem 1rem;z-index:100}
+.skip:focus{left:1rem;top:calc(env(safe-area-inset-top,0px) + .5rem)}
+
+/* nav */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:rgba(18,20,42,.92);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(18,20,42,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font:700 1.15rem var(--head);text-decoration:none}
+.links{display:flex;gap:1.6rem;list-style:none;margin:0;padding:0}
+.links a{text-decoration:none;color:var(--muted);font-weight:500;font-size:.97rem;padding:.4rem 0;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
+.links a:hover,.links a.on{color:var(--text);border-color:var(--accent)}
+.menu{display:none;background:none;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:.5rem .8rem;font:500 .95rem var(--body);cursor:pointer}
+@media(max-width:760px){
+  .menu{display:block}
+  .links{display:none;position:absolute;left:0;right:0;top:68px;flex-direction:column;gap:0;background:var(--surface);border-bottom:1px solid var(--line);padding:.5rem 1.25rem 1rem}
+  .links.open{display:flex}
+  .links a{display:block;padding:.8rem 0}
+}
+
+/* hero */
+.hero{padding:5rem 0 4rem;background:radial-gradient(60rem 28rem at 85% -10%,rgba(139,124,255,.22),transparent 60%),radial-gradient(40rem 24rem at -10% 40%,rgba(90,162,255,.12),transparent 60%)}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:3rem;align-items:center}
+h1{font-size:clamp(2.4rem,6.2vw,4.1rem);margin-bottom:1.25rem}
+.lead{font-size:1.2rem;color:var(--muted)}
+.btns{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.75rem}
+.btn{display:inline-block;text-decoration:none;font-weight:600;padding:.85rem 1.4rem;border-radius:10px;border:1px solid var(--line);transition:transform .2s,background .2s,border-color .2s}
+.btn:hover{transform:translateY(-2px);border-color:var(--accent)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:var(--on-accent);border:0}
+.inspector{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:.95rem}
+.inspector header{position:static;display:flex;gap:.5rem;align-items:center;padding:.7rem 1rem;background:var(--surface-2);backdrop-filter:none;font:600 .85rem var(--mono);color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.inspector dl{margin:0;padding:.4rem 1rem 1rem}
+.inspector .row{display:grid;grid-template-columns:7.5rem 1fr;gap:.75rem;padding:.6rem 0;border-bottom:1px solid var(--line)}
+.inspector .row:last-child{border:0}
+.inspector dt{color:var(--muted);font-family:var(--mono);font-size:.82rem;padding-top:.15rem}
+.inspector dd{margin:0}
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr}}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1.5rem}
+.tags{display:flex;flex-wrap:wrap;gap:.45rem;margin:.9rem 0 0;padding:0;list-style:none}
+.tags li{font-size:.85rem;padding:.2rem .65rem;border-radius:99px;background:var(--surface-2);color:var(--muted)}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem}
+@media(max-width:760px){.facts{grid-template-columns:1fr}}
+.ph{border:1px dashed var(--accent);border-radius:6px;padding:0 .35rem;color:var(--accent-2);font-size:.92em}
+
+/* experience */
+.job{border-left:3px solid var(--accent);padding-left:1.5rem}
+.job ul{padding-left:1.2rem;margin:1rem 0}
+.job li{margin-bottom:.5rem;max-width:68ch}
+.note{margin-top:1.5rem;padding:1.1rem 1.25rem;background:var(--surface);border:1px solid var(--line);border-radius:10px;max-width:68ch}
+
+/* projects */
+.shot{aspect-ratio:16/9;border-radius:8px;margin-bottom:1.1rem;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:.9rem;padding:1rem;background:repeating-linear-gradient(45deg,var(--surface-2) 0 14px,#1d2040 14px 28px)}
+.shot img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+.plinks{display:flex;gap:1rem;margin-top:1.1rem;font-weight:600}
+.plinks a{color:var(--accent-2)}
+
+/* skills */
+.skill{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;padding:1rem 0;border-bottom:1px solid var(--line)}
+.skill:last-child{border:0}
+.level{font-size:.85rem;color:var(--accent-2);white-space:nowrap}
+
+/* contact */
+.contact a.big{display:block;font:700 clamp(1.1rem,3.4vw,1.8rem) var(--head);text-decoration:none;margin:.3rem 0 1.5rem;overflow-wrap:anywhere}
+.contact a.big:hover{color:var(--accent)}
+footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-size:.93rem}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem}
+
+/* one entrance on load, plus motion on user action only */
+.hero .wrap>*{animation:rise .7s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header>
+  <nav class="wrap" aria-label="Main">
+    <a class="logo" href="#home">Hammad</a>
+    <button class="menu" aria-expanded="false" aria-controls="links">Menu</button>
+    <ul class="links" id="links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+<section class="hero" id="home">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>I build Unity games and I’m heading into Computer Science.</h1>
+      <p class="lead">I’m Ali Hammad Shehzad, a Unity game developer intern from Pakistan. I want to study Computer Science at an English-taught university and grow into a software engineer, with game development and AI as my main interests.</p>
+      <div class="btns">
+        <a class="btn primary" href="#projects">View my projects</a>
+        <a class="btn" href="#contact">Get in touch</a>
+        <a class="btn" href="https://github.com/hamadcheema" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+    <div class="inspector" aria-label="Quick facts">
+      <header><span class="dot"></span>Inspector: Hammad</header>
+      <dl>
+        <div class="row"><dt>Role</dt><dd>Unity Game Developer Intern</dd></div>
+        <div class="row"><dt>Studio</dt><dd>Emerging Tech Studio (6+ months)</dd></div>
+        <div class="row"><dt>Location</dt><dd>Pakistan</dd></div>
+        <div class="row"><dt>Studying next</dt><dd>BSc Computer Science (goal)</dd></div>
+        <div class="row"><dt>Interests</dt><dd>Games, software engineering, AI</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <h2>About me</h2>
+    <div class="facts">
+      <div>
+        <p>I’m a Pakistani student who started in game development through a paid Unity internship. Working on real projects with a designer showed me how games come together, from assets and animation to the code that connects them.</p>
+        <p>I’m honest about where I am: I’ve learned a lot by doing, I use AI tools to help with C# scripting, and I can read and work with scripts to some extent. A Computer Science degree is how I plan to build the fundamentals properly.</p>
+      </div>
+      <div>
+        <h3>What interests me</h3>
+        <ul class="tags">
+          <li>Computer Science</li><li>Game Development</li><li>Artificial Intelligence</li>
+          <li>Software Engineering</li><li>Interactive Applications</li><li>Technology and Innovation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <h2>Experience</h2>
+    <div class="job">
+      <h3>Unity Game Developer Intern</h3>
+      <p class="muted">Emerging Tech Studio. Paid internship, more than 6 months. Dates: <span class="ph">[add start and end month]</span></p>
+      <ul>
+        <li>Worked on multiple Unity game development projects.</li>
+        <li>Was the developer on a project, working alongside a graphic designer.</li>
+        <li>Integrated game elements and creative assets into Unity projects.</li>
+        <li>Collaborated with a designer who handled UI/UX, 3D models and animated characters.</li>
+        <li>Used AI-assisted tools for much of the C# scripting, and can understand and work with C# scripts to some extent.</li>
+      </ul>
+      <p class="muted">Studio contact: <a href="mailto:iemergingtech@gmail.com">iemergingtech@gmail.com</a></p>
+    </div>
+    <div class="note">
+      <strong>Commercial work.</strong> A game project I contributed to was reportedly sold by Emerging Tech Studio to a client for USD 13,000. That sale was the company’s transaction and not my personal income.
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <h2>Projects</h2>
+    <p class="muted">Placeholders below. Replace each one with a real Unity project from my internship by editing the list at the bottom of this file.</p>
+    <div class="grid" id="project-grid"></div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <h2>Skills</h2>
+    <div class="card">
+      <div class="skill"><div><strong>Unity</strong><div class="muted">Used across multiple internship projects.</div></div><span class="level">Hands-on project experience</span></div>
+      <div class="skill"><div><strong>C#</strong><div class="muted">I can read and work with scripts to some extent. Much of my scripting was AI-assisted.</div></div><span class="level">Basic</span></div>
+      <div class="skill"><div><strong>AI-assisted development tools</strong><div class="muted">Used to speed up C# scripting.</div></div><span class="level">Practical use</span></div>
+      <div class="skill"><div><strong>Game asset integration</strong><div class="muted">Bringing designer-made UI, 3D models and animations into Unity.</div></div><span class="level">Project experience</span></div>
+      <div class="skill"><div><strong>Game development workflow</strong><div class="muted">Working with a designer on a shared project.</div></div><span class="level">Practical exposure</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="wrap">
+    <h2>Education</h2>
+    <div class="card">
+      <h3>Intermediate (ICS), Pakistan</h3>
+      <p class="muted">Result: 53%. Institution: <span class="ph">[add college name]</span>. Year: <span class="ph">[add year]</span></p>
+      <p>Goal: an English-taught Bachelor’s degree in Computer Science or a related field at an international university.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <h2>Contact</h2>
+    <p>I’m open to internships, freelance Unity work, and conversations with developers, recruiters and university admissions teams.</p>
+    <a class="big" href="mailto:thatsmehammad@gmail.com">thatsmehammad@gmail.com</a>
+    <div class="btns">
+      <a class="btn primary" href="mailto:thatsmehammad@gmail.com?subject=Hello%20Hammad">Send an email</a>
+      <a class="btn" href="https://github.com/hamadcheema" target="_blank" rel="noopener">github.com/hamadcheema</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr">2026</span> Ali Hammad Shehzad</span>
+    <span>Unity developer and aspiring Computer Science student</span>
+  </div>
+</footer>
+
+<script>
+/* ===== EDIT HERE: add real projects. Leave image/links empty to hide them. ===== */
+const PROJECTS = [
+  { title:"[Project title 1]", description:"[One or two sentences: what the game is and what you built.]", tech:["Unity","C#"], image:"", links:[] },
+  { title:"[Project title 2]", description:"[Describe your role, for example integrating assets with the designer.]", tech:["Unity","C#"], image:"", links:[] }
+  // Link example: links:[{label:"Play", url:"https://..."},{label:"Code", url:"https://github.com/hamadcheema/..."}]
+];
+
+const grid = document.getElementById("project-grid");
+PROJECTS.forEach(p => {
+  const el = document.createElement("article");
+  el.className = "card";
+  const shot = document.createElement("div");
+  shot.className = "shot";
+  if (p.image) { const i = document.createElement("img"); i.src = p.image; i.alt = p.title + " screenshot"; i.loading = "lazy"; shot.appendChild(i); }
+  else shot.textContent = "Screenshot placeholder";
+  const h = document.createElement("h3"); h.textContent = p.title;
+  const d = document.createElement("p"); d.className = "muted"; d.style.marginTop = ".5rem"; d.textContent = p.description;
+  const t = document.createElement("ul"); t.className = "tags";
+  p.tech.forEach(x => { const li = document.createElement("li"); li.textContent = x; t.appendChild(li); });
+  el.append(shot, h, d, t);
+  if (p.links.length) {
+    const l = document.createElement("div"); l.className = "plinks";
+    p.links.forEach(k => { const a = document.createElement("a"); a.href = k.url; a.textContent = k.label; a.target = "_blank"; a.rel = "noopener"; l.appendChild(a); });
+    el.appendChild(l);
+  }
+  grid.appendChild(el);
+});
+
+document.getElementById("yr").textContent = new Date().getFullYear();
+
+const btn = document.querySelector(".menu"), links = document.getElementById("links");
+btn.addEventListener("click", () => { const o = links.classList.toggle("open"); btn.setAttribute("aria-expanded", o); });
+links.addEventListener("click", e => { if (e.target.tagName === "A") { links.classList.remove("open"); btn.setAttribute("aria-expanded", false); } });
+
+const secs = [...document.querySelectorAll("main section[id]")], navA = [...links.querySelectorAll("a")];
+new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) navA.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+}), { rootMargin: "-45% 0px -50% 0px" }).observe && secs.forEach(s => {
+  new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) navA.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-45% 0px -50% 0px" }).observe(s);
+});
+</script>
+</body>
+</html>
