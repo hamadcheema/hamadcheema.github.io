@@ -73,6 +73,20 @@ footer{margin-top:30px}
 :focus-visible{outline:3px solid var(--accent2);outline-offset:4px}
 /* Premium cool-grey header in light mode; dark mode remains unchanged */
 body:not(.dark) header{background:rgb(235 239 242 / .96)}
+/* UX refinements: clearer navigation, calmer surfaces, and stronger interaction feedback */
+section[id]{scroll-margin-top:92px}
+header{transition:background .2s,border-color .2s}
+.navlinks a[aria-current="location"]{color:var(--accent);font-weight:700}
+.navlinks a[aria-current="location"]:after{right:0}
+.btn{min-height:46px;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.035)}
+.btn.primary:hover{box-shadow:0 11px 24px color-mix(in srgb,var(--accent) 28%,transparent)}
+.card:focus-within,.profile:focus-within{border-color:var(--accent)}
+section:nth-of-type(even){background:color-mix(in srgb,var(--panel) 34%,var(--bg))}
+.section-head{max-width:720px}
+.section-head h2{max-width:620px}
+@media(max-width:760px){.navlinks.open{padding:18px 22px 22px}.navlinks a{min-height:36px;display:flex;align-items:center;width:100%}.actions .btn{min-height:48px}}
+@media(hover:none){.card:hover,.neo:hover{transform:none;box-shadow:9px 9px 18px var(--shadow-dark),-9px -9px 18px var(--shadow-light)}}
 </style>
 </head>
 <body>
@@ -99,5 +113,17 @@ links.addEventListener("click",e=>{if(e.target.closest("a"))closeMenu()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMenu()});
 document.addEventListener("click",e=>{if(!e.target.closest("header"))closeMenu()});
 $("year").textContent=new Date().getFullYear();
+const navAnchors=[...links.querySelectorAll("a[href^='#']")];
+const sectionObserver=new IntersectionObserver(entries=>{
+  for(const entry of entries){
+    if(entry.isIntersecting){
+      navAnchors.forEach(anchor=>{
+        if(anchor.getAttribute("href")==="#"+entry.target.id) anchor.setAttribute("aria-current","location");
+        else anchor.removeAttribute("aria-current");
+      });
+    }
+  }
+},{rootMargin:"-28% 0px -62% 0px",threshold:0});
+document.querySelectorAll("main section[id]").forEach(section=>sectionObserver.observe(section));
 </script>
 </body></html>
